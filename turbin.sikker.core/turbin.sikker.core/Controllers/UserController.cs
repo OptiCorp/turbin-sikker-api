@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
+
 
 namespace turbin.sikker.core.Controllers
 {
