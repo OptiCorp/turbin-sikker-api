@@ -12,5 +12,7 @@ namespace turbin.sikker.core
 
         public DbSet<User> User { get; set; }
 
+        public DbSet<UserRole> UserRole { get; set; }
+
     }
 }
