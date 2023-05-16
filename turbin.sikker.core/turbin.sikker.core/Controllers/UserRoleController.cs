@@ -32,7 +32,7 @@ namespace turbin.sikker.core.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<UserRole>> PutUserRole(long id, UserRole userRole)
         {
-            if (id != userRole.RoleId)
+            if (id != userRole.Id)
             {
                 return BadRequest();
             }
@@ -62,7 +62,7 @@ namespace turbin.sikker.core.Controllers
             _context.UserRole.Add(userRole);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUserRole), new { id = userRole.RoleId }, userRole);
+            return CreatedAtAction(nameof(GetUserRole), new { id = userRole.Id }, userRole);
         }
         
         // Deletes user role based on given Id
@@ -87,7 +87,7 @@ namespace turbin.sikker.core.Controllers
         // Bool to check if user role exists
         private bool UserRoleExists(long id)
         {
-            return (_context.UserRole?.Any(userRole => userRole.RoleId == id)).GetValueOrDefault();
+            return (_context.UserRole?.Any(userRole => userRole.Id == id)).GetValueOrDefault();
         }
         
     }
