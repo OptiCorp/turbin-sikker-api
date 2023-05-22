@@ -14,5 +14,16 @@ namespace turbin.sikker.core
 
         public DbSet<UserRole> UserRole { get; set; }
 
+        public DbSet<Category> Category { get; set; }
+
+        public DbSet<FormTask> FormTask { get; set; }
+
+        public DbSet<Form> Form { get; set; }
+
+        public DbSet<Upload> Upload { get; set; }
+
+        public DbSet<Punch> Punch { get; set; }
+
+
     }
 }
