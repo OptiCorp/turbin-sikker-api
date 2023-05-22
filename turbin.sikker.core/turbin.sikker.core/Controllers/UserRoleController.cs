@@ -18,7 +18,7 @@ namespace turbin.sikker.core.Controllers
         // Get specific user role based on given Id
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserRole>> GetUserRole(long id)
+        public async Task<ActionResult<UserRole>> GetUserRole(int id)
         {
             var UserRoleId = await _context.UserRole.FindAsync(id);
             if (UserRoleId == null)
@@ -30,7 +30,7 @@ namespace turbin.sikker.core.Controllers
         
         // Edit specific user role role based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserRole>> PutUserRole(long id, UserRole userRole)
+        public async Task<ActionResult<UserRole>> PutUserRole(int id, UserRole userRole)
         {
             if (id != userRole.Id)
             {
@@ -67,7 +67,7 @@ namespace turbin.sikker.core.Controllers
         
         // Deletes user role based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserRole>> DeleteUserRole(long id)
+        public async Task<ActionResult<UserRole>> DeleteUserRole(int id)
         {
             if (_context.UserRole == null)
             {
@@ -85,7 +85,7 @@ namespace turbin.sikker.core.Controllers
         }
         
         // Bool to check if user role exists
-        private bool UserRoleExists(long id)
+        private bool UserRoleExists(int id)
         {
             return (_context.UserRole?.Any(userRole => userRole.Id == id)).GetValueOrDefault();
         }

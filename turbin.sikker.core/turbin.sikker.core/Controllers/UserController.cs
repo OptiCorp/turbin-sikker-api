@@ -22,7 +22,7 @@ namespace turbin.sikker.core.Controllers
         }
         // Get specific user based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(long id)
+        public async Task<ActionResult<User>> GetUser(int id)
         {
             var UserId = await _context.User.FindAsync(id);
             if (UserId == null)
@@ -34,9 +34,9 @@ namespace turbin.sikker.core.Controllers
 
         // Edit specific user based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<User>> PutUser(long id, User user)
+        public async Task<ActionResult<User>> PutUser(string id, User user)
         {
-            if (id != user.Id)
+            if (id != user.id)
             {
                 return BadRequest();
             }
@@ -66,12 +66,12 @@ namespace turbin.sikker.core.Controllers
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            return CreatedAtAction(nameof(GetUser), new { id = user.id }, user);
         }
 
         // Deletes user based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(long id)
+        public async Task<ActionResult<User>> DeleteUser(string id)
         {
             if (_context.User == null)
             {
@@ -89,9 +89,9 @@ namespace turbin.sikker.core.Controllers
         }
 
         // Bool to check if user exists
-        private bool UserExists(long id)
+        private bool UserExists(string id)
         {
-            return (_context.User?.Any(user => user.Id == id)).GetValueOrDefault();
+            return (_context.User?.Any(user => user.id == id)).GetValueOrDefault();
         }
     }
 }
