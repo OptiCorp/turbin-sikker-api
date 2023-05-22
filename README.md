@@ -32,4 +32,9 @@ CREATE TABLE Task (
     description VARCHAR (1500) NULL,
     category_id INT            NULL
 );
+
+CREATE TABLE Category (
+    id int NOT NULL PRIMARY KEY,
+    name VARCHAR(100)
+);
 ```
