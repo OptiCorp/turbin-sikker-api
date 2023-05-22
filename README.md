@@ -12,6 +12,13 @@ ALTER ROLE db_datareader ADD MEMBER [bjorn.goa@bouvet.no];
 ALTER ROLE db_datawriter ADD MEMBER [bjorn.goa@bouvet.no];
 ALTER ROLE db_owner ADD MEMBER [bjorn.goa@bouvet.no];
 
+// User Roles
+
+CREATE USER [malin.svela@bouvet.no] FROM EXTERNAL PROVIDER WITH DEFAULT_SCHEMA = dbo;
+ALTER ROLE db_datareader ADD MEMBER [malin.svela@bouvet.no];
+ALTER ROLE db_datawriter ADD MEMBER [malin.svela@bouvet.no];
+ALTER ROLE db_ddladmin ADD MEMBER [malin.svela@bouvet.no];
+
 // Tables
 
 CREATE TABLE User (
