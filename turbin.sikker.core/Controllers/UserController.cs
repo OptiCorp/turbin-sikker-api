@@ -22,7 +22,7 @@ namespace turbin.sikker.core.Controllers
         }
         // Get specific user based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<User>> GetUser(string id)
         {
             var UserId = await _context.User.FindAsync(id);
             if (UserId == null)
