@@ -25,6 +25,11 @@ CREATE TABLE User (
     last_name varchar(250) NOT NULL,
     username varchar(250) NOT NULL,
     email varchar(300) NOT NULL
+);
+
+CREATE TABLE User_Role (
+    id varchar(500) NOT NULL PRIMARY KEY,
+    name varchar(100) NOT NULL,
 )
 
 CREATE TABLE Task (
