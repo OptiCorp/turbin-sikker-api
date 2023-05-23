@@ -39,9 +39,8 @@ CREATE TABLE Task (
 );
 
 CREATE TABLE Category (
-    id int NOT NULL PRIMARY KEY,
-    name VARCHAR(100),
-    id VARCHAR(500),
+    id VARCHAR(500) NOT NULL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
 );
 
 CREATE TABLE Form (
