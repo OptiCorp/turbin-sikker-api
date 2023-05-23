@@ -1,8 +1,6 @@
 # turbin-sikker-api
 
-
 ##sql queries
-
 ```
 
 // User Admin Roles
