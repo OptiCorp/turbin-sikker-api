@@ -32,7 +32,7 @@ CREATE TABLE User_Role (
     name varchar(100) NOT NULL,
 )
 
-CREATE TABLE Task (
+CREATE TABLE Form_Task (
     description VARCHAR (1500) NOT NULL,
     category_id VARCHAR (500)  NOT NULL,
     id VARCHAR (500) NOT NULL PRIMARY KEY,
@@ -43,7 +43,7 @@ CREATE TABLE Category (
     name VARCHAR(100) NOT NULL,
 );
 
-CREATE TABLE Form_Task (
+CREATE TABLE Form (
     id VARCHAR(500) NOT NULL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     created_date DATE,
