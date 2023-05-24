@@ -24,9 +24,9 @@ namespace turbin.sikker.core.Controllers
 
         // Get specific form task based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<FormTask>> GetFormTask(int id)
+        public async Task<ActionResult<Form_Task>> GetFormTask(string id)
         {
-            var FormTaskId = await _context.FormTask.FindAsync(id);
+            var FormTaskId = await _context.Form_Task.FindAsync(id);
             if (FormTaskId == null)
             {
                 return NotFound();
@@ -37,7 +37,7 @@ namespace turbin.sikker.core.Controllers
         
         // Edit specific form task based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<FormTask>> PutFormTask(int id, FormTask formTask)
+        public async Task<ActionResult<Form_Task>> PutFormTask(string id, Form_Task formTask)
         {
             if (id != formTask.Id)
             {
@@ -64,9 +64,9 @@ namespace turbin.sikker.core.Controllers
 
         // Creates a new form task
         [HttpPost]
-        public async Task<ActionResult<FormTask>> PostFormTask(FormTask formTask)
+        public async Task<ActionResult<Form_Task>> PostFormTask(Form_Task formTask)
         {
-            _context.FormTask.Add(formTask);
+            _context.Form_Task.Add(formTask);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetFormTask), new { id = formTask.Id }, formTask);
@@ -74,18 +74,18 @@ namespace turbin.sikker.core.Controllers
 
         // Deletes form task based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<FormTask>> DeleteFormTask(int id)
+        public async Task<ActionResult<Form_Task>> DeleteFormTask(string id)
         {
-            if (_context.FormTask == null)
+            if (_context.Form_Task == null)
             {
                 return NotFound();
             }
-            var selectedFormTask = await _context.FormTask.FindAsync(id);
+            var selectedFormTask = await _context.Form_Task.FindAsync(id);
             if (selectedFormTask == null)
             {
                 return NotFound();
             }
-            _context.FormTask.Remove(selectedFormTask);
+            _context.Form_Task.Remove(selectedFormTask);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -93,9 +93,9 @@ namespace turbin.sikker.core.Controllers
 
 
         // Bool to check if form task exists
-        private bool FormTaskExists(int id)
+        private bool FormTaskExists(string id)
         {
-            return (_context.FormTask?.Any(formTask => formTask.Id == id)).GetValueOrDefault();
+            return (_context.Form_Task?.Any(formTask => formTask.Id == id)).GetValueOrDefault();
         }
     }
 }

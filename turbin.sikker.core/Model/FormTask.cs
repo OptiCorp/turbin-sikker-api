@@ -1,11 +1,11 @@
 ﻿using System;
 namespace turbin.sikker.core.Model
 {
-	public class FormTask
+	public class Form_Task
 	{
-		public int Id { get; set; }
+		public string Id { get; set; }
 
-		public int CategoryId { get; set; }
+		public string category_id { get; set; }
 
 		public string Description { get; set; }
 
