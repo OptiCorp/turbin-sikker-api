@@ -4,7 +4,7 @@
     {
         public string id { get; set; }
         
-        public int role_id { get; set; }
+        public string role_id { get; set; }
 
         public string first_name { get; set; }
 
