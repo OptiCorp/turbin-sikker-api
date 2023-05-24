@@ -24,7 +24,7 @@ namespace turbin.sikker.core.Controllers
 
         // Get specific Category based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(string id)
         {
             var CategoryId = await _context.Category.FindAsync(id);
             if (CategoryId == null)
@@ -37,7 +37,7 @@ namespace turbin.sikker.core.Controllers
         
         // Edit specific Category based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<Category>> PutCategory(int id, Category category)
+        public async Task<ActionResult<Category>> PutCategory(string id, Category category)
         {
             if (id != category.Id)
             {
@@ -74,7 +74,7 @@ namespace turbin.sikker.core.Controllers
 
         // Deletes Category based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteCategory(int id)
+        public async Task<ActionResult<Category>> DeleteCategory(string id)
         {
             if (_context.Category == null)
             {
@@ -93,7 +93,7 @@ namespace turbin.sikker.core.Controllers
 
 
         // Bool to check if Category exists
-        private bool CategoryExists(int id)
+        private bool CategoryExists(string id)
         {
             return (_context.Category?.Any(cat => cat.Id == id)).GetValueOrDefault();
         }
