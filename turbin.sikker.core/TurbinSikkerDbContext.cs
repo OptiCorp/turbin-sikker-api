@@ -16,7 +16,7 @@ namespace turbin.sikker.core
 
         public DbSet<Category> Category { get; set; }
 
-        public DbSet<FormTask> FormTask { get; set; }
+        public DbSet<Form_Task> Form_Task { get; set; }
 
         public DbSet<Form> Form { get; set; }
 

@@ -43,7 +43,7 @@ CREATE TABLE Category (
     name VARCHAR(100) NOT NULL,
 );
 
-CREATE TABLE Form (
+CREATE TABLE Form_Task (
     id VARCHAR(500) NOT NULL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     created_date DATE,
