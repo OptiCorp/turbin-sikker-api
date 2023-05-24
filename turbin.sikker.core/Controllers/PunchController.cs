@@ -24,7 +24,7 @@ namespace turbin.sikker.core.Controllers
 
         // Get specific Punch based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Punch>> GetPunch(int id)
+        public async Task<ActionResult<Punch>> GetPunch(string id)
         {
             var PunchId = await _context.Punch.FindAsync(id);
             if (PunchId == null)
@@ -37,7 +37,7 @@ namespace turbin.sikker.core.Controllers
         
         // Edit specific punch based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<Punch>> PutPunch(int id, Punch punch)
+        public async Task<ActionResult<Punch>> PutPunch(string id, Punch punch)
         {
             if (id != punch.Id)
             {
@@ -74,7 +74,7 @@ namespace turbin.sikker.core.Controllers
 
         // Deletes punch based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Punch>> DeletePunch(int id)
+        public async Task<ActionResult<Punch>> DeletePunch(string id)
         {
             if (_context.Punch == null)
             {
@@ -93,7 +93,7 @@ namespace turbin.sikker.core.Controllers
 
 
         // Bool to check if punch exists
-        private bool PunchExists(int id)
+        private bool PunchExists(string id)
         {
             return (_context.Punch?.Any(punch => punch.Id == id)).GetValueOrDefault();
         }
