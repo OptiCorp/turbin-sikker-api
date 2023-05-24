@@ -24,7 +24,7 @@ namespace turbin.sikker.core.Controllers
 
         // Get specific Category based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Form>> GetForm(int id)
+        public async Task<ActionResult<Form>> GetForm(string id)
         {
             var FormId = await _context.Form.FindAsync(id);
             if (FormId == null)
@@ -37,7 +37,7 @@ namespace turbin.sikker.core.Controllers
 
         // Edit specific Category based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<Form>> PutForm(int id, Form form)
+        public async Task<ActionResult<Form>> PutForm(string id, Form form)
         {
             if (id != form.Id)
             {
@@ -74,7 +74,7 @@ namespace turbin.sikker.core.Controllers
 
         // Deletes Category based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Form>> DeleteForm(int id)
+        public async Task<ActionResult<Form>> DeleteForm(string id)
         {
             if (_context.Form == null)
             {
@@ -93,7 +93,7 @@ namespace turbin.sikker.core.Controllers
 
 
         // Bool to check if Category exists
-        private bool FormExists(int id)
+        private bool FormExists(string id)
         {
             return (_context.Form?.Any(form => form.Id == id)).GetValueOrDefault();
         }

@@ -9,10 +9,10 @@ namespace turbin.sikker.core.Model
 
 		public Form Form  { get; }
 
-		public int GetFormId()
-		{
-			return Form.Id;
-		}
+		//public int GetFormId()
+		//{
+		//	return Form.Id;
+		//}
 
         public int UserId { get; set; }
 
