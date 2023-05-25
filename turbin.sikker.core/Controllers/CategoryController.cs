@@ -2,9 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace turbin.sikker.core.Controllers
 {
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("[controller]")]
     public class CategoryController : ControllerBase
