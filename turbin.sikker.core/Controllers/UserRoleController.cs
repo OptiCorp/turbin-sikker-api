@@ -18,9 +18,9 @@ namespace turbin.sikker.core.Controllers
         // Get specific user role based on given Id
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserRole>> GetUserRole(int id)
+        public async Task<ActionResult<UserRole>> GetUserRole(string id)
         {
-            var UserRoleId = await _context.UserRole.FindAsync(id);
+            var UserRoleId = await _context.User_Role.FindAsync(id);
             if (UserRoleId == null)
             {
                 return NotFound();
@@ -30,7 +30,7 @@ namespace turbin.sikker.core.Controllers
         
         // Edit specific user role role based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserRole>> PutUserRole(int id, UserRole userRole)
+        public async Task<ActionResult<UserRole>> PutUserRole(string id, UserRole userRole)
         {
             if (id != userRole.Id)
             {
@@ -59,7 +59,7 @@ namespace turbin.sikker.core.Controllers
         [HttpPost]
         public async Task<ActionResult<UserRole>> PostUserRole(UserRole userRole)
         {
-            _context.UserRole.Add(userRole);
+            _context.User_Role.Add(userRole);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetUserRole), new { id = userRole.Id }, userRole);
@@ -67,27 +67,27 @@ namespace turbin.sikker.core.Controllers
         
         // Deletes user role based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserRole>> DeleteUserRole(int id)
+        public async Task<ActionResult<UserRole>> DeleteUserRole(string id)
         {
-            if (_context.UserRole == null)
+            if (_context.User_Role == null)
             {
                 return NotFound();
             }
-            var selectedUserRole = await _context.UserRole.FindAsync(id);
+            var selectedUserRole = await _context.User_Role.FindAsync(id);
             if (selectedUserRole == null)
             {
                 return NotFound();
             }
-            _context.UserRole.Remove(selectedUserRole);
+            _context.User_Role.Remove(selectedUserRole);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
         
         // Bool to check if user role exists
-        private bool UserRoleExists(int id)
+        private bool UserRoleExists(string id)
         {
-            return (_context.UserRole?.Any(userRole => userRole.Id == id)).GetValueOrDefault();
+            return (_context.User_Role?.Any(userRole => userRole.Id == id)).GetValueOrDefault();
         }
         
     }
