@@ -1,6 +1,10 @@
 ﻿using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Logging;
 
 namespace turbin.sikker.core
 {
@@ -14,6 +18,8 @@ namespace turbin.sikker.core
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+            ConfigureAuthenticationAndAuthorization(services);
             // Add CORS services
             services.AddCors(options =>
             {
@@ -34,6 +40,34 @@ namespace turbin.sikker.core
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
+
+        private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
+        {
+            services.AddAuthentication()
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = "73b505c0-1edd-4fcd-8545-d024892a11d5";
+                    options.Authority = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47";
+                    options.RequireHttpsMetadata = false; //Bad? 
+                });
+
+            // TODO: Implement Authorization
+            //services.AddAuthorization(options =>
+            //{
+            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+            //        );
+            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            //});
+
+            //services.AddAuthentication().AddIdentityServerJwt();
+
+            //services.AddControllersWithViews();
+            //services.AddRazorPages();
+        }
+
+        
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -57,6 +91,7 @@ namespace turbin.sikker.core
             // Enable CORS
             app.UseCors("AllowSpecificOrigin");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
