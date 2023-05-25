@@ -5,10 +5,10 @@ on:
     - master
 env:
   AZURE_WEBAPP_NAME: TurbinSikker-API
-  AZURE_WEBAPP_PACKAGE_PATH: .\publish
+  AZURE_WEBAPP_PACKAGE_PATH: turbin.sikker.core\publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
-  WORKING_DIRECTORY: .
+  WORKING_DIRECTORY: turbin.sikker.core
 jobs:
   build:
     runs-on: windows-latest

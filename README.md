@@ -41,7 +41,6 @@ CREATE TABLE User_Role (
 );
 
 
-
 CREATE TABLE Form_Task (
     description VARCHAR (1500) NOT NULL,
     category_id VARCHAR (500)  NOT NULL,
