@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Logging;
+using turbin.sikker.core.Services;
 
 namespace turbin.sikker.core
 {
@@ -28,6 +29,8 @@ namespace turbin.sikker.core
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
+
+            services.AddScoped<IUserService, UserService>();
 
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
