@@ -3,98 +3,80 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
-
+using turbin.sikker.core.Services;
 
 namespace turbin.sikker.core.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("[controller]")]
-    public class UserController: ControllerBase
+    public class UserController: Controller
     {
-        private readonly TurbinSikkerDbContext _context;
-        public UserController(TurbinSikkerDbContext context)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         [HttpGet]
         public IEnumerable<User> GetUsers()
         {
-            return _context.User.ToList();
+            return _userService.GetUsers();
         }
+
+
         // Get specific user based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(string id)
+        public async Task<IActionResult> GetUser(string id)
         {
-            var UserId = await _context.User.FindAsync(id);
-            if (UserId == null)
+            var user = await _userService.GetUserById(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return UserId;
+
+            return Ok(user);
         }
 
         // Edit specific user based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<User>> PutUser(string id, User user)
+        public IActionResult PutUser(string id, User user)
         {
-            if (id != user.id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(user).State = EntityState.Modified;
+            _userService.UpdateUser(id, user);
+            return NoContent();
+        }
+
+        
+
+        //// Creates a new user
+        [HttpPost]
+        public async Task<IActionResult> PostUser(User user)
+        {
             try
             {
-                await _context.SaveChangesAsync();
+                await _userService.CreateUser(user);
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
-            return NoContent();
+        }
+
+        //// Deletes user based on given Id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            try
+            {
+                await _userService.DeleteUser(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
         
-        // Creates a new user
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetUser), new { id = user.id }, user);
-        }
-
-        // Deletes user based on given Id
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(string id)
-        {
-            if (_context.User == null)
-            {
-                return NotFound();
-            }
-            var selectedUser = await _context.User.FindAsync(id);
-            if (selectedUser == null)
-            {
-                return NotFound();
-            }
-            _context.User.Remove(selectedUser);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        // Bool to check if user exists
-        private bool UserExists(string id)
-        {
-            return (_context.User?.Any(user => user.id == id)).GetValueOrDefault();
-        }
     }
 }
