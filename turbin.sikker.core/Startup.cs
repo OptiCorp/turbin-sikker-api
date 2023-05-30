@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Logging;
 using turbin.sikker.core.Services;
-
+using Duende.IdentityServer.Stores;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 namespace turbin.sikker.core
 {
     public class Startup
@@ -19,8 +21,12 @@ namespace turbin.sikker.core
         }
         public void ConfigureServices(IServiceCollection services)
         {
+
             IdentityModelEventSource.ShowPII = true;
             ConfigureAuthenticationAndAuthorization(services);
+            
+            services.AddIdentityServer()
+                .AddSigningCredentials();
             // Add CORS services
             services.AddCors(options =>
             {
@@ -46,28 +52,53 @@ namespace turbin.sikker.core
 
         private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            });
             services.AddAuthentication()
                 .AddJwtBearer(options =>
                 {
-                    options.Audience = "73b505c0-1edd-4fcd-8545-d024892a11d5";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        //ValidateIssuerSigningKey = true,
+                        ValidIssuer = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47",
+                        ValidAudience = "a337567c-cda4-4847-89d9-16c4c67128cc"
+                    };
+                    options.Audience = "95763e09-e04c-48a8-99a6-a878ed99d774";
                     options.Authority = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47";
                     options.RequireHttpsMetadata = false; //Bad? 
                 });
 
+
+            services.AddAuthentication()
+                .AddJwtBearer("AzureAD", options =>
+                {
+                    options.Audience = "95763e09-e04c-48a8-99a6-a878ed99d774";
+                    options.Authority = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47";
+                    options.RequireHttpsMetadata = false; //Bad? 
+                });
+
+
             // TODO: Implement Authorization
-            //services.AddAuthorization(options =>
-            //{
-            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-            //        );
-            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            //});
+            services.AddAuthorization(options =>
+            {
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                    JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+                    );
+                defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            });
 
-            //services.AddAuthentication().AddIdentityServerJwt();
+            services.AddAuthentication().AddIdentityServerJwt();
 
-            //services.AddControllersWithViews();
-            //services.AddRazorPages();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         
@@ -88,13 +119,14 @@ namespace turbin.sikker.core
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
 
             // Enable CORS
             app.UseCors("AllowSpecificOrigin");
 
             app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
