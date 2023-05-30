@@ -1,95 +1,72 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Services;
 
 namespace turbin.sikker.core.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserRoleController : ControllerBase
+    public class UserRoleController : Controller
     {
-        private readonly TurbinSikkerDbContext _context;
-        public UserRoleController(TurbinSikkerDbContext context)
+        private readonly IUserRoleService _userRoleService;
+        public UserRoleController(IUserRoleService context)
         {
-            _context = context;
+            _userRoleService = context;
         }
 
 
         // Get specific user role based on given Id
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserRole>> GetUserRole(string id)
+        public async Task<IActionResult> GetUserRole(string id)
         {
-            var UserRoleId = await _context.User_Role.FindAsync(id);
-            if (UserRoleId == null)
+            var UserRole = await _userRoleService.GetUserRoleById(id);
+            if (UserRole == null)
             {
                 return NotFound();
             }
-            return UserRoleId;
+            return Ok(UserRole);
         }
         
         // Edit specific user role role based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserRole>> PutUserRole(string id, UserRole userRole)
+        public IActionResult PutUserRole(string id, UserRole userRole)
         {
-            if (id != userRole.Id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(userRole).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserRoleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _userRoleService.UpdateUserRole(id, userRole);
             return NoContent();
         }
         
         // Creates a new user role
         [HttpPost]
-        public async Task<ActionResult<UserRole>> PostUserRole(UserRole userRole)
+        public async Task<IActionResult> PostUserRole(UserRole userRole)
         {
-            _context.User_Role.Add(userRole);
-            await _context.SaveChangesAsync();
+            try
+            {
 
-            return CreatedAtAction(nameof(GetUserRole), new { id = userRole.Id }, userRole);
+                await _userRoleService.CreateUserRole(userRole);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         
         // Deletes user role based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserRole>> DeleteUserRole(string id)
+        public async Task<IActionResult> DeleteUserRole(string id)
         {
-            if (_context.User_Role == null)
+            try
             {
-                return NotFound();
+                await _userRoleService.DeleteUserRole(id);
+                return Ok();
             }
-            var selectedUserRole = await _context.User_Role.FindAsync(id);
-            if (selectedUserRole == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            _context.User_Role.Remove(selectedUserRole);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
-        
-        // Bool to check if user role exists
-        private bool UserRoleExists(string id)
-        {
-            return (_context.User_Role?.Any(userRole => userRole.Id == id)).GetValueOrDefault();
-        }
-        
     }
     
 }
