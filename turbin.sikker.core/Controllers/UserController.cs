@@ -7,7 +7,7 @@ using turbin.sikker.core.Services;
 
 namespace turbin.sikker.core.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("[controller]")]
     public class UserController: Controller
