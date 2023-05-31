@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using System;
+using turbin.sikker.core.Services;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -9,93 +10,64 @@ namespace turbin.sikker.core.Controllers
     [Route("[controller]")]
     public class FormController : ControllerBase
     {
-        private readonly TurbinSikkerDbContext _context;
-        public FormController(TurbinSikkerDbContext context)
+        private readonly IFormService _formService;
+        public FormController(IFormService context)
         {
-            _context = context;
+            _formService = context;
         }
-        /*
-        [HttpGet]
-        public IEnumerable<Category> GetCategories()
-        {
-            return _context.Category.ToList();
-        }
-        */
+      
 
-        // Get specific Category based on given Id
+        // Get specific Form based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Form>> GetForm(string id)
+        public async Task<IActionResult> GetForm(string id)
         {
-            var FormId = await _context.Form.FindAsync(id);
-            if (FormId == null)
+            var Form = await _formService.GetFormById(id);
+            if (Form == null)
             {
                 return NotFound();
             }
 
-            return FormId;
+            return Ok(Form);
         }
 
-        // Edit specific Category based on given Id
+        // Edit specific Form based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<Form>> PutForm(string id, Form form)
+        public IActionResult PutForm(string id, Form form)
         {
-            if (id != form.Id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(form).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FormExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _formService.UpdateForm(id, form);
             return NoContent();
         }
 
-        // Creates a new Category
+        // Creates a new Form
         [HttpPost]
-        public async Task<ActionResult<Category>> PostForm(Form form)
+        public async Task<IActionResult> PostForm(Form form)
         {
-            _context.Form.Add(form);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetForm), new { id = form.Id }, form);
+            try
+            {
+                DateTime creationTime = DateTime.Now; ;
+                Console.WriteLine("Creation time: ", creationTime.ToString());
+                await _formService.CreateForm(form);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // Deletes Category based on given Id
+        // Deletes Form based on given Id
         [HttpDelete("{id}")]
         public async Task<ActionResult<Form>> DeleteForm(string id)
         {
-            if (_context.Form == null)
+            try
             {
-                return NotFound();
+                await _formService.DeleteForm(id);
+                return Ok();
             }
-            var selectedForm = await _context.Form.FindAsync(id);
-            if (selectedForm == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            _context.Form.Remove(selectedForm);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-
-        // Bool to check if Category exists
-        private bool FormExists(string id)
-        {
-            return (_context.Form?.Any(form => form.Id == id)).GetValueOrDefault();
         }
     }
 }
