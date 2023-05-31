@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace turbin.sikker.core.Model
 {
 	public class Form
@@ -7,9 +8,14 @@ namespace turbin.sikker.core.Model
 
 		public string Title { get; set; }
 
-		//public DateOnly CreatedDate { get; set; }
+		//public DateTime Created_Date { get; set; }
 
-		public string created_by { get; set; }
+		//public void ProcessRequest()
+		//{
+		//	Created_Date = DateTime.Now;
+		//}
+
+		public string Created_By { get; set; }
 	}
 }
 
