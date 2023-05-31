@@ -35,7 +35,7 @@ namespace turbin.sikker.core.Services
             {
                 if (!UserRoleExists(id))
                 {
-                    throw new ArgumentException("User does not exist");
+                    throw new ArgumentException("User role does not exist");
                 }
                 else
                 {
