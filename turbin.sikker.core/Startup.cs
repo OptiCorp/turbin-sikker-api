@@ -39,6 +39,8 @@ namespace turbin.sikker.core
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<IFormService, FormService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
 
 
             // Add DbContext
