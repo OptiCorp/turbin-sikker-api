@@ -4,6 +4,8 @@ using turbin.sikker.core.Model;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using turbin.sikker.core.Services;
+
 
 namespace turbin.sikker.core.Controllers
 {
@@ -12,10 +14,10 @@ namespace turbin.sikker.core.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly TurbinSikkerDbContext _context;
-        public CategoryController(TurbinSikkerDbContext context)
+        private readonly ICategoryService _categoryService;
+        public CategoryController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
         /*
         [HttpGet]
@@ -27,78 +29,53 @@ namespace turbin.sikker.core.Controllers
 
         // Get specific Category based on given Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(string id)
+        public async Task<IActionResult> GetCategory(string id)
         {
-            var CategoryId = await _context.Category.FindAsync(id);
-            if (CategoryId == null)
+            var Category = await _categoryService.GetCategoryById(id);
+            if (Category == null)
             {
                 return NotFound();
             }
 
-            return CategoryId;
+            return Ok(Category);
         }
         
         // Edit specific Category based on given Id
         [HttpPut("{id}")]
-        public async Task<ActionResult<Category>> PutCategory(string id, Category category)
+        public IActionResult PutCategory(string id, Category category)
         {
-            if (id != category.Id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(category).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _categoryService.UpdateCategory(id, category);
             return NoContent();
         }
 
         // Creates a new Category
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<IActionResult> PostCategory(Category category)
         {
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
+            try
+            {
+                await _categoryService.CreateCategory(category);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // Deletes Category based on given Id
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteCategory(string id)
+        public async Task<IActionResult> DeleteCategory(string id)
         {
-            if (_context.Category == null)
+            try
             {
-                return NotFound();
+                await _categoryService.DeleteCategory(id);
+                return Ok();
             }
-            var selectedCategory = await _context.Category.FindAsync(id);
-            if (selectedCategory == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
-            _context.Category.Remove(selectedCategory);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-
-        // Bool to check if Category exists
-        private bool CategoryExists(string id)
-        {
-            return (_context.Category?.Any(cat => cat.Id == id)).GetValueOrDefault();
         }
     }
 }
