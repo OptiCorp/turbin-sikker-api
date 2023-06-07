@@ -13,6 +13,12 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
+        public IEnumerable<UserRole> GetUserRoles()
+        {
+            return _context.User_Role.ToList();
+        }
+
+
         public async Task<UserRole> GetUserRoleById(string id)
         {
             var userRole = await _context.User_Role.FindAsync(id);
