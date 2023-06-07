@@ -9,7 +9,11 @@ using turbin.sikker.core.Services;
 using Duende.IdentityServer.Stores;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+
+
+
 namespace turbin.sikker.core
+
 {
     public class Startup
     {
@@ -31,9 +35,14 @@ namespace turbin.sikker.core
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("https://localhost:7082")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
+                    builder => builder.WithOrigins("http://localhost:5173").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
+                    //builder.AllowAnyOrigin().AllowAnyHeader().WithExposedHeaders("Authorization").SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
+                    //WithOrigins("https://localhost:5173", "https://localhost:7190")
+                    //    .AllowAnyHeader()
+                    //    .AllowAnyMethod()
+                    //    .AllowCredentials()
+                    //    );
+                
             });
 
             services.AddScoped<IUserService, UserService>();
@@ -44,9 +53,18 @@ namespace turbin.sikker.core
 
 
             // Add DbContext
-            var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
+            //var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
+
+            //LOCAL CONNECTION STRING
+            var connectionString = "Data Source=localhost;Initial Catalog=LocalTurbin;User Id=sa; Password=Tls0106ts;TrustServerCertificate=true;";
+            
+
+            
+
+            
             services.AddDbContext<TurbinSikkerDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(connectionString
+                ));
 
             services.AddControllers();
 
@@ -57,48 +75,33 @@ namespace turbin.sikker.core
 
         private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            });
-            services.AddAuthentication()
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        //ValidateIssuerSigningKey = true,
-                        ValidIssuer = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47",
-                        ValidAudience = "a337567c-cda4-4847-89d9-16c4c67128cc"
-                    };
-                    options.Audience = "95763e09-e04c-48a8-99a6-a878ed99d774";
-                    options.Authority = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47";
-                    options.RequireHttpsMetadata = false; //Bad? 
-                });
-
+            //});
+            
+                
 
             services.AddAuthentication()
-                .AddJwtBearer("AzureAD", options =>
+                .AddJwtBearer("Bearer", options =>
                 {
                     options.Audience = "95763e09-e04c-48a8-99a6-a878ed99d774";
-                    options.Authority = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47";
+                    options.Authority = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47/v2.0";
                     options.RequireHttpsMetadata = false; //Bad? 
                 });
 
 
             // TODO: Implement Authorization
-            services.AddAuthorization(options =>
-            {
-                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-                    JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-                    );
-                defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+            //        );
+            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            //});
 
             services.AddAuthentication().AddIdentityServerJwt();
 

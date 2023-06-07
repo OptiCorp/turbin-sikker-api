@@ -2,16 +2,24 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Services;
 
 namespace turbin.sikker.core.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("[controller]")]
     public class UserController: Controller
     {
+
+        [HttpOptions]
+        [Route("User")]
+        public IActionResult HandleOptions()
+        {
+            return NoContent();
+        }
         private readonly IUserService _userService;
         public UserController(IUserService userService)
         {
@@ -54,6 +62,9 @@ namespace turbin.sikker.core.Controllers
         {
             try
             {
+                string json = JsonConvert.SerializeObject(user);
+                Console.WriteLine($"json:  { json }");
+
                 await _userService.CreateUser(user);
                 return Ok();
             }

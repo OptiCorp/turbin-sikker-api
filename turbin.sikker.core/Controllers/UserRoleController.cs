@@ -16,8 +16,14 @@ namespace turbin.sikker.core.Controllers
         }
 
 
+        [HttpGet]
+        public IEnumerable<UserRole> GetUserRoles()
+        {
+            return _userRoleService.GetUserRoles();
+        }
+
         // Get specific user role based on given Id
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserRole(string id)
         {
@@ -49,7 +55,7 @@ namespace turbin.sikker.core.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
         }
         
