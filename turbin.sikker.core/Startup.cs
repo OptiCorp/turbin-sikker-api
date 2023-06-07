@@ -9,6 +9,9 @@ using turbin.sikker.core.Services;
 using Duende.IdentityServer.Stores;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+
+
+
 namespace turbin.sikker.core
 
 {
@@ -32,7 +35,8 @@ namespace turbin.sikker.core
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.AllowAnyOrigin().AllowAnyHeader().WithExposedHeaders("Authorization").SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
+                    builder => builder.WithOrigins("http://localhost:5173").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
+                    //builder.AllowAnyOrigin().AllowAnyHeader().WithExposedHeaders("Authorization").SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
                     //WithOrigins("https://localhost:5173", "https://localhost:7190")
                     //    .AllowAnyHeader()
                     //    .AllowAnyMethod()
@@ -53,7 +57,11 @@ namespace turbin.sikker.core
 
             //LOCAL CONNECTION STRING
             var connectionString = "Data Source=localhost;Initial Catalog=LocalTurbin;User Id=sa; Password=Tls0106ts;TrustServerCertificate=true;";
+            
 
+            
+
+            
             services.AddDbContext<TurbinSikkerDbContext>(options =>
                 options.UseSqlServer(connectionString
                 ));

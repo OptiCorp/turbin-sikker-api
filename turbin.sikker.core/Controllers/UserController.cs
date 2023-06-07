@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Services;
 
@@ -61,6 +62,9 @@ namespace turbin.sikker.core.Controllers
         {
             try
             {
+                string json = JsonConvert.SerializeObject(user);
+                Console.WriteLine($"json:  { json }");
+
                 await _userService.CreateUser(user);
                 return Ok();
             }
