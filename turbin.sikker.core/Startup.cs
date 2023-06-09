@@ -56,7 +56,7 @@ namespace turbin.sikker.core
             //var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
 
             //LOCAL CONNECTION STRING
-            var connectionString = "Data Source=localhost;Initial Catalog=LocalTurbin;User Id=sa; Password=Tls0106ts;TrustServerCertificate=true;";
+            var connectionString = "Data Source=localhost;Initial Catalog=turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
             
 
             
