@@ -1,80 +1,60 @@
-﻿using System;
-using turbin.sikker.core.Model;
-using Microsoft.EntityFrameworkCore;
+﻿using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Services
 {
-	public class UserService : IUserService
-	{
-        public readonly TurbinSikkerDbContext _context;
+    public class UserService : IUserService
+    {
+        private readonly TurbinSikkerDbContext _context;
 
         public UserService(TurbinSikkerDbContext context)
         {
             _context = context;
         }
 
-
         public IEnumerable<User> GetUsers()
         {
             return _context.User.ToList();
         }
 
-        public async Task<User> GetUserById(string id)
+        public User GetUserById(string id)
         {
-            var user = await _context.User.FindAsync(id);
-            return user;
+            return _context.User.FirstOrDefault(u => u.Id == id);
         }
 
-        public async Task UpdateUser(string id, User user)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentException("Invalid ID");
-            }
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    throw new ArgumentException("User does not exist");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-        public async Task CreateUser(User user)
+        public void CreateUser(User user)
         {
             _context.User.Add(user);
-            await _context.SaveChangesAsync();
-
-            //return user;
-            
+            _context.SaveChanges();
         }
 
-        public async Task DeleteUser(string id)
+        public void UpdateUser(User updatedUser)
         {
-            
-            var selectedUser = await _context.User.FindAsync(id);
-            if (selectedUser == null)
+            var user = _context.User.FirstOrDefault(u => u.Id == updatedUser.Id);
+
+            if (user != null)
             {
-                throw new ArgumentException("404 Not Found");
+                user.Username = updatedUser.Username;
+                user.FirstName = updatedUser.FirstName;
+                user.LastName = updatedUser.LastName;
+                user.Email = updatedUser.Email;
+         
+                user.UserRoleId = updatedUser.UserRoleId;
+
+                _context.SaveChanges();
             }
-            _context.User.Remove(selectedUser);
-            await _context.SaveChangesAsync();
         }
 
-        public bool UserExists(string id)
+        public void DeleteUser(string id)
         {
-            return (_context.User?.Any(user => user.id == id)).GetValueOrDefault();
+            var user = _context.User.FirstOrDefault(u => u.Id == id);
+
+            if (user != null)
+            {
+                _context.User.Remove(user);
+                _context.SaveChanges();
+            }
         }
 
     }
-}
 
+}

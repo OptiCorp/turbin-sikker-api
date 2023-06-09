@@ -69,7 +69,9 @@ namespace turbin.sikker.core.Services
 
         public bool UserRoleExists(string id)
         {
-            return (_context.User_Role?.Any(userRole => userRole.Id == id)).GetValueOrDefault();
+
+            return (_context.User?.Any(user => user.Id == id)).GetValueOrDefault();
+
         }
 
     }

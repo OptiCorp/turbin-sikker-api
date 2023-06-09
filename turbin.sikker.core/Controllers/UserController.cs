@@ -1,43 +1,40 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 using turbin.sikker.core.Model;
+using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace turbin.sikker.core.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    [Route("/")]
-    public class UserController: Controller
+    [Route("api")]
+    public class UserController : ControllerBase
     {
-
-        //[HttpOptions]
-        //[Route("GetUsers")]
-        //public IActionResult HandleOptions()
-        //{
-        //    return NoContent();
-        //}
         private readonly IUserService _userService;
+
         public UserController(IUserService userService)
         {
             _userService = userService;
         }
-        [Route("get-all-users")]
-        [HttpGet]
+
+        [HttpGet("GetAllUsers")]
+        [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
         public IEnumerable<User> GetUsers()
         {
             return _userService.GetUsers();
         }
 
-
-        // Get specific user based on given Id
-        [HttpGet("get-user-by-id/{id}")]
-        public async Task<IActionResult> GetUserById(string id)
+        [HttpGet("GetUser")]
+        [SwaggerOperation(Summary = "Get user by ID", Description = "Retrieves a user by their ID.")]
+        [SwaggerResponse(200, "Success", typeof(User))]
+        [SwaggerResponse(404, "User not found")]
+        public IActionResult GetUserById(string id)
         {
-            var user = await _userService.GetUserById(id);
+            var user = _userService.GetUserById(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -46,49 +43,61 @@ namespace turbin.sikker.core.Controllers
             return Ok(user);
         }
 
-        // Edit specific user based on given Id
-        [HttpPut("update-user/{id}")]
-        public IActionResult PutUser(string id, User user)
+        [HttpPost("AddUser")]
+        [SwaggerOperation(Summary = "Create a new user", Description = "Creates a new user.")]
+        [SwaggerResponse(201, "User created", typeof(User))]
+        [SwaggerResponse(400, "Invalid request")]
+        public IActionResult CreateUser(User user)
         {
-            _userService.UpdateUser(id, user);
+            if (ModelState.IsValid)
+            {
+                _userService.CreateUser(user);
+                return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("UpdateUser")]
+        [SwaggerOperation(Summary = "Update user by ID", Description = "Updates an existing user by their ID.")]
+        [SwaggerResponse(204, "User updated")]
+        [SwaggerResponse(400, "Invalid request")]
+        [SwaggerResponse(404, "User not found")]
+        public IActionResult UpdateUser(string id, User updatedUser)
+        {
+            if (id != updatedUser.Id)
+            {
+                return BadRequest();
+            }
+
+            var user = _userService.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _userService.UpdateUser(updatedUser);
+
             return NoContent();
         }
 
-
-
-        //// Creates a new user
-        [Route("create-user")]
-        [HttpPost]
-        public async Task<IActionResult> PostUser(User user)
+        [HttpDelete("DeleteUser")]
+        [SwaggerOperation(Summary = "Delete user by ID", Description = "Deletes a user by their ID.")]
+        [SwaggerResponse(204, "User deleted")]
+        [SwaggerResponse(404, "User not found")]
+        public IActionResult DeleteUser(string id)
         {
-            try
-            {
-                string json = JsonConvert.SerializeObject(user);
-                Console.WriteLine($"json:  { json }");
+            var user = _userService.GetUserById(id);
 
-                await _userService.CreateUser(user);
-                return Ok();
-            }
-            catch (Exception ex)
+            if (user == null)
             {
-                return BadRequest(ex.Message);
+                return NotFound();
             }
-        }
 
-        //// Deletes user based on given Id
-        [HttpDelete("delete-user/{id}")]
-        public async Task<IActionResult> DeleteUser(string id)
-        {
-            try
-            {
-                await _userService.DeleteUser(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            _userService.DeleteUser(id);
+
+            return NoContent();
         }
-        
     }
 }
