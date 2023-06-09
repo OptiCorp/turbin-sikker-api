@@ -63,7 +63,7 @@ namespace turbin.sikker.core.Services
 
         public bool UserExists(string id)
         {
-            return (_context.User?.Any(user => user.id == id)).GetValueOrDefault();
+            return (_context.User?.Any(user => user.Id == id)).GetValueOrDefault();
         }
 
     }
