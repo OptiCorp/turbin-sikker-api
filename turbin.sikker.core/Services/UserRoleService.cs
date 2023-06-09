@@ -39,9 +39,9 @@ namespace turbin.sikker.core.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!UserRoleExists(id))
                 {
-                    throw new ArgumentException("User does not exist");
+                    throw new ArgumentException("User role does not exist");
                 }
                 else
                 {
@@ -67,9 +67,11 @@ namespace turbin.sikker.core.Services
             await _context.SaveChangesAsync();
         }
 
-        public bool UserExists(string id)
+        public bool UserRoleExists(string id)
         {
+
             return (_context.User?.Any(user => user.Id == id)).GetValueOrDefault();
+
         }
 
     }
