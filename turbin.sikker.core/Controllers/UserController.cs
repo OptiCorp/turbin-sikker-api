@@ -10,22 +10,22 @@ namespace turbin.sikker.core.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    [Route("[controller]")]
+    [Route("/")]
     public class UserController: Controller
     {
 
-        [HttpOptions]
-        [Route("User")]
-        public IActionResult HandleOptions()
-        {
-            return NoContent();
-        }
+        //[HttpOptions]
+        //[Route("GetUsers")]
+        //public IActionResult HandleOptions()
+        //{
+        //    return NoContent();
+        //}
         private readonly IUserService _userService;
         public UserController(IUserService userService)
         {
             _userService = userService;
         }
-
+        [Route("get-all-users")]
         [HttpGet]
         public IEnumerable<User> GetUsers()
         {
@@ -34,8 +34,8 @@ namespace turbin.sikker.core.Controllers
 
 
         // Get specific user based on given Id
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(string id)
+        [HttpGet("get-user-by-id/{id}")]
+        public async Task<IActionResult> GetUserById(string id)
         {
             var user = await _userService.GetUserById(id);
             if (user == null)
@@ -47,16 +47,17 @@ namespace turbin.sikker.core.Controllers
         }
 
         // Edit specific user based on given Id
-        [HttpPut("{id}")]
+        [HttpPut("update-user/{id}")]
         public IActionResult PutUser(string id, User user)
         {
             _userService.UpdateUser(id, user);
             return NoContent();
         }
 
-        
+
 
         //// Creates a new user
+        [Route("create-user")]
         [HttpPost]
         public async Task<IActionResult> PostUser(User user)
         {
@@ -75,7 +76,7 @@ namespace turbin.sikker.core.Controllers
         }
 
         //// Deletes user based on given Id
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-user/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             try
