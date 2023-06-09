@@ -1,18 +1,12 @@
-version: "3.9"
+version: '3'
 services:
-  turbin_api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: localserverturbintest
+  mssql-turbin-sikker:
+    image: 'mcr.microsoft.com/mssql/server:2019-latest'
     ports:
-      - "5000:80"
-
-  sql:
-    image: "mcr.microsoft.com/mssql/server:2022-latest"
-    container_name: LocalTurbin
-    ports:
-      - "1433:1433"
+      - '1433:1433'
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=Tls0106ts
+      - MSSQL_SA_PASSWORD=Turbinsikker101
+    volumes:
+      - './drive:/var/opt/mssql'
+    command: /opt/mssql/bin/sqlservr
