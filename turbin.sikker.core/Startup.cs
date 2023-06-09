@@ -45,6 +45,11 @@ namespace turbin.sikker.core
                 
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+            });
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<IFormService, FormService>();
