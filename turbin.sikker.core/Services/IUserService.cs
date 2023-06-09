@@ -6,10 +6,10 @@ namespace turbin.sikker.core.Services
 	public interface IUserService
 	{
 		IEnumerable<User> GetUsers();
-		Task<User> GetUserById(string id);
-		Task UpdateUser(string id, User user);
-		Task CreateUser(User user);
-		Task DeleteUser(string id);
+		User GetUserById(string id);
+		void UpdateUser(User user);
+		void CreateUser(User user);
+		void DeleteUser(string id);
 	}
 }
 
