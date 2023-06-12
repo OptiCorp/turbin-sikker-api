@@ -5,13 +5,15 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using turbin.sikker.core.Services;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 
 namespace turbin.sikker.core.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -28,10 +30,13 @@ namespace turbin.sikker.core.Controllers
         */
 
         // Get specific Category based on given Id
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategory(string id)
+        [HttpGet("GetCategory")]
+        [SwaggerOperation(Summary = "Get category by ID", Description = "Retrives a category by the ID.")]
+        [SwaggerResponse(200, "Success", typeof (Category))]
+        [SwaggerResponse(400, "Category not found")]
+        public IActionResult GetCategoryById(string id)
         {
-            var Category = await _categoryService.GetCategoryById(id);
+            var Category = _categoryService.GetCategoryById(id);
             if (Category == null)
             {
                 return NotFound();
@@ -40,42 +45,61 @@ namespace turbin.sikker.core.Controllers
             return Ok(Category);
         }
         
-        // Edit specific Category based on given Id
-        [HttpPut("{id}")]
-        public IActionResult PutCategory(string id, Category category)
+        // Creates a new Category
+        [HttpPost("AddCategory")]
+        [SwaggerOperation(Summary = "Create a new category", Description = "Create a new Category")]
+        [SwaggerResponse(201, "Category created", typeof(Category))]
+        [SwaggerResponse(400, "Invalid request")]
+        public IActionResult PostCategory(Category category)
         {
-            _categoryService.UpdateCategory(id, category);
+            if (ModelState.IsValid)
+            {
+                _categoryService.CreateCategory(category);
+                return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id}, category);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("UpdateCategory")]
+        [SwaggerOperation(Summary = "Update category by id", Description = "Updates an existing category by its ID.")]
+        [SwaggerResponse(201, "Category updated", typeof(Category))]
+        [SwaggerResponse(400, "Invalid request")]
+        [SwaggerResponse(404, "Category not found")]
+        public IActionResult UpdateCategory(string id, Category updatedCategory)
+        {
+            if (id != updatedCategory.Id)
+            {
+                return BadRequest();
+            }
+
+            var category = _categoryService.GetCategoryById(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            _categoryService.UpdateCategory(updatedCategory);
+
             return NoContent();
         }
-
-        // Creates a new Category
-        [HttpPost]
-        public async Task<IActionResult> PostCategory(Category category)
-        {
-            try
-            {
-                await _categoryService.CreateCategory(category);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         // Deletes Category based on given Id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(string id)
+        [HttpDelete("DeleteCategory")]
+        [SwaggerOperation(Summary = "Delete category by ID", Description = "Deletes a category by their ID")]
+        [SwaggerResponse(204, "Category deleted")]
+        [SwaggerResponse(404, "Category not found")]
+        public IActionResult DeleteCategory(string id)
         {
-            try
+            var category = _categoryService.GetCategoryById(id);
+
+            if (category == null)
             {
-                await _categoryService.DeleteCategory(id);
-                return Ok();
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+
+            _categoryService.DeleteCategory(id);
+
+            return NoContent();
         }
     }
 }

@@ -13,59 +13,40 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
-        public async Task<Category> GetCategoryById(string id)
+        public  Category GetCategoryById(string id)
         {
-            var category = await _context.Category.FindAsync(id);
-            return category;
+            return _context.Category.FirstOrDefault(category => category.Id == id);
         }
 
-        public async Task UpdateCategory(string id, Category category)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentException("Invalid ID");
-            }
-            _context.Entry(category).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    throw new ArgumentException("User does not exist");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-        public async Task CreateCategory(Category category)
+        public void CreateCategory(Category category)
         {
             _context.Category.Add(category);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
         }
 
-        public async Task DeleteCategory(string id)
+        public void UpdateCategory(Category updatedCategory)
         {
+            var category = _context.Category.FirstOrDefault(category => category.Id == updatedCategory.Id);
 
-            var selectedCategory = await _context.Category.FindAsync(id);
-            if (selectedCategory == null)
+            if (category != null)
             {
-                throw new ArgumentException("404 Not Found");
+                category.Name = updatedCategory.Name;
+
+                _context.SaveChanges();
             }
-            _context.Category.Remove(selectedCategory);
-            await _context.SaveChangesAsync();
         }
+        
 
-        public bool UserExists(string id)
+        public void DeleteCategory(string id)
         {
-            return (_context.Category?.Any(category => category.Id == id)).GetValueOrDefault();
-        }
 
+            var category =  _context.Category.FirstOrDefault(category => category.Id == id);
+            if (category != null)
+            {
+                _context.Category.Remove(category);
+                _context.SaveChanges();
+            }
+        }
     }
 }
 
