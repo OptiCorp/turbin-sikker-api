@@ -2,100 +2,93 @@
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using System;
+using Swashbuckle.AspNetCore.Annotations;
+using turbin.sikker.core.Services;
 
 namespace turbin.sikker.core.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class FormTaskController : ControllerBase
+    [Route("api")]
+    public class ChecklistTaskController : ControllerBase
     {
-        private readonly TurbinSikkerDbContext _context;
-        public FormTaskController(TurbinSikkerDbContext context)
+        private readonly IChecklistTaskService _checklistTaskService;
+        public ChecklistTaskController(IChecklistTaskService checklistTaskService)
         {
-            _context = context;
+            _checklistTaskService = checklistTaskService;
         }
-        /*
-        [HttpGet]
-        public IEnumerable<Category> GetCategories()
-        {
-            return _context.Category.ToList();
-        }
-        */
 
         // Get specific form task based on given Id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Form_Task>> GetFormTask(string id)
+        [HttpGet("GetChecklistTask")]
+        [SwaggerOperation(Summary = "Get checklist task by ID", Description = "Retrieves a checklist task by their ID.")]
+        [SwaggerResponse(200, "Success", typeof(ChecklistTask))]
+        [SwaggerResponse(404, "Checklist task not found")]
+        public IActionResult GetChecklistTaskById(string id)
         {
-            var FormTaskId = await _context.Form_Task.FindAsync(id);
-            if (FormTaskId == null)
+            var ChecklistTask = _checklistTaskService.GetChecklistTaskById(id);
+            if (ChecklistTask == null)
             {
                 return NotFound();
             }
 
-            return FormTaskId;
+            return Ok(ChecklistTask);
         }
-        
-        // Edit specific form task based on given Id
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Form_Task>> PutFormTask(string id, Form_Task formTask)
+
+        [HttpPost("AddChecklistTask")]
+        [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task")]
+        [SwaggerResponse(201, "Checklist task created", typeof(ChecklistTask))]
+        [SwaggerResponse(400, "Invalid request")]
+        public IActionResult CreateChecklistTask(ChecklistTask checklistTask)
         {
-            if (id != formTask.Id)
+            if (ModelState.IsValid)
             {
-                return BadRequest();
+                _checklistTaskService.CreateChecklistTask(checklistTask);
+                return CreatedAtAction(nameof(GetChecklistTaskById), new { id = checklistTask.Id }, checklistTask);
             }
-            _context.Entry(formTask).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FormTaskExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
+
+            return BadRequest(ModelState);
         }
 
         // Creates a new form task
-        [HttpPost]
-        public async Task<ActionResult<Form_Task>> PostFormTask(Form_Task formTask)
+        [HttpPost("UpdateChecklistTask")]
+        [SwaggerOperation(Summary = "Update checklist task by ID", Description = "Updates an existing checklist task by their ID.")]
+        [SwaggerResponse(204, "Checklist task updated")]
+        [SwaggerResponse(400, "Invalid request")]
+        [SwaggerResponse(404, "Checklist task not found")]
+        public IActionResult UpdateChecklistTask(string id, ChecklistTask updatedChecklistTask)
         {
-            _context.Form_Task.Add(formTask);
-            await _context.SaveChangesAsync();
+            if (id != updatedChecklistTask.Id)
+            {
+                return BadRequest();
+            }
 
-            return CreatedAtAction(nameof(GetFormTask), new { id = formTask.Id }, formTask);
-        }
+            var checklistTask = _checklistTaskService.GetChecklistTaskById(id);
 
-        // Deletes form task based on given Id
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Form_Task>> DeleteFormTask(string id)
-        {
-            if (_context.Form_Task == null)
+            if (checklistTask == null)
             {
                 return NotFound();
             }
-            var selectedFormTask = await _context.Form_Task.FindAsync(id);
-            if (selectedFormTask == null)
-            {
-                return NotFound();
-            }
-            _context.Form_Task.Remove(selectedFormTask);
-            await _context.SaveChangesAsync();
+
+            _checklistTaskService.UpdateChecklistTask(updatedChecklistTask);
 
             return NoContent();
         }
 
-
-        // Bool to check if form task exists
-        private bool FormTaskExists(string id)
+        // Deletes form task based on given Id
+        [HttpDelete("DeleteChecklistTask")]
+        [SwaggerOperation(Summary = "Delete checklist task by ID", Description = "Deletes a checklist task by their ID.")]
+        [SwaggerResponse(204, "Checklist task deleted")]
+        [SwaggerResponse(404, "Checklist task not found")]
+        public IActionResult DeleteChecklistTask(string id)
         {
-            return (_context.Form_Task?.Any(formTask => formTask.Id == id)).GetValueOrDefault();
+            var checklistTask = _checklistTaskService.GetChecklistTaskById(id);
+            if (checklistTask == null)
+            {
+                return NotFound();
+            }
+            _checklistTaskService.DeleteChecklistTask(id);
+            
+
+            return NoContent();
         }
     }
 }

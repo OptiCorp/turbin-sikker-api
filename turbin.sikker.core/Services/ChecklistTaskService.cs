@@ -1,51 +1,49 @@
-﻿using System;
-using turbin.sikker.core.Model;
-using Microsoft.EntityFrameworkCore;
+﻿using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Services
 {
-	public class ChecklistService : IChecklistService
+	public class ChecklistTaskService : IChecklistTaskService
 	{
         public readonly TurbinSikkerDbContext _context;
 
-        public ChecklistService(TurbinSikkerDbContext context)
+        public ChecklistTaskService(TurbinSikkerDbContext context)
         {
             _context = context;
         }
 
-        public Checklist GetChecklistById(string id)
+        public ChecklistTask GetChecklistTaskById(string id)
         {
-            return _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
+            return _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == id);
             
         }
 
-        public void CreateChecklist(Checklist checklist)
+        public void CreateChecklistTask(ChecklistTask checklistTask)
         {
-            _context.Checklist.Add(checklist);
+            _context.Checklist_Task.Add(checklistTask);
             _context.SaveChanges();
         }
 
-        public void UpdateChecklist(Checklist updatedChecklist)
+        public void UpdateChecklistTask(ChecklistTask updatedChecklistTask)
         {
-            var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == updatedChecklist.Id);
+            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == updatedChecklistTask.Id);
 
-            if (checklist != null)
+            if (checklistTask != null)
             {
-                checklist.Title = updatedChecklist.Title;
-                checklist.UpdatedDate = updatedChecklist.UpdatedDate;
-                checklist.ChecklistStatus = updatedChecklist.ChecklistStatus;
+                checklistTask.CategoryId = updatedChecklistTask.CategoryId;
+
+                checklistTask.Description = updatedChecklistTask.Description;
 
                 _context.SaveChanges();
             }
         }
 
-        public void DeleteChecklist(string id)
+        public void DeleteChecklistTask(string id)
         {
 
-            var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
-            if (checklist != null)
+            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == id);
+            if (checklistTask != null)
             {
-                _context.Checklist.Remove(checklist);
+                _context.Checklist_Task.Remove(checklistTask);
                 _context.SaveChanges();
             }
         }
