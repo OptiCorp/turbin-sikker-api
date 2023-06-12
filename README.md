@@ -59,11 +59,13 @@ CREATE TABLE Category (
     name VARCHAR(100) NOT NULL,
 );
 
-CREATE TABLE Form (
+CREATE TABLE Checklist (
     id VARCHAR(500) NOT NULL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    created_date DATE,
-    created_by varchar(500),
+    checklistStatus INT,
+    createdDate DATE,
+    updatedDate DATE,
+    createdBy VARCHAR(500)
 );
 
 ALTER TABLE Form
