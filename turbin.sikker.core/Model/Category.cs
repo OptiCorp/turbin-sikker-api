@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace turbin.sikker.core.Model
 {
 	
@@ -6,7 +8,9 @@ namespace turbin.sikker.core.Model
 	{
 		public string Id { get; set; }
 
-		public string Name { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string Name { get; set; }
 
 	}
 }
