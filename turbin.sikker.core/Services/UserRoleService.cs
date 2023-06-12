@@ -19,61 +19,44 @@ namespace turbin.sikker.core.Services
         }
 
 
-        public async Task<UserRole> GetUserRoleById(string id)
+        public UserRole GetUserRoleById(string id)
         {
-            var userRole = await _context.User_Role.FindAsync(id);
-            return userRole;
+            return _context.User_Role.FirstOrDefault(userRole => userRole.Id == id);
+            
         }
 
-        public async Task UpdateUserRole(string id, UserRole userRole)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentException("Invalid ID");
-            }
-            _context.Entry(userRole).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserRoleExists(id))
-                {
-                    throw new ArgumentException("User role does not exist");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-        public async Task CreateUserRole(UserRole userRole)
+        public void CreateUserRole(UserRole userRole)
         {
             _context.User_Role.Add(userRole);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public async Task DeleteUserRole(string id)
+        public void UpdateUserRole(UserRole updatedUserRole)
         {
+            var userRole = _context.User_Role.FirstOrDefault(userRole => userRole.Id == updatedUserRole.Id);
 
-            var selectedUserRole = await _context.User_Role.FindAsync(id);
-            if (selectedUserRole == null)
+            if (userRole != null)
             {
-                throw new ArgumentException("404 Not Found");
+                userRole.Name = updatedUserRole.Name;
+
+                _context.SaveChanges();
             }
-            _context.User_Role.Remove(selectedUserRole);
-            await _context.SaveChangesAsync();
         }
 
-        public bool UserRoleExists(string id)
+        public void DeleteUserRole(string id)
         {
 
-            return (_context.User?.Any(user => user.Id == id)).GetValueOrDefault();
+            var userRole = _context.User_Role.FirstOrDefault(userRole => userRole.Id == id);
 
+            if (userRole != null)
+            {
+                _context.User_Role.Remove(userRole);
+                _context.SaveChanges();
+            }
+            
         }
 
+        
     }
 }
 
