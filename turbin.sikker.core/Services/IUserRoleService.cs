@@ -6,10 +6,10 @@ namespace turbin.sikker.core.Services
     public interface IUserRoleService
     {
         IEnumerable<UserRole> GetUserRoles();
-        Task<UserRole> GetUserRoleById(string id);
-        Task UpdateUserRole(string id, UserRole userRole);
-        Task CreateUserRole(UserRole userRole);
-        Task DeleteUserRole(string id);
+        UserRole GetUserRoleById(string id);
+        void UpdateUserRole(UserRole userRole);
+        void CreateUserRole(UserRole userRole);
+        void DeleteUserRole(string id);
     }
 }
 
