@@ -52,7 +52,7 @@ namespace turbin.sikker.core
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRoleService, UserRoleService>();
-            services.AddScoped<IFormService, FormService>();
+            services.AddScoped<IChecklistService, ChecklistService>();
             services.AddScoped<ICategoryService, CategoryService>();
 
 

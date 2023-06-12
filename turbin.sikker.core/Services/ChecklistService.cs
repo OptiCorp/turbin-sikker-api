@@ -4,68 +4,51 @@ using Microsoft.EntityFrameworkCore;
 
 namespace turbin.sikker.core.Services
 {
-	public class FormService : IFormService
+	public class ChecklistService : IChecklistService
 	{
         public readonly TurbinSikkerDbContext _context;
 
-        public FormService(TurbinSikkerDbContext context)
+        public ChecklistService(TurbinSikkerDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Form> GetFormById(string id)
+        public Checklist GetChecklistById(string id)
         {
-            var form = await _context.Form.FindAsync(id);
-            return form;
+            return _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
+            
         }
 
-        public async Task UpdateForm(string id, Form form)
+        public void CreateChecklist(Checklist checklist)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentException("Invalid ID");
-            }
-            _context.Entry(form).State = EntityState.Modified;
+            _context.Checklist.Add(checklist);
+            _context.SaveChanges();
+        }
 
-            try
+        public void UpdateChecklist(Checklist updatedChecklist)
+        {
+            var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == updatedChecklist.Id);
+
+            if (checklist != null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    throw new ArgumentException("User does not exist");
-                }
-                else
-                {
-                    throw;
-                }
+                checklist.Title = updatedChecklist.Title;
+                checklist.UpdatedDate = updatedChecklist.UpdatedDate;
+                checklist.ChecklistStatus = updatedChecklist.ChecklistStatus;
+
+                _context.SaveChanges();
             }
         }
-        public async Task CreateForm(Form form)
-        {
-            _context.Form.Add(form);
-            await _context.SaveChangesAsync();
-        }
 
-        public async Task DeleteForm(string id)
+        public void DeleteChecklist(string id)
         {
 
-            var selectedForm = await _context.Form.FindAsync(id);
-            if (selectedForm == null)
+            var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
+            if (checklist != null)
             {
-                throw new ArgumentException("404 Not Found");
+                _context.Checklist.Remove(checklist);
+                _context.SaveChanges();
             }
-            _context.Form.Remove(selectedForm);
-            await _context.SaveChangesAsync();
         }
-
-        public bool UserExists(string id)
-        {
-            return (_context.User?.Any(user => user.Id == id)).GetValueOrDefault();
-        }
-
     }
 }
 

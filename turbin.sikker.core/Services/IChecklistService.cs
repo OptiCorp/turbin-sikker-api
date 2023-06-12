@@ -3,12 +3,12 @@ using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Services
 {
-    public interface IFormService
+    public interface IChecklistService
     {
-        Task<Form> GetFormById(string id);
-        Task UpdateForm(string id, Form form);
-        Task CreateForm(Form form);
-        Task DeleteForm(string id);
+        Checklist GetChecklistById(string id);
+        void UpdateChecklist(Checklist checklist);
+        void CreateChecklist(Checklist checklist);
+        void DeleteChecklist(string id);
     }
 }
 
