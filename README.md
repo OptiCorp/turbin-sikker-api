@@ -20,11 +20,11 @@ ALTER ROLE db_ddladmin ADD MEMBER [malin.svela@bouvet.no];
 
 CREATE TABLE User (
     id varchar(500) NOT NULL PRIMARY KEY,
-    role_id varchar(500) NOT NULL,
-    first_name varchar(250) NOT NULL,
-    last_name varchar(250) NOT NULL,
-    username varchar(250) NOT NULL,
-    email varchar(300) NOT NULL
+    UserRoleId varchar(500) NOT NULL,
+    FirstName varchar(250) NOT NULL,
+    LastName varchar(250) NOT NULL,
+    Username varchar(250) NOT NULL,
+    Email varchar(300) NOT NULL
 );
 
 ALTER TABLE [User]
@@ -37,7 +37,7 @@ ALTER TABLE [User]
 
 CREATE TABLE User_Role (
     id varchar(500) NOT NULL PRIMARY KEY,
-    name varchar(100) NOT NULL,
+    Name varchar(100) NOT NULL,
 );
 
 
