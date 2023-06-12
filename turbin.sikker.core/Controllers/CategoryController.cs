@@ -61,7 +61,7 @@ namespace turbin.sikker.core.Controllers
         }
 
         [HttpPost("UpdateCategory")]
-        [SwaggerOperation(Summary = "Update category by id", Description = "Updates an existing category by its ID.")]
+        [SwaggerOperation(Summary = "Update category by ID", Description = "Updates an existing category by its ID.")]
         [SwaggerResponse(201, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
