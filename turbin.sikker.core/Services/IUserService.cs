@@ -1,5 +1,6 @@
 ﻿using System;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
 {
@@ -7,8 +8,8 @@ namespace turbin.sikker.core.Services
 	{
 		IEnumerable<User> GetUsers();
 		User GetUserById(string id);
-		void UpdateUser(User user);
-		void CreateUser(User user);
+		void UpdateUser(string id, UserUpdateDto user);
+		void CreateUser(UserCreateDto user);
 		void DeleteUser(string id);
 	}
 }

@@ -1,4 +1,7 @@
-﻿using turbin.sikker.core.Model;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
+using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
 {
@@ -21,24 +24,57 @@ namespace turbin.sikker.core.Services
             return _context.User.FirstOrDefault(u => u.Id == id);
         }
 
-        public void CreateUser(User user)
+        public void CreateUser(UserCreateDto userDto)
         {
+            var user = new User
+            {
+                Username = userDto.Username,
+                FirstName = userDto.FirstName,
+                LastName = userDto.LastName,
+                Email = userDto.Email,
+                UserRoleId = userDto.UserRoleId,
+                Password = HashedPassword(userDto.Password)
+            };
+
             _context.User.Add(user);
             _context.SaveChanges();
         }
 
-        public void UpdateUser(User updatedUser)
+        private string HashedPassword(string password)
         {
-            var user = _context.User.FirstOrDefault(u => u.Id == updatedUser.Id);
+            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8);
+            string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password!,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+            return hashedPassword;
+        }
+
+        public void UpdateUser(string userId, UserUpdateDto updatedUserDto)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Id == userId);
 
             if (user != null)
             {
-                user.Username = updatedUser.Username;
-                user.FirstName = updatedUser.FirstName;
-                user.LastName = updatedUser.LastName;
-                user.Email = updatedUser.Email;
-         
-                user.UserRoleId = updatedUser.UserRoleId;
+                if (updatedUserDto.Username != null)
+                    user.Username = updatedUserDto.Username;
+
+                if (updatedUserDto.FirstName != null)
+                    user.FirstName = updatedUserDto.FirstName;
+
+                if (updatedUserDto.LastName != null)
+                    user.LastName = updatedUserDto.LastName;
+
+                if (updatedUserDto.Email != null)
+                    user.Email = updatedUserDto.Email;
+
+                if (updatedUserDto.UserRoleId != null)
+                    user.UserRoleId = updatedUserDto.UserRoleId;
+
+                if (updatedUserDto.Password != null)
+                    user.Password = HashedPassword(updatedUserDto.Password);
 
                 _context.SaveChanges();
             }

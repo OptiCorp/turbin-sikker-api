@@ -5,8 +5,9 @@ namespace turbin.sikker.core.Model
 {
     public class User
     {
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -24,6 +25,10 @@ namespace turbin.sikker.core.Model
         [EmailAddress]
         [StringLength(100)]
         public string Email { get; set; }
+
+        [Required]
+        [StringLength(300)]
+        public string Password { get; set; }
 
         [Required]
         [StringLength(50)]
