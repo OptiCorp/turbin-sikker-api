@@ -19,20 +19,42 @@ ALTER ROLE db_ddladmin ADD MEMBER [malin.svela@bouvet.no];
 // Tables
 
 CREATE TABLE User (
-    id varchar(500) PRIMARY KEY DEFAULT newid(),
+    id varchar(500) PRIMARY KEY NOT NULL DEFAULT newid(),
     userRoleId varchar(500) NOT NULL,
     firstName varchar(250) NOT NULL,
     lastName varchar(250) NOT NULL,
     username varchar(250) NOT NULL,
-    mail varchar(300) NOT NULL
+    email varchar(300) NOT NULL,
+    password varchar(300) NOT NULL
+    
 );
-
 ALTER TABLE [User]
     ADD CONSTRAINT FK_User_Role_Id FOREIGN KEY (userRoleId)
     REFERENCES User_Role (id)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 ;
+
+CREATE FUNCTION [dbo].[func_PassowrdCrypt] (@Data varchar(100))
+RETURNS varchar(300)
+AS
+BEGIN
+RETURN convert(varchar(300),HASHBYTES('SHA2_256',@Data),2)
+END
+
+CREATE TRIGGER [dbo].[triggerPasswordHash] on [dbo].[USER]
+for INSERT, UPDATE
+AS
+BEGIN
+	if UPDATE([password])
+	BEGIN
+		DECLARE @id varchar(500)
+		DECLARE @Password varchar(300)
+		SELECT @Password = [password], @id = id FROM inserted
+		SET @Password = dbo.func_PassowrdCrypt(@Password)
+		UPDATE [USER] SET [password] = @Password WHERE id = @id
+	END
+END;
 
 
 CREATE TABLE User_Role (
