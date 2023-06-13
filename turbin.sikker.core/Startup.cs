@@ -63,12 +63,15 @@ namespace turbin.sikker.core
             //var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
 
             //LOCAL CONNECTION STRING
-            var connectionString = "Data Source=localhost;Initial Catalog=turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
-            
+            //BjørnOle
+            //var connectionString = "Data Source=localhost;Initial Catalog=turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
+            //Malin
+            var connectionString = "Server =.\\SQLEXPRESS; Database = turbinsikkerdb; Trusted_Connection = True; TrustServerCertificate = Yes;";
 
-            
 
-            
+
+
+
             services.AddDbContext<TurbinSikkerDbContext>(options =>
                 options.UseSqlServer(connectionString
                 ));
