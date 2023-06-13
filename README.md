@@ -35,28 +35,6 @@ ALTER TABLE [User]
     ON UPDATE NO ACTION
 ;
 
-CREATE FUNCTION [dbo].[func_PassowrdCrypt] (@Data varchar(100))
-RETURNS varchar(300)
-AS
-BEGIN
-RETURN convert(varchar(300),HASHBYTES('SHA2_256',@Data),2)
-END
-
-CREATE TRIGGER [dbo].[triggerPasswordHash] on [dbo].[USER]
-for INSERT, UPDATE
-AS
-BEGIN
-	if UPDATE([password])
-	BEGIN
-		DECLARE @id varchar(500)
-		DECLARE @Password varchar(300)
-		SELECT @Password = [password], @id = id FROM inserted
-		SET @Password = dbo.func_PassowrdCrypt(@Password)
-		UPDATE [USER] SET [password] = @Password WHERE id = @id
-	END
-END;
-
-
 CREATE TABLE User_Role (
     id varchar(500) NOT NULL PRIMARY KEY,
     Name varchar(100) NOT NULL,
