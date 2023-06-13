@@ -19,7 +19,7 @@ ALTER ROLE db_ddladmin ADD MEMBER [malin.svela@bouvet.no];
 // Tables
 
 CREATE TABLE User (
-    id varchar(500) NOT NULL PRIMARY KEY,
+    id varchar(500) NOT NULL PRIMARY KEY DEFAULT newid(),
     UserRoleId varchar(500) NOT NULL,
     FirstName varchar(250) NOT NULL,
     LastName varchar(250) NOT NULL,
