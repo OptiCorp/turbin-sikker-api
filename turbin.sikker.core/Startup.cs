@@ -54,6 +54,8 @@ namespace turbin.sikker.core
             services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<IChecklistService, ChecklistService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IChecklistTaskService, ChecklistTaskService>();
+
 
 
 
