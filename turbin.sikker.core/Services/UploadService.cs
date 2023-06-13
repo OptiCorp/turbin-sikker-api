@@ -2,55 +2,46 @@
 
 namespace turbin.sikker.core.Services
 {
-    public class UserService : IUserService
+    public class UploadService : IUploadService
     {
         private readonly TurbinSikkerDbContext _context;
 
-        public UserService(TurbinSikkerDbContext context)
+        public UploadService(TurbinSikkerDbContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<User> GetUsers()
+        public Upload GetUploadById(string id)
         {
-            return _context.User.ToList();
+            return _context.Upload.FirstOrDefault(u => u.Id == id);
         }
 
-        public User GetUserById(string id)
+        public void CreateUpload(Upload upload)
         {
-            return _context.User.FirstOrDefault(u => u.Id == id);
-        }
-
-        public void CreateUser(User user)
-        {
-            _context.User.Add(user);
+            _context.Upload.Add(upload);
             _context.SaveChanges();
         }
 
-        public void UpdateUser(User updatedUser)
+        public void UpdateUpload(Upload updatedUpload)
         {
-            var user = _context.User.FirstOrDefault(u => u.Id == updatedUser.Id);
+            var upload = _context.Upload.FirstOrDefault(u => u.Id == updatedUpload.Id);
 
-            if (user != null)
+            if (upload != null)
             {
-                user.Username = updatedUser.Username;
-                user.FirstName = updatedUser.FirstName;
-                user.LastName = updatedUser.LastName;
-                user.Email = updatedUser.Email;
-         
-                user.UserRoleId = updatedUser.UserRoleId;
+                upload.PunchId = updatedUpload.PunchId;
+                upload.BlobRef = updatedUpload.BlobRef;
 
                 _context.SaveChanges();
             }
         }
 
-        public void DeleteUser(string id)
+        public void DeleteUpload(string id)
         {
-            var user = _context.User.FirstOrDefault(u => u.Id == id);
+            var upload = _context.Upload.FirstOrDefault(u => u.Id == id);
 
-            if (user != null)
+            if (upload != null)
             {
-                _context.User.Remove(user);
+                _context.Upload.Remove(upload);
                 _context.SaveChanges();
             }
         }
