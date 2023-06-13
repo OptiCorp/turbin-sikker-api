@@ -1,101 +1,97 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Services;
 using System;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace turbin.sikker.core.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api")]
     public class UploadController : ControllerBase
     {
-        private readonly TurbinSikkerDbContext _context;
-        public UploadController(TurbinSikkerDbContext context)
+        private readonly IUploadService _uploadService;
+        public UploadController(IUploadService uploadService)
         {
-            _context = context;
+            _uploadService = uploadService;
         }
-        /*
-        [HttpGet]
-        public IEnumerable<Category> GetCategories()
-        {
-            return _context.Category.ToList();
-        }
-        */
+        
 
         // Get specific upload based on given Id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Upload>> GetUpload(int id)
+        [HttpGet("GetUpload")]
+        [SwaggerOperation(Summary = "Get upload by ID", Description = "Retrieves a upload by their ID.")]
+        [SwaggerResponse(200, "Success", typeof(Upload))]
+        [SwaggerResponse(404, "Upload not found")]
+        public IActionResult GetUploadById(string id)
         {
-            var UploadId = await _context.Upload.FindAsync(id);
-            if (UploadId == null)
+            var upload =  _uploadService.GetUploadById(id);
+            if (upload == null)
             {
                 return NotFound();
             }
 
-            return UploadId;
+            return Ok(upload);
         }
         
         // Edit specific upload based on given Id
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Upload>> PutUpload(int id, Upload upload)
+        [HttpPost("AddUpload")]
+        [SwaggerOperation(Summary = "Create a new upload", Description = "Creates a new upload.")]
+        [SwaggerResponse(201, "Upload created", typeof(User))]
+        [SwaggerResponse(400, "Invalid request")]
+        public IActionResult CreateUpload(Upload upload)
         {
-            if (id != upload.Id)
+            if (ModelState.IsValid)
             {
-                return BadRequest();
+                _uploadService.CreateUpload(upload);
+                return CreatedAtAction(nameof(GetUploadById), new { id = upload.Id }, upload);
             }
-            _context.Entry(upload).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UploadExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
+            
+            return BadRequest(ModelState);
         }
 
         // Creates a new upload
-        [HttpPost]
-        public async Task<ActionResult<Upload>> PostUpload(Upload upload)
+        [HttpPost("UpdateUpload")]
+        [SwaggerOperation(Summary = "Update upload by ID", Description = "Updates an existing upload by their ID.")]
+        [SwaggerResponse(204, "Upload updated")]
+        [SwaggerResponse(400, "Invalid request")]
+        [SwaggerResponse(404, "Upload not found")]
+        public IActionResult UpdateUpload(string id, Upload updatedUpload)
         {
-            _context.Upload.Add(upload);
-            await _context.SaveChangesAsync();
+            if (id != updatedUpload.Id)
+            {
+                return BadRequest();
+            }
 
-            return CreatedAtAction(nameof(GetUpload), new { id = upload.Id }, upload);
-        }
+            var upload = _uploadService.GetUploadById(id);
 
-        // Deletes upload based on given Id
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Upload>> DeleteUpload(int id)
-        {
-            if (_context.Upload == null)
+            if (upload == null)
             {
                 return NotFound();
             }
-            var selectedUpload = await _context.Upload.FindAsync(id);
-            if (selectedUpload == null)
-            {
-                return NotFound();
-            }
-            _context.Upload.Remove(selectedUpload);
-            await _context.SaveChangesAsync();
+
+            _uploadService.UpdateUpload(updatedUpload);
 
             return NoContent();
         }
 
-
-        // Bool to check if upload exists
-        private bool UploadExists(int id)
+        // Deletes upload based on given Id
+        [HttpDelete("DeleteUpload")]
+        [SwaggerOperation(Summary = "Delete upload by ID", Description = "Deletes a upload by their ID.")]
+        [SwaggerResponse(204, "Upload deleted")]
+        [SwaggerResponse(404, "Upload not found")]
+        public IActionResult DeleteUpload(string id)
         {
-            return (_context.Upload?.Any(upload => upload.Id == id)).GetValueOrDefault();
+            var upload = _uploadService.GetUploadById(id);
+
+            if (upload == null)
+            {
+                return NotFound();
+            }
+
+            _uploadService.DeleteUpload(id);
+
+            return NoContent();
         }
     }
 }
