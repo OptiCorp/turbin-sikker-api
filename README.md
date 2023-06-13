@@ -19,16 +19,16 @@ ALTER ROLE db_ddladmin ADD MEMBER [malin.svela@bouvet.no];
 // Tables
 
 CREATE TABLE User (
-    id varchar(500) NOT NULL PRIMARY KEY DEFAULT newid(),
-    UserRoleId varchar(500) NOT NULL,
-    FirstName varchar(250) NOT NULL,
-    LastName varchar(250) NOT NULL,
-    Username varchar(250) NOT NULL,
-    Email varchar(300) NOT NULL
+    id varchar(500) PRIMARY KEY DEFAULT newid(),
+    userRoleId varchar(500) NOT NULL,
+    firstName varchar(250) NOT NULL,
+    lastName varchar(250) NOT NULL,
+    username varchar(250) NOT NULL,
+    mail varchar(300) NOT NULL
 );
 
 ALTER TABLE [User]
-    ADD CONSTRAINT FK_User_Role_Id FOREIGN KEY (role_id)
+    ADD CONSTRAINT FK_User_Role_Id FOREIGN KEY (userRoleId)
     REFERENCES User_Role (id)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
