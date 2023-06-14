@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -47,12 +48,12 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new user", Description = "Creates a new user.")]
         [SwaggerResponse(201, "User created", typeof(User))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateUser(User user)
+        public IActionResult CreateUser(UserCreateDto user)
         {
             if (ModelState.IsValid)
             {
                 _userService.CreateUser(user);
-                return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+                return CreatedAtAction(nameof(GetUserById), user);
             }
 
             return BadRequest(ModelState);
@@ -63,13 +64,8 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "User updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult UpdateUser(string id, User updatedUser)
+        public IActionResult UpdateUser(string id, UserUpdateDto updatedUser)
         {
-            if (id != updatedUser.Id)
-            {
-                return BadRequest();
-            }
-
             var user = _userService.GetUserById(id);
 
             if (user == null)
@@ -77,7 +73,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound();
             }
 
-            _userService.UpdateUser(updatedUser);
+            _userService.UpdateUser(id, updatedUser);
 
             return NoContent();
         }
