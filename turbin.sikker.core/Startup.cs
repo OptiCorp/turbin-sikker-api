@@ -56,7 +56,7 @@ namespace turbin.sikker.core
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IChecklistTaskService, ChecklistTaskService>();
             services.AddScoped<IUploadService, UploadService>();
-
+            services.AddScoped<IPunchService, PunchService>();
 
 
             // Add DbContext
