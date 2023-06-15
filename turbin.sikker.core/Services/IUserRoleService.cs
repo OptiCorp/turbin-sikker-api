@@ -1,5 +1,7 @@
 ﻿using System;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO;
+
 
 namespace turbin.sikker.core.Services
 {
@@ -7,8 +9,9 @@ namespace turbin.sikker.core.Services
     {
         IEnumerable<UserRole> GetUserRoles();
         UserRole GetUserRoleById(string id);
-        void UpdateUserRole(UserRole userRole);
-        void CreateUserRole(UserRole userRole);
+        UserRole GetUserRoleByUserRoleName(string userRoleName);
+        void UpdateUserRole(string id, UserRoleUpdateDto userRole);
+        void CreateUserRole(UserRoleCreateDto userRole);
         void DeleteUserRole(string id);
     }
 }
