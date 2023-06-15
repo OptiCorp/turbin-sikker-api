@@ -24,15 +24,9 @@ namespace turbin.sikker.core.Services
             return _context.User.FirstOrDefault(u => u.Id == id);
         }
 
-        public IEnumerable<User> GetUserByName(string name)
+        public User GetUserByUsername(string username)
         {
-            string[] fullName = name.Split(" ");
-
-            string firstName = fullName[0];
-            string lastName = fullName.Length > 1 ? fullName[1] : string.Empty;
-            return _context.User.Where(u =>
-            u.FirstName.Contains(firstName) &&
-            u.LastName.Contains(lastName));
+            return _context.User.FirstOrDefault(u => u.Username == username);
         }
 
         public void CreateUser(UserCreateDto userDto)
