@@ -44,13 +44,13 @@ namespace turbin.sikker.core.Controllers
             return Ok(user);
         }
 
-        [HttpGet("GetUserName")]
-        [SwaggerOperation(Summary = "Get user by name", Description = "Retrieves a user by their name.")]
+        [HttpGet("GetUserByUserName")]
+        [SwaggerOperation(Summary = "Get user by username", Description = "Retrieves a user by their username.")]
         [SwaggerResponse(200, "Success", typeof(User))]
-        [SwaggerResponse(404, "User not found")]
-        public IActionResult GetUserByName(string name)
+        [SwaggerResponse(404, "Username not found")]
+        public IActionResult GetUserByUsername(string username)
         {
-            var user = _userService.GetUserByName(name);
+            var user = _userService.GetUserByUsername(username);
 
             if (user == null)
             {
@@ -66,13 +66,24 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateUser(UserCreateDto user)
         {
+            var checkUserExist = _userService.GetUserByUsername(user.Username);
+
+            if (checkUserExist != null)
+            {
+                return Conflict("Username is taken");
+            }
+
             if (ModelState.IsValid)
             {
                 _userService.CreateUser(user);
-                return CreatedAtAction(nameof(GetUserById), user);
+                var newUser = _userService.GetUserByUsername(user.Username);
+                return CreatedAtAction(nameof(GetUserById), newUser);
+            }
+            else
+            {
+                return BadRequest(ModelState);
             }
 
-            return BadRequest(ModelState);
         }
 
         [HttpPost("UpdateUser")]
