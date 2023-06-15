@@ -2,46 +2,50 @@
 
 namespace turbin.sikker.core.Services
 {
-    public class UploadService : IUploadService
+    public class PunchService : IPunchService
     {
         private readonly TurbinSikkerDbContext _context;
 
-        public UploadService(TurbinSikkerDbContext context)
+        public PunchService(TurbinSikkerDbContext context)
         {
             _context = context;
         }
 
-        public Upload GetUploadById(string id)
+        public Punch GetPunchById(string id)
         {
-            return _context.Upload.FirstOrDefault(u => u.Id == id);
+            return _context.Punch.FirstOrDefault(u => u.Id == id);
         }
 
-        public void CreateUpload(Upload upload)
+        public void CreatePunch(Punch punch)
         {
-            _context.Upload.Add(upload);
+            _context.Punch.Add(punch);
             _context.SaveChanges();
         }
 
-        public void UpdateUpload(Upload updatedUpload)
+        public void UpdatePunch(Punch updatedPunch)
         {
-            var upload = _context.Upload.FirstOrDefault(u => u.Id == updatedUpload.Id);
+            var punch = _context.Punch.FirstOrDefault(u => u.Id == updatedPunch.Id);
 
-            if (upload != null)
+            if (punch != null)
             {
-                upload.PunchId = updatedUpload.PunchId;
-                upload.BlobRef = updatedUpload.BlobRef;
+                punch.Active = updatedPunch.Active;
+                punch.FormId = updatedPunch.FormId;
+                punch.PunchDescription = updatedPunch.PunchDescription;
+                punch.PunchStatus = updatedPunch.PunchStatus;
+                punch.Severity = updatedPunch.Severity;
+                punch.UserId = updatedPunch.UserId;
 
                 _context.SaveChanges();
             }
         }
 
-        public void DeleteUpload(string id)
+        public void DeletePunch(string id)
         {
-            var upload = _context.Upload.FirstOrDefault(u => u.Id == id);
+            var punch = _context.Punch.FirstOrDefault(u => u.Id == id);
 
-            if (upload != null)
+            if (punch != null)
             {
-                _context.Upload.Remove(upload);
+                _context.Punch.Remove(punch);
                 _context.SaveChanges();
             }
         }
