@@ -1,101 +1,93 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
-using System;
+using Swashbuckle.AspNetCore.Annotations;
+using turbin.sikker.core.Services;
+
 
 namespace turbin.sikker.core.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api")]
     public class PunchController : ControllerBase
     {
-        private readonly TurbinSikkerDbContext _context;
-        public PunchController(TurbinSikkerDbContext context)
+        private readonly IPunchService _punchService;
+        public PunchController(IPunchService punchService)
         {
-            _context = context;
+            _punchService = punchService;
         }
-        /*
-        [HttpGet]
-        public IEnumerable<Category> GetCategories()
-        {
-            return _context.Category.ToList();
-        }
-        */
 
-        // Get specific Punch based on given Id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Punch>> GetPunch(string id)
+        [HttpGet("GetPunch")]
+        [SwaggerOperation(Summary = "Get punch by ID", Description = "Retrieves a punch by their ID.")]
+        [SwaggerResponse(200, "Success", typeof(Punch))]
+        [SwaggerResponse(404, "Punch not found")]
+        public IActionResult GetPunchById(string id)
         {
-            var PunchId = await _context.Punch.FindAsync(id);
-            if (PunchId == null)
+            var punch = _punchService.GetPunchById(id);
+            if (punch == null)
             {
                 return NotFound();
             }
 
-            return PunchId;
+            return Ok(punch);
         }
-        
-        // Edit specific punch based on given Id
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Punch>> PutPunch(string id, Punch punch)
+
+
+        [HttpPost("AddPunch")]
+        [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]
+        [SwaggerResponse(201, "Punch created", typeof(Punch))]
+        [SwaggerResponse(400, "Invalid request")]
+        public IActionResult PostPunch(Punch punch)
         {
-            if (id != punch.Id)
+            if (ModelState.IsValid)
+            {
+                _punchService.CreatePunch(punch);
+                return CreatedAtAction(nameof(GetPunchById), new { id = punch.Id }, punch);
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("UpdatePunch")]
+        [SwaggerOperation(Summary = "Update punch by ID", Description = "Updates an existing punch by their ID.")]
+        [SwaggerResponse(204, "Punch updated")]
+        [SwaggerResponse(400, "Invalid request")]
+        [SwaggerResponse(404, "Punch not found")]
+        public IActionResult UpdatePunch(string id, Punch updatedPunch)
+        {
+            if (id != updatedPunch.Id)
             {
                 return BadRequest();
             }
-            _context.Entry(punch).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PunchExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
-        }
 
-        // Creates a new punch
-        [HttpPost]
-        public async Task<ActionResult<Punch>> PostPunch(Punch punch)
-        {
-            _context.Punch.Add(punch);
-            await _context.SaveChangesAsync();
+            var punch = _punchService.GetPunchById(id);
 
-            return CreatedAtAction(nameof(GetPunch), new { id = punch.Id }, punch);
-        }
-
-        // Deletes punch based on given Id
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Punch>> DeletePunch(string id)
-        {
-            if (_context.Punch == null)
+            if (punch == null)
             {
                 return NotFound();
             }
-            var selectedPunch = await _context.Punch.FindAsync(id);
-            if (selectedPunch == null)
-            {
-                return NotFound();
-            }
-            _context.Punch.Remove(selectedPunch);
-            await _context.SaveChangesAsync();
+
+            _punchService.UpdatePunch(updatedPunch);
 
             return NoContent();
         }
 
 
-        // Bool to check if punch exists
-        private bool PunchExists(string id)
+        [HttpDelete("DeletePunch")]
+        [SwaggerOperation(Summary = "Delete punch by ID", Description = "Deletes a punch by their ID.")]
+        [SwaggerResponse(204, "Punch deleted")]
+        [SwaggerResponse(404, "Punch not found")]
+        public IActionResult DeletePunch(string id)
         {
-            return (_context.Punch?.Any(punch => punch.Id == id)).GetValueOrDefault();
+            var punch = _punchService.GetPunchById(id);
+
+            if (punch == null)
+            {
+                return NotFound();
+            }
+
+            _punchService.DeletePunch(id);
+
+            return NoContent();
         }
     }
 }
