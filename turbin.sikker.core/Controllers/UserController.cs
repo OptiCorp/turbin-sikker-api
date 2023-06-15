@@ -44,6 +44,22 @@ namespace turbin.sikker.core.Controllers
             return Ok(user);
         }
 
+        [HttpGet("GetUserName")]
+        [SwaggerOperation(Summary = "Get user by name", Description = "Retrieves a user by their name.")]
+        [SwaggerResponse(200, "Success", typeof(User))]
+        [SwaggerResponse(404, "User not found")]
+        public IActionResult GetUserByName(string name)
+        {
+            var user = _userService.GetUserByName(name);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
         [HttpPost("AddUser")]
         [SwaggerOperation(Summary = "Create a new user", Description = "Creates a new user.")]
         [SwaggerResponse(201, "User created", typeof(User))]
