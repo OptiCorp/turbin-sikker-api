@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using System;
 namespace turbin.sikker.core.Model
 {
 	public class ChecklistTask
@@ -9,6 +10,6 @@ namespace turbin.sikker.core.Model
 
 		public string Description { get; set; }
 
-	}
+    }
 }
 

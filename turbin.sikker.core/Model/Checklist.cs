@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace turbin.sikker.core.Model
@@ -21,6 +22,10 @@ namespace turbin.sikker.core.Model
         public DateTime UpdatedDate { get; set; }
 
         public string CreatedBy { get; set; }
-	}
+
+        public User? CreatedByUser { get; }
+        public ICollection<ChecklistTask>? ChecklistTasks { get;  }
+
+    }
 }
 
