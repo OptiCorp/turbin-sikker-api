@@ -1,6 +1,14 @@
 # turbin-sikker-api
 
-##sql queries
+## merging
+Afte changing models/ services/corntollers or context
+run the following command
+```
+dotnet ef migrations add NameOfChanges
+dotnet ef database update
+```
+
+## sql queries
 
 ```
 
