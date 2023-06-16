@@ -27,6 +27,7 @@
     <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="Services\" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Configuration;
 using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core
@@ -24,6 +25,13 @@ namespace turbin.sikker.core
 
         public DbSet<Punch> Punch { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Call the Configure method from ModelConfigurations class
+            ModelConfigurations.Configure(modelBuilder);
+        }
 
     }
 }

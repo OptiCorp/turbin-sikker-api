@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace turbin.sikker.core.Services
 {
@@ -16,7 +17,7 @@ namespace turbin.sikker.core.Services
 
         public IEnumerable<User> GetUsers()
         {
-            return _context.User.ToList();
+            return _context.User.Include(u => u.UserRole).ToList();
         }
 
         public User GetUserById(string id)

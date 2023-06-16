@@ -11,5 +11,8 @@ namespace turbin.sikker.core.Model
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
+
+        [JsonIgnore]
+        public ICollection<User>? Users { get;  }
     }
 }
