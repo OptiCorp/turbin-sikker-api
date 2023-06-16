@@ -34,6 +34,6 @@ namespace turbin.sikker.core.Model
         [StringLength(50)]
         public string Username { get; set; }
 
-        public UserRole UserRole { get; set;}
+        public UserRole UserRole { get; set; }
     }
 }

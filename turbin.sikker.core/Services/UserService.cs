@@ -22,12 +22,12 @@ namespace turbin.sikker.core.Services
 
         public User GetUserById(string id)
         {
-            return _context.User.FirstOrDefault(u => u.Id == id);
+            return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.Id == id);
         }
 
         public User GetUserByUsername(string username)
         {
-            return _context.User.FirstOrDefault(u => u.Username == username);
+            return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.Username == username);
         }
 
         public void CreateUser(UserCreateDto userDto)

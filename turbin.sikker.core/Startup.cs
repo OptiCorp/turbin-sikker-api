@@ -28,7 +28,7 @@ namespace turbin.sikker.core
 
             IdentityModelEventSource.ShowPII = true;
             ConfigureAuthenticationAndAuthorization(services);
-            
+
             services.AddIdentityServer()
                 .AddSigningCredentials();
             // Add CORS services
@@ -36,13 +36,13 @@ namespace turbin.sikker.core
             {
                 options.AddPolicy("AllowSpecificOrigin",
                     builder => builder.WithOrigins("http://localhost:5173").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
-                    //builder.AllowAnyOrigin().AllowAnyHeader().WithExposedHeaders("Authorization").SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
-                    //WithOrigins("https://localhost:5173", "https://localhost:7190")
-                    //    .AllowAnyHeader()
-                    //    .AllowAnyMethod()
-                    //    .AllowCredentials()
-                    //    );
-                
+                //builder.AllowAnyOrigin().AllowAnyHeader().WithExposedHeaders("Authorization").SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
+                //WithOrigins("https://localhost:5173", "https://localhost:7190")
+                //    .AllowAnyHeader()
+                //    .AllowAnyMethod()
+                //    .AllowCredentials()
+                //    );
+
             });
 
             services.AddSwaggerGen(c =>
@@ -91,8 +91,8 @@ namespace turbin.sikker.core
             //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
             //});
-            
-                
+
+
 
             services.AddAuthentication()
                 .AddJwtBearer("Bearer", options =>
@@ -119,7 +119,7 @@ namespace turbin.sikker.core
             services.AddRazorPages();
         }
 
-        
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TurbinSikkerDbContext dbContext)
         {
@@ -138,14 +138,14 @@ namespace turbin.sikker.core
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
+
             app.UseRouting();
 
             // Enable CORS
             app.UseCors("AllowSpecificOrigin");
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
