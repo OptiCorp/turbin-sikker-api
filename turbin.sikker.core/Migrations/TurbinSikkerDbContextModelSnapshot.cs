@@ -175,7 +175,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("UserRoleId");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.UserRole", b =>
@@ -187,12 +187,12 @@ namespace turbin.sikker.core.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRole", (string)null);
+                    b.ToTable("User_Role");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.User", b =>

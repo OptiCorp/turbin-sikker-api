@@ -23,11 +23,6 @@ namespace turbin.sikker.core.Configuration
                 .WithOne(u => u.UserRole)
                 .HasForeignKey(u => u.UserRoleId);
 
-            modelBuilder.Entity<User>()
-                .ToTable("User");
-
-            modelBuilder.Entity<UserRole>()
-                .ToTable("UserRole");
         }
     }
 }

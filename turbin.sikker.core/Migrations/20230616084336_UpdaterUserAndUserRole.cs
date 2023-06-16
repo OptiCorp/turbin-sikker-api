@@ -5,7 +5,7 @@
 namespace turbin.sikker.core.Migrations
 {
     /// <inheritdoc />
-    public partial class UsersShouldBeOptional : Migration
+    public partial class UpdaterUserAndUserRole : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

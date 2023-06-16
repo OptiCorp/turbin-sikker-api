@@ -10,7 +10,7 @@ namespace turbin.sikker.core.Model
         public string Id { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(150)]
         public string UserRoleId { get; set; }
 
         [Required]
@@ -34,6 +34,6 @@ namespace turbin.sikker.core.Model
         [StringLength(50)]
         public string Username { get; set; }
 
-        public UserRole UserRole { get; }
+        public UserRole UserRole { get; set;}
     }
 }
