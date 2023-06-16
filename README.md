@@ -1,7 +1,7 @@
 # turbin-sikker-api
 
 ## merging
-Afte changing models/ services/corntollers or context
+After changing models, services, contollers or context
 run the following command
 ```
 dotnet ef migrations add NameOfChanges
