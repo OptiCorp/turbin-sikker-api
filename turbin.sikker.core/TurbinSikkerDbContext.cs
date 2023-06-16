@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Configuration;
 using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core
@@ -12,7 +13,7 @@ namespace turbin.sikker.core
 
         public DbSet<User> User { get; set; }
 
-        public DbSet<UserRole> User_Role { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
 
         public DbSet<Category> Category { get; set; }
 
@@ -24,6 +25,13 @@ namespace turbin.sikker.core
 
         public DbSet<Punch> Punch { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Call the Configure method from ModelConfigurations class
+            ModelConfigurations.Configure(modelBuilder);
+        }
 
     }
 }

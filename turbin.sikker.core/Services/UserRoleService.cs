@@ -16,19 +16,19 @@ namespace turbin.sikker.core.Services
 
         public IEnumerable<UserRole> GetUserRoles()
         {
-            return _context.User_Role.ToList();
+            return _context.UserRole.ToList();
         }
 
 
         public UserRole GetUserRoleById(string id)
         {
-            return _context.User_Role.FirstOrDefault(userRole => userRole.Id == id);
+            return _context.UserRole.FirstOrDefault(userRole => userRole.Id == id);
 
         }
 
         public UserRole GetUserRoleByUserRoleName(string userRoleName)
         {
-            return _context.User_Role.FirstOrDefault(userRole => userRole.Name == userRoleName);
+            return _context.UserRole.FirstOrDefault(userRole => userRole.Name == userRoleName);
         }
 
         public void CreateUserRole(UserRoleCreateDto userRoleDto)
@@ -38,13 +38,13 @@ namespace turbin.sikker.core.Services
                 Name = userRoleDto.Name,
             };
 
-            _context.User_Role.Add(userRole);
+            _context.UserRole.Add(userRole);
             _context.SaveChanges();
         }
 
         public void UpdateUserRole(string userRoleId, UserRoleUpdateDto updatedUserRole)
         {
-            var userRole = _context.User_Role.FirstOrDefault(userRole => userRole.Id == userRoleId);
+            var userRole = _context.UserRole.FirstOrDefault(userRole => userRole.Id == userRoleId);
 
             if (userRole != null)
             {
@@ -57,11 +57,11 @@ namespace turbin.sikker.core.Services
         public void DeleteUserRole(string id)
         {
 
-            var userRole = _context.User_Role.FirstOrDefault(userRole => userRole.Id == id);
+            var userRole = _context.UserRole.FirstOrDefault(userRole => userRole.Id == id);
 
             if (userRole != null)
             {
-                _context.User_Role.Remove(userRole);
+                _context.UserRole.Remove(userRole);
                 _context.SaveChanges();
             }
 
