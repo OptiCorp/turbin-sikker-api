@@ -30,7 +30,8 @@ namespace turbin.sikker.core
             base.OnModelCreating(modelBuilder);
 
             // Call the Configure method from ModelConfigurations class
-            ModelConfigurations.Configure(modelBuilder);
+            UserConfigurations.Configure(modelBuilder);
+            ChecklistConfigurations.Configure(modelBuilder);
         }
 
     }

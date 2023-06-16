@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Configuration
 {
-    public static class ModelConfigurations
+    public static class UserConfigurations
     {
         public static void Configure(ModelBuilder modelBuilder)
         {
@@ -12,17 +13,32 @@ namespace turbin.sikker.core.Configuration
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.UserRole)
-                .WithMany(ur => ur.Users)
+                .WithMany()
                 .HasForeignKey(u => u.UserRoleId);
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => ur.Id);
 
-            modelBuilder.Entity<UserRole>()
-                .HasMany(ur => ur.Users)
-                .WithOne(u => u.UserRole)
-                .HasForeignKey(u => u.UserRoleId);
 
+        }
+    }
+
+    public static class ChecklistConfigurations
+    {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Checklist>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Checklist>()
+                .HasMany(e => e.ChecklistTasks)
+                .WithMany()
+                .UsingEntity("ChecklistToTaskLink");
+
+            modelBuilder.Entity<Checklist>()
+                .HasOne(c => c.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(c => c.CreatedBy);
         }
     }
 }

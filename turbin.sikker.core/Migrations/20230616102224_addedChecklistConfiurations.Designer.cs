@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230616102224_addedChecklistConfiurations")]
+    partial class addedChecklistConfiurations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace turbin.sikker.core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ChecklistToTaskLink", b =>
-                {
-                    b.Property<string>("ChecklistId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ChecklistTasksId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ChecklistId", "ChecklistTasksId");
-
-                    b.HasIndex("ChecklistTasksId");
-
-                    b.ToTable("ChecklistToTaskLink");
-                });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Category", b =>
                 {
@@ -62,7 +50,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -76,8 +64,6 @@ namespace turbin.sikker.core.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
 
                     b.ToTable("Checklist");
                 });
@@ -212,41 +198,20 @@ namespace turbin.sikker.core.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("ChecklistToTaskLink", b =>
-                {
-                    b.HasOne("turbin.sikker.core.Model.Checklist", null)
-                        .WithMany()
-                        .HasForeignKey("ChecklistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("turbin.sikker.core.Model.ChecklistTask", null)
-                        .WithMany()
-                        .HasForeignKey("ChecklistTasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("turbin.sikker.core.Model.Checklist", b =>
-                {
-                    b.HasOne("turbin.sikker.core.Model.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-                });
-
             modelBuilder.Entity("turbin.sikker.core.Model.User", b =>
                 {
                     b.HasOne("turbin.sikker.core.Model.UserRole", "UserRole")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("UserRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("UserRole");
+                });
+
+            modelBuilder.Entity("turbin.sikker.core.Model.UserRole", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
