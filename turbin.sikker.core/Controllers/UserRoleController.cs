@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -49,14 +50,26 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new user role", Description = "Create a new user role")]
         [SwaggerResponse(201, "User role created", typeof(UserRole))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateUserRole(UserRole userRole)
+        public IActionResult CreateUserRole(UserRoleCreateDto userRole)
         {
+
+            var checkUserRoleExist = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
+
+            if (checkUserRoleExist != null)
+            {
+                return Conflict("Userrole already exist");
+            }
+
             if (ModelState.IsValid)
             {
                 _userRoleService.CreateUserRole(userRole);
-                return CreatedAtAction(nameof(GetUserRoleById), new { id = userRole.Id }, userRole);
+                var newUserRole = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
+                return CreatedAtAction(nameof(GetUserRoleById), newUserRole);
             }
-            return BadRequest(ModelState);
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         // Creates a new user role
@@ -65,21 +78,18 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "User role updated", typeof(UserRole))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult UpdateUserRole(string id, UserRole updatedUserRole)
+        public IActionResult UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole)
         {
-            if (id != updatedUserRole.Id)
-            {
-                return BadRequest();
-            }
-
             var userRole = _userRoleService.GetUserRoleById(id);
+
+
 
             if (userRole == null)
             {
                 return NotFound();
             }
 
-            _userRoleService.UpdateUserRole(updatedUserRole);
+            _userRoleService.UpdateUserRole(id, updatedUserRole);
 
             return NoContent();
         }
@@ -103,5 +113,5 @@ namespace turbin.sikker.core.Controllers
             return NoContent();
         }
     }
-    
+
 }

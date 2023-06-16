@@ -1,11 +1,12 @@
 ﻿using System;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace turbin.sikker.core.Services
 {
-	public class UserRoleService : IUserRoleService
-	{
+    public class UserRoleService : IUserRoleService
+    {
         public readonly TurbinSikkerDbContext _context;
 
         public UserRoleService(TurbinSikkerDbContext context)
@@ -22,22 +23,32 @@ namespace turbin.sikker.core.Services
         public UserRole GetUserRoleById(string id)
         {
             return _context.User_Role.FirstOrDefault(userRole => userRole.Id == id);
-            
+
         }
 
-        public void CreateUserRole(UserRole userRole)
+        public UserRole GetUserRoleByUserRoleName(string userRoleName)
         {
+            return _context.User_Role.FirstOrDefault(userRole => userRole.Name == userRoleName);
+        }
+
+        public void CreateUserRole(UserRoleCreateDto userRoleDto)
+        {
+            var userRole = new UserRole
+            {
+                Name = userRoleDto.Name,
+            };
+
             _context.User_Role.Add(userRole);
             _context.SaveChanges();
         }
 
-        public void UpdateUserRole(UserRole updatedUserRole)
+        public void UpdateUserRole(string userRoleId, UserRoleUpdateDto updatedUserRole)
         {
-            var userRole = _context.User_Role.FirstOrDefault(userRole => userRole.Id == updatedUserRole.Id);
+            var userRole = _context.User_Role.FirstOrDefault(userRole => userRole.Id == userRoleId);
 
             if (userRole != null)
             {
-                userRole.Name = updatedUserRole.Name;
+                if (updatedUserRole.Name != null) userRole.Name = updatedUserRole.Name;
 
                 _context.SaveChanges();
             }
@@ -53,10 +64,10 @@ namespace turbin.sikker.core.Services
                 _context.User_Role.Remove(userRole);
                 _context.SaveChanges();
             }
-            
+
         }
 
-        
+
     }
 }
 
