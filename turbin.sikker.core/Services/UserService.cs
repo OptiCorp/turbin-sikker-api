@@ -82,6 +82,9 @@ namespace turbin.sikker.core.Services
                 if (updatedUserDto.Password != null)
                     user.Password = HashedPassword(updatedUserDto.Password);
 
+                if (updatedUserDto.Status != null)
+                    user.Status = updatedUserDto.Status;
+
                 _context.SaveChanges();
             }
         }

@@ -21,5 +21,8 @@ namespace turbin.sikker.core.Model.DTO
 
         [StringLength(500)]
         public string? Password { get; set; }
+
+        [EnumDataType(typeof(UserStatus))]
+        public UserStatus Status { get; set; }
     }
 }
