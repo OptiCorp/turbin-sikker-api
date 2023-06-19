@@ -38,7 +38,8 @@ namespace turbin.sikker.core.Configuration
             modelBuilder.Entity<Checklist>()
                 .HasOne(c => c.CreatedByUser)
                 .WithMany()
-                .HasForeignKey(c => c.CreatedBy);
+                .HasForeignKey(c => c.CreatedBy)
+                .HasPrincipalKey(u => u.Id);
         }
     }
 

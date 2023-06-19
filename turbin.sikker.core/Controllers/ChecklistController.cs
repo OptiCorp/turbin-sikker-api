@@ -4,6 +4,7 @@ using turbin.sikker.core.Model;
 using System;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
+using turbin.sikker.core.Model.DTO.ChecklistDtos;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -40,12 +41,14 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new checklist", Description = "Creates a new checklist.")]
         [SwaggerResponse(201, "Checklist created", typeof(Checklist))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateChecklist(Checklist checklist)
+        public IActionResult CreateChecklist(ChecklistCreateDto checklist)
         {
             if (ModelState.IsValid)
             {
-                _checklistService.CreateChecklist(checklist);
-                return CreatedAtAction(nameof(GetChecklistById), new { id = checklist.Id }, checklist);
+                var newChecklistId= _checklistService.CreateChecklist(checklist);
+                var newChecklist = _checklistService.GetChecklistById(newChecklistId);
+
+                return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
             }
 
             return BadRequest(ModelState);
@@ -56,13 +59,8 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "Checklist updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Checklist not found")]
-        public IActionResult UpdateChecklist(string id, Checklist updatedChecklist)
+        public IActionResult UpdateChecklist(string id, ChecklistEditDto updatedChecklist)
         {
-            if (id != updatedChecklist.Id)
-            {
-                return BadRequest();
-            }
-
             var checklist = _checklistService.GetChecklistById(id);
 
             if (checklist == null)
@@ -70,7 +68,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound();
             }
 
-            _checklistService.UpdateChecklist(updatedChecklist);
+            _checklistService.UpdateChecklist( id,  updatedChecklist);
 
             return NoContent();
         }
