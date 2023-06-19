@@ -3,6 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
+    public enum UserStatus
+    {
+        [Display(Name = "Active")]
+        Active,
+        [Display(Name = "Inactive")]
+        Inactive
+    }
     public class User
     {
 
@@ -35,5 +42,8 @@ namespace turbin.sikker.core.Model
         public string Username { get; set; }
 
         public UserRole? UserRole { get; }
+
+        [EnumDataType(typeof(UserStatus))]
+        public UserStatus Status { get; set; }
     }
 }
