@@ -1,9 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace turbin.sikker.core.Model
 {
 	public class Upload
 	{
-		public string Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string? Id { get; set; }
 
 		public string PunchId { get; set; }
 

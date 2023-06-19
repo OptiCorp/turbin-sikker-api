@@ -41,4 +41,21 @@ namespace turbin.sikker.core.Configuration
                 .HasForeignKey(c => c.CreatedBy);
         }
     }
+
+    public static class TaskConfigurations
+    {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChecklistTask>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<ChecklistTask>()
+                .HasOne(e => e.Category)
+                .WithMany()
+                .HasForeignKey(c => c.CategoryId);
+
+            modelBuilder.Entity<Category>()
+                .HasKey(c => c.Id);
+        }
+    }
 }
