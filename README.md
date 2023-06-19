@@ -13,7 +13,11 @@ run the following command
 dotnet ef migrations remove
 dotnet ef database update (or start the solution)
 ```
-
+or
+```
+dotnet ef database update <NameofMigrationYouWantToRevertTo>
+dotnet ef migrations remove (wil remove all migration after the one you reverted to)
+```
 ## sql queries
 
 ```
