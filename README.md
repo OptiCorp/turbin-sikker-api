@@ -1,11 +1,17 @@
 # turbin-sikker-api
 
-## merging
+## db migration
 After changing models, services, contollers or context
 run the following command
 ```
 dotnet ef migrations add NameOfChanges
-dotnet ef database update
+dotnet ef database update (or start the solution)
+```
+To undo migration
+run the following command
+```
+dotnet ef migrations remove
+dotnet ef database update (or start the solution)
 ```
 
 ## sql queries
