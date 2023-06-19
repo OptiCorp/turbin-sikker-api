@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
-	public enum CStatus { Pending = 0, Approved = 1, Rejected = 2 }
+	public enum CStatus { Active = 0, Inactive = 1}
 
 	public class Checklist
 	{
@@ -20,7 +20,7 @@ namespace turbin.sikker.core.Model
 
 		public DateTime CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public string CreatedBy { get; set; }
 
