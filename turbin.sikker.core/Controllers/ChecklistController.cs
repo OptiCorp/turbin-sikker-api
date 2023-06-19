@@ -35,6 +35,15 @@ namespace turbin.sikker.core.Controllers
             return Ok(checklist);
         }
 
+        // Get all existing Checklists 
+        [HttpGet("GetAllChecklists")]
+        [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<Checklist>))]
+        public IEnumerable<Checklist> GetAllChecklists()
+        {
+            return _checklistService.GetAllChecklists();
+        }
+
 
         // Creates a new Checklist
         [HttpPost("AddChecklist")]

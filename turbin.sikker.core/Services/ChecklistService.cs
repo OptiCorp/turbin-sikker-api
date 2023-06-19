@@ -20,6 +20,24 @@ namespace turbin.sikker.core.Services
             
         }
 
+        public IEnumerable<Checklist> GetAllChecklists()
+        {
+            return _context.Checklist.Include(c => c.CreatedByUser).Include(c => c.ChecklistTasks).ToList();
+        }
+
+        public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)
+        {
+            return _context.Checklist.Where(c => c.CreatedBy == id)
+                                     .Select(c => new ChecklistViewNoUserDto{
+                                         Id = c.Id,
+                                         Title = c.Title,
+                                         Status = c.Status,
+                                         CreatedDate = c.CreatedDate,
+                                         UpdatedDate = c.UpdatedDate
+                                     })
+                                     .ToList();
+        }
+
         public string CreateChecklist(ChecklistCreateDto checklistDto)
         {
             var checklist = new Checklist
@@ -47,9 +65,9 @@ namespace turbin.sikker.core.Services
                 { 
                     checklist.Title = updatedChecklist.Title;
                 }
-                if (updatedChecklist.ChecklistStatus != null)
+                if (updatedChecklist.Status != null)
                 {
-                    checklist.ChecklistStatus = updatedChecklist.ChecklistStatus;
+                    checklist.Status = updatedChecklist.Status;
                 }
                 checklist.UpdatedDate = DateTime.Now;
 

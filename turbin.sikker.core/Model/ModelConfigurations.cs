@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Configuration
