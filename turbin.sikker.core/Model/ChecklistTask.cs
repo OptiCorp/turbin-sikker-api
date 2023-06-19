@@ -10,6 +10,8 @@ namespace turbin.sikker.core.Model
 
 		public string Description { get; set; }
 
+        public Category? Category { get; }
+
     }
 }
 
