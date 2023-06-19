@@ -112,7 +112,10 @@ namespace turbin.sikker.core.Controllers
         public IActionResult DeleteUser(string id)
         {
             var user = _userService.GetUserById(id);
-
+            if (user.Status == UserStatus.Inactive)
+            {
+                return Conflict("User already deleted");
+            }
             if (user == null)
             {
                 return NotFound();

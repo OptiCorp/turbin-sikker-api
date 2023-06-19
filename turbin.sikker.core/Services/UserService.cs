@@ -95,7 +95,7 @@ namespace turbin.sikker.core.Services
 
             if (user != null)
             {
-                _context.User.Remove(user);
+                user.Status = UserStatus.Inactive;
                 _context.SaveChanges();
             }
         }
