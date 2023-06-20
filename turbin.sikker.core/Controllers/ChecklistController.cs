@@ -44,6 +44,15 @@ namespace turbin.sikker.core.Controllers
             return _checklistService.GetAllChecklists();
         }
 
+        // Get all Checklists by userId
+        [HttpGet("GetAllChecklistsByUserId")]
+        [SwaggerOperation(Summary = "Get all checklists by userId", Description = "Retrieves a list of all checklists created by user.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistViewNoUserDto>))]
+        public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)
+        {
+            return _checklistService.GetAllChecklistsByUserId(id);
+        }
+
 
         // Creates a new Checklist
         [HttpPost("AddChecklist")]
