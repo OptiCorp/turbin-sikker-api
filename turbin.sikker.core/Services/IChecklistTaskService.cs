@@ -9,6 +9,7 @@ namespace turbin.sikker.core.Services
         ChecklistTask GetChecklistTaskById(string id);
         void UpdateChecklistTask(string id, ChecklistTaskRequestDto checklistTask);
         string CreateChecklistTask(ChecklistTaskRequestDto checklistTask);
+        public void AddTaskToChecklist(string checklistId, string taskId);
         void DeleteChecklistTask(string id);
     }
 }

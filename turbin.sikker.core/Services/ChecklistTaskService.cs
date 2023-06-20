@@ -54,6 +54,19 @@ namespace turbin.sikker.core.Services
             }
         }
 
+        public void AddTaskToChecklist(string checklistId, string taskId)
+        {
+            var checklist = _context.Checklist.FirstOrDefault(c => c.Id == checklistId);
+            var task = _context.Checklist_Task.FirstOrDefault(t => t.Id == taskId);
+
+            if (checklist != null && task != null)
+            {
+                checklist.ChecklistTasks.Add(task);
+
+                _context.SaveChanges();
+            }
+        }
+
         public void DeleteChecklistTask(string id)
         {
 
