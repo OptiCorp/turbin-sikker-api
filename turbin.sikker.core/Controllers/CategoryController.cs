@@ -51,6 +51,11 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateCategory(CategoryRequestDto category)
         {
+            var categories = _categoryService.GetAllCategories();
+            if(_categoryService.isCategoryNametaken(categories, category.Name))
+            {
+                return Conflict("Category " + category.Name + " already exists");
+            }
             if (ModelState.IsValid)
             {
                 var categoryId = _categoryService.CreateCategory(category);
