@@ -15,6 +15,18 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
+
+        public bool IsUserNameTaken(IEnumerable<User> users, string userName)
+        {
+            return users.Any(u => u.Username == userName);
+        }
+
+        public bool IsEmailTaken(IEnumerable<User> users, string userEmail)
+        {
+            return users.Any(u => u.Email == userEmail);
+        }
+
+
         public IEnumerable<User> GetUsers()
         {
             return _context.User.Include(u => u.UserRole).ToList();

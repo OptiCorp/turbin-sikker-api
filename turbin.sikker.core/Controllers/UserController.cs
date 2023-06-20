@@ -23,11 +23,6 @@ namespace turbin.sikker.core.Controllers
             _userRoleService = userRoleService;
         }
 
-        private static bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId)
-        {
-            return userRoles.Any(role => role.Id == userRoleId);
-        }
-
         [HttpGet("GetAllUsers")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
@@ -74,16 +69,21 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateUser(UserCreateDto user)
         {
-            var checkUserExist = _userService.GetUserByUsername(user.Username);
-
             var userRoles = _userRoleService.GetUserRoles();
 
-            if (!IsValidUserRole(userRoles, user.UserRoleId))
+            var users = _userService.GetUsers();
+
+            if (!_userRoleService.IsValidUserRole(userRoles, user.UserRoleId))
             {
                 return Conflict("Invalid user role");
             }
 
-            if (checkUserExist != null)
+            if (_userService.IsEmailTaken(users, user.Email))
+            {
+                return Conflict("Email is already in taken");
+            }
+
+            if (_userService.IsUserNameTaken(users, user.Username))
             {
                 return Conflict("Username is taken");
             }
@@ -111,9 +111,21 @@ namespace turbin.sikker.core.Controllers
 
             var userRoles = _userRoleService.GetUserRoles();
 
-            if (!IsValidUserRole(userRoles, updatedUser.UserRoleId))
+            var users = _userService.GetUsers();
+
+            if (_userService.IsUserNameTaken(users, updatedUser.Username))
+            {
+                return Conflict("Username is already taken");
+            }
+
+            if (!_userRoleService.IsValidUserRole(userRoles, updatedUser.UserRoleId))
             {
                 return Conflict("Invalid user role");
+            }
+
+            if (_userService.IsEmailTaken(users, updatedUser.Email))
+            {
+                return Conflict("Email is already in taken");
             }
 
             var user = _userService.GetUserById(id);
