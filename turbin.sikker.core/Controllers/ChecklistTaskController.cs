@@ -48,7 +48,7 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllTasksByCategoryId")]
         [SwaggerOperation(Summary = "Get all tasks with Category Id", Description = "Retrieves a list of all tasks with Category Id.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
-        public IEnumerable<ChecklistTask> GetAllTasksByCategoryId(string id)
+        public IEnumerable<ChecklistTaskByCategoryResponseDto> GetAllTasksByCategoryId(string id)
         {
             return _checklistTaskService.GetAllTasksByCategoryId(id);
         }

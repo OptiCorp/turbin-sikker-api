@@ -23,9 +23,13 @@ namespace turbin.sikker.core.Services
             
         }
         
-        public IEnumerable<ChecklistTask> GetAllTasksByCategoryId(string categoryId)
+        public IEnumerable<ChecklistTaskByCategoryResponseDto> GetAllTasksByCategoryId(string categoryId)
         {
-            return _context.Checklist_Task.Include(ct => ct.Category).Where(ct => ct.CategoryId == categoryId).ToList();
+            return _context.Checklist_Task.Where(ct => ct.CategoryId == categoryId).Select(ct => new ChecklistTaskByCategoryResponseDto
+            {
+                Id = ct.Id,
+                Description = ct.Description
+            }).ToList();
         }
 
         public IEnumerable<ChecklistTask> GetAllTasksByChecklistId(string checklistId)
