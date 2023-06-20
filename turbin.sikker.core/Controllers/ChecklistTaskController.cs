@@ -19,6 +19,14 @@ namespace turbin.sikker.core.Controllers
             _checklistService = checklistService;
             _checklistTaskService = checklistTaskService;
         }
+        //Get all tasks
+        [HttpGet("GetAllTasks")]
+        [SwaggerOperation(Summary = "Get all tasks", Description = "Retrieves a list of all tasks.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
+        public IEnumerable<ChecklistTask> GetAllTasks()
+        {
+            return _checklistTaskService.GetAllTasks();
+        }
 
         // Get specific form task based on given Id
         [HttpGet("GetChecklistTask")]

@@ -12,12 +12,23 @@ namespace turbin.sikker.core.Services
         {
             _context = context;
         }
+        public IEnumerable<ChecklistTask> GetAllTasks()
+        {
+            return _context.Checklist_Task.ToList();
+        }
 
         public ChecklistTask GetChecklistTaskById(string id)
         {
             return _context.Checklist_Task.Include(ct =>ct.Category).FirstOrDefault(ct => ct.Id == id);
             
         }
+
+        /*
+        public IEnumerable<ChecklistTask> GetAllTasksByCategoryId(string categoryId)
+        {
+            return _context.Checklist_Task.Where(ct => ct.CategoryId == categoryId).ToList();
+        }
+        */
 
         public string CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
         {
