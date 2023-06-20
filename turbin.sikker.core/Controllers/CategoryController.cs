@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
-
-
+using turbin.sikker.core.Model.DTO.CategoryDtos;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -50,12 +49,13 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new category", Description = "Create a new Category")]
         [SwaggerResponse(201, "Category created", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult PostCategory(Category category)
+        public IActionResult CreateCategory(CategoryRequestDto category)
         {
             if (ModelState.IsValid)
             {
-                _categoryService.CreateCategory(category);
-                return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id}, category);
+                var categoryId = _categoryService.CreateCategory(category);
+                var newCategory = _categoryService.GetCategoryById(categoryId);
+                return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId}, newCategory);
             }
             return BadRequest(ModelState);
         }
@@ -65,12 +65,8 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
-        public IActionResult UpdateCategory(string id, Category updatedCategory)
+        public IActionResult UpdateCategory(string id, CategoryRequestDto updatedCategory)
         {
-            if (id != updatedCategory.Id)
-            {
-                return BadRequest();
-            }
 
             var category = _categoryService.GetCategoryById(id);
 
@@ -79,7 +75,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound();
             }
 
-            _categoryService.UpdateCategory(updatedCategory);
+            _categoryService.UpdateCategory(id, updatedCategory);
 
             return NoContent();
         }

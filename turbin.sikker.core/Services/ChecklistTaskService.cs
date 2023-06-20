@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO.TaskDtos;
 
 namespace turbin.sikker.core.Services
 {
@@ -18,21 +19,36 @@ namespace turbin.sikker.core.Services
             
         }
 
-        public void CreateChecklistTask(ChecklistTask checklistTask)
+        public string CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
         {
-            _context.Checklist_Task.Add(checklistTask);
+            var task = new ChecklistTask
+            {
+                CategoryId = checklistTask.CategoryId,
+                Description = checklistTask.Description
+            };
+
+            _context.Checklist_Task.Add(task);
             _context.SaveChanges();
+
+            string taskId = task.Id;
+
+            return taskId;
         }
 
-        public void UpdateChecklistTask(ChecklistTask updatedChecklistTask)
+        public void UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask)
         {
-            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == updatedChecklistTask.Id);
+            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == id);
 
             if (checklistTask != null)
             {
-                checklistTask.CategoryId = updatedChecklistTask.CategoryId;
-
-                checklistTask.Description = updatedChecklistTask.Description;
+                if(checklistTask.CategoryId != null)
+                {
+                    checklistTask.CategoryId = updatedChecklistTask.CategoryId;
+                }
+                if(checklistTask.Description != null)
+                {
+                    checklistTask.Description = updatedChecklistTask.Description;
+                }
 
                 _context.SaveChanges();
             }
