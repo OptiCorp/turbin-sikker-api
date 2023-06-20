@@ -8,6 +8,7 @@ namespace turbin.sikker.core.Services
     {
         IEnumerable<ChecklistTask> GetAllTasks();
         ChecklistTask GetChecklistTaskById(string id);
+        IEnumerable<ChecklistTask> GetAllTasksByCategoryId(string categoryId);
         void UpdateChecklistTask(string id, ChecklistTaskRequestDto checklistTask);
         string CreateChecklistTask(ChecklistTaskRequestDto checklistTask);
         public void AddTaskToChecklist(string checklistId, string taskId);
