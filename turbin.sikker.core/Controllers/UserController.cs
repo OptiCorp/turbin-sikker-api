@@ -23,6 +23,11 @@ namespace turbin.sikker.core.Controllers
             _userRoleService = userRoleService;
         }
 
+        private static bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId)
+        {
+            return userRoles.Any(role => role.Id == userRoleId);
+        }
+
         [HttpGet("GetAllUsers")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
@@ -73,9 +78,7 @@ namespace turbin.sikker.core.Controllers
 
             var userRoles = _userRoleService.GetUserRoles();
 
-            var isValidUserRole = userRoles.Any(userRoles => userRoles.Id == user.UserRoleId);
-
-            if (!isValidUserRole)
+            if (!IsValidUserRole(userRoles, user.UserRoleId))
             {
                 return Conflict("Invalid user role");
             }
@@ -105,6 +108,14 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User not found")]
         public IActionResult UpdateUser(string id, UserUpdateDto updatedUser)
         {
+
+            var userRoles = _userRoleService.GetUserRoles();
+
+            if (!IsValidUserRole(userRoles, updatedUser.UserRoleId))
+            {
+                return Conflict("Invalid user role");
+            }
+
             var user = _userService.GetUserById(id);
 
             if (user == null)
