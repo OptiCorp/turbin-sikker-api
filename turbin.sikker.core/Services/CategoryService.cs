@@ -1,6 +1,7 @@
 ﻿using System;
 using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Model.DTO.CategoryDtos;
 
 namespace turbin.sikker.core.Services
 {
@@ -18,20 +19,30 @@ namespace turbin.sikker.core.Services
             return _context.Category.FirstOrDefault(category => category.Id == id);
         }
 
-        public void CreateCategory(Category category)
+        public string CreateCategory(CategoryRequestDto categoryDto)
         {
+            var category = new Category
+            {
+                Name = categoryDto.Name
+            };
             _context.Category.Add(category);
             _context.SaveChangesAsync();
+
+            string categoryId = category.Id;
+
+            return categoryId;
         }
 
-        public void UpdateCategory(Category updatedCategory)
+        public void UpdateCategory(string id, CategoryRequestDto updatedCategory)
         {
-            var category = _context.Category.FirstOrDefault(category => category.Id == updatedCategory.Id);
+            var category = _context.Category.FirstOrDefault(category => category.Id == id);
 
             if (category != null)
             {
-                category.Name = updatedCategory.Name;
-
+                if(category.Name != null)
+                {
+                    category.Name = updatedCategory.Name;
+                }
                 _context.SaveChanges();
             }
         }
