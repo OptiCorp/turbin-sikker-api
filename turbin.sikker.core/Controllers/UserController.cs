@@ -14,10 +14,13 @@ namespace turbin.sikker.core.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IUserRoleService _userRoleService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IUserRoleService userRoleService)
         {
             _userService = userService;
+
+            _userRoleService = userRoleService;
         }
 
         [HttpGet("GetAllUsers")]
@@ -67,6 +70,15 @@ namespace turbin.sikker.core.Controllers
         public IActionResult CreateUser(UserCreateDto user)
         {
             var checkUserExist = _userService.GetUserByUsername(user.Username);
+
+            var userRoles = _userRoleService.GetUserRoles();
+
+            var isValidUserRole = userRoles.Any(userRoles => userRoles.Id == user.UserRoleId);
+
+            if (!isValidUserRole)
+            {
+                return Conflict("Invalid user role");
+            }
 
             if (checkUserExist != null)
             {
