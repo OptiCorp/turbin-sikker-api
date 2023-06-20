@@ -35,6 +35,24 @@ namespace turbin.sikker.core.Controllers
             return Ok(checklist);
         }
 
+        // Get all existing Checklists 
+        [HttpGet("GetAllChecklists")]
+        [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<Checklist>))]
+        public IEnumerable<Checklist> GetAllChecklists()
+        {
+            return _checklistService.GetAllChecklists();
+        }
+
+        // Get all Checklists by userId
+        [HttpGet("GetAllChecklistsByUserId")]
+        [SwaggerOperation(Summary = "Get all checklists by userId", Description = "Retrieves a list of all checklists created by user.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistViewNoUserDto>))]
+        public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)
+        {
+            return _checklistService.GetAllChecklistsByUserId(id);
+        }
+
 
         // Creates a new Checklist
         [HttpPost("AddChecklist")]
@@ -81,7 +99,10 @@ namespace turbin.sikker.core.Controllers
         public IActionResult DeleteChecklist(string id)
         {
             var checklist = _checklistService.GetChecklistById(id);
-
+            if (checklist.Status == ChecklistStatus.Inactive)
+            {
+                return Conflict("Checklist already deleted");
+            }
             if (checklist == null)
             {
                 return NotFound();

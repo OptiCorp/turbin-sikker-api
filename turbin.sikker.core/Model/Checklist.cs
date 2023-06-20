@@ -5,9 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
-	public enum CStatus { Active = 0, Inactive = 1}
+    public enum ChecklistStatus
+    {
+        [Display(Name = "Active")]
+        Active,
+        [Display(Name = "Inactive")]
+        Inactive
+    }
 
-	public class Checklist
+    public class Checklist
 	{
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
@@ -16,7 +22,8 @@ namespace turbin.sikker.core.Model
         [StringLength(50)]
         public string Title { get; set; }
 
-		public CStatus ChecklistStatus { get; set; }
+        [EnumDataType(typeof(ChecklistStatus))]
+        public ChecklistStatus Status { get; set; }
 
 		public DateTime CreatedDate { get; set; }
 
