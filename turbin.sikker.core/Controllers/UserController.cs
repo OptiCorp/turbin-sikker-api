@@ -113,7 +113,14 @@ namespace turbin.sikker.core.Controllers
 
             var users = _userService.GetUsers();
 
-            if (_userService.IsUserNameTaken(users, updatedUser.Username))
+            var existingUser = _userService.GetUserById(id);
+
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            if (existingUser.Username != updatedUser.Username && _userService.IsUserNameTaken(users, updatedUser.Username))
             {
                 return Conflict("Username is already taken");
             }
@@ -123,7 +130,7 @@ namespace turbin.sikker.core.Controllers
                 return Conflict("Invalid user role");
             }
 
-            if (_userService.IsEmailTaken(users, updatedUser.Email))
+            if (existingUser.Email != updatedUser.Email && _userService.IsEmailTaken(users, updatedUser.Email))
             {
                 return Conflict("Email is already in taken");
             }
