@@ -1,4 +1,5 @@
-﻿using turbin.sikker.core.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Services
 {
@@ -13,7 +14,7 @@ namespace turbin.sikker.core.Services
 
         public ChecklistTask GetChecklistTaskById(string id)
         {
-            return _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == id);
+            return _context.Checklist_Task.Include(ct =>ct.Category).FirstOrDefault(ct => ct.Id == id);
             
         }
 
