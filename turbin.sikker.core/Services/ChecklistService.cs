@@ -81,7 +81,8 @@ namespace turbin.sikker.core.Services
             var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
             if (checklist != null)
             {
-                _context.Checklist.Remove(checklist);
+                //_context.Checklist.Remove(checklist);
+                checklist.Status = ChecklistStatus.Inactive;
                 _context.SaveChanges();
             }
         }

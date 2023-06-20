@@ -99,7 +99,10 @@ namespace turbin.sikker.core.Controllers
         public IActionResult DeleteChecklist(string id)
         {
             var checklist = _checklistService.GetChecklistById(id);
-
+            if (checklist.Status == ChecklistStatus.Inactive)
+            {
+                return Conflict("Checklist already deleted");
+            }
             if (checklist == null)
             {
                 return NotFound();
