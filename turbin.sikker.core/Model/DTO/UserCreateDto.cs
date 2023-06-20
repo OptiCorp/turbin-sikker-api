@@ -23,9 +23,5 @@ namespace turbin.sikker.core.Model.DTO
         [Required]
         [StringLength(150)]
         public string UserRoleId { get; set; }
-
-        [Required]
-        [StringLength(500)]
-        public string Password { get; set; }
     }
 }

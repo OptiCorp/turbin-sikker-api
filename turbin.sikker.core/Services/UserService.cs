@@ -51,24 +51,11 @@ namespace turbin.sikker.core.Services
                 LastName = userDto.LastName,
                 Email = userDto.Email,
                 UserRoleId = userDto.UserRoleId,
-                Password = HashedPassword(userDto.Password),
                 CreatedDate = DateTime.Now,
             };
 
             _context.User.Add(user);
             _context.SaveChanges();
-        }
-
-        private string HashedPassword(string password)
-        {
-            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8);
-            string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password!,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
-            return hashedPassword;
         }
 
         public void UpdateUser(string userId, UserUpdateDto updatedUserDto)
@@ -91,9 +78,6 @@ namespace turbin.sikker.core.Services
 
                 if (updatedUserDto.UserRoleId != null)
                     user.UserRoleId = updatedUserDto.UserRoleId;
-
-                if (updatedUserDto.Password != null)
-                    user.Password = HashedPassword(updatedUserDto.Password);
 
                 if (updatedUserDto.Status != null)
                     user.Status = updatedUserDto.Status;
