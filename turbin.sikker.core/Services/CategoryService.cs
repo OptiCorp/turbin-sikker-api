@@ -14,6 +14,11 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
+        public IEnumerable<Category> GetAllCategories()
+        {
+            return _context.Category.ToList();
+        }
+
         public  Category GetCategoryById(string id)
         {
             return _context.Category.FirstOrDefault(category => category.Id == id);

@@ -12,12 +12,36 @@ namespace turbin.sikker.core.Services
         {
             _context = context;
         }
+        public IEnumerable<ChecklistTask> GetAllTasks()
+        {
+            return _context.Checklist_Task.ToList();
+        }
 
         public ChecklistTask GetChecklistTaskById(string id)
         {
             return _context.Checklist_Task.Include(ct =>ct.Category).FirstOrDefault(ct => ct.Id == id);
             
         }
+        
+        public IEnumerable<ChecklistTaskByCategoryResponseDto> GetAllTasksByCategoryId(string categoryId)
+        {
+            return _context.Checklist_Task.Where(ct => ct.CategoryId == categoryId).Select(ct => new ChecklistTaskByCategoryResponseDto
+            {
+                Id = ct.Id,
+                Description = ct.Description
+            }).ToList();
+        }
+
+        public IEnumerable<ChecklistTask> GetAllTasksByChecklistId(string checklistId)
+        {
+            var tasks = _context.Checklist
+                .Where(c => c.Id == checklistId)
+                .SelectMany(c => c.ChecklistTasks)
+                .ToList();
+
+            return tasks;
+        }
+
 
         public string CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
         {
@@ -49,6 +73,19 @@ namespace turbin.sikker.core.Services
                 {
                     checklistTask.Description = updatedChecklistTask.Description;
                 }
+
+                _context.SaveChanges();
+            }
+        }
+
+        public void AddTaskToChecklist(string checklistId, string taskId)
+        {
+            var checklist = _context.Checklist.FirstOrDefault(c => c.Id == checklistId);
+            var task = _context.Checklist_Task.FirstOrDefault(t => t.Id == taskId);
+
+            if (checklist != null && task != null)
+            {
+                checklist.ChecklistTasks.Add(task);
 
                 _context.SaveChanges();
             }
