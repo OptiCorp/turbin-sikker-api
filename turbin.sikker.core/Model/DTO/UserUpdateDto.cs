@@ -24,5 +24,7 @@ namespace turbin.sikker.core.Model.DTO
 
         [EnumDataType(typeof(UserStatus))]
         public UserStatus Status { get; set; }
+
+        public DateTime? UpdatedDate { get; }
     }
 }

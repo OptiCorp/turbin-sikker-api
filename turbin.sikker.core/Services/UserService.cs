@@ -51,7 +51,8 @@ namespace turbin.sikker.core.Services
                 LastName = userDto.LastName,
                 Email = userDto.Email,
                 UserRoleId = userDto.UserRoleId,
-                Password = HashedPassword(userDto.Password)
+                Password = HashedPassword(userDto.Password),
+                CreatedDate = DateTime.Now,
             };
 
             _context.User.Add(user);
@@ -96,6 +97,8 @@ namespace turbin.sikker.core.Services
 
                 if (updatedUserDto.Status != null)
                     user.Status = updatedUserDto.Status;
+
+                user.UpdatedDate = DateTime.Now;
 
                 _context.SaveChanges();
             }
