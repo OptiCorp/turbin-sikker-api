@@ -14,6 +14,12 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
+
+        public bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId)
+        {
+            return userRoles.Any(role => role.Id == userRoleId);
+        }
+
         public IEnumerable<UserRole> GetUserRoles()
         {
             return _context.UserRole.ToList();

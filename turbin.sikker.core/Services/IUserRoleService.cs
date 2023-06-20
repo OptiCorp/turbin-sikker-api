@@ -13,6 +13,7 @@ namespace turbin.sikker.core.Services
         void UpdateUserRole(string id, UserRoleUpdateDto userRole);
         void CreateUserRole(UserRoleCreateDto userRole);
         void DeleteUserRole(string id);
+        bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId);
     }
 }
 
