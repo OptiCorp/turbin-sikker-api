@@ -12,7 +12,7 @@ namespace turbin.sikker.core.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    [Route("api")]
+    [Route("GetAllCategories")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -20,13 +20,13 @@ namespace turbin.sikker.core.Controllers
         {
             _categoryService = categoryService;
         }
-        /*
         [HttpGet]
-        public IEnumerable<Category> GetCategories()
+        [SwaggerOperation(Summary = "Get all categories", Description = "Retrieves a list of all categories.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
+        public IEnumerable<Category> GetAllCategories()
         {
-            return _context.Category.ToList();
+            return _categoryService.GetAllCategories();
         }
-        */
 
         // Get specific Category based on given Id
         [HttpGet("GetCategory")]

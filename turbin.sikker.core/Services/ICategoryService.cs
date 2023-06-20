@@ -6,6 +6,7 @@ namespace turbin.sikker.core.Services
 {
     public interface ICategoryService
     {
+        IEnumerable<Category> GetAllCategories();
         Category GetCategoryById(string id);
         void UpdateCategory(string id, CategoryRequestDto category);
         string CreateCategory(CategoryRequestDto category);
