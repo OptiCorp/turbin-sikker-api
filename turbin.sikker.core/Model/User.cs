@@ -45,5 +45,10 @@ namespace turbin.sikker.core.Model
 
         [EnumDataType(typeof(UserStatus))]
         public UserStatus Status { get; set; }
+
+        [Required]
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
     }
 }
