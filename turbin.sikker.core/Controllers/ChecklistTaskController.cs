@@ -53,6 +53,15 @@ namespace turbin.sikker.core.Controllers
             return _checklistTaskService.GetAllTasksByCategoryId(id);
         }
 
+        //Get all tasks by Checklist
+        [HttpGet("GetAllTasksByChecklistId")]
+        [SwaggerOperation(Summary = "Get all tasks with Checklist Id", Description = "Retrieves a list of all tasks with Checklist Id.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
+        public IEnumerable<ChecklistTask> GetAllTasksByChecklistId(string id)
+        {
+            return _checklistTaskService.GetAllTasksByChecklistId(id);
+        }
+
         // Creates a new form task
         [HttpPost("AddChecklistTask")]
         [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task")]
