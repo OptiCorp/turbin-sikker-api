@@ -24,7 +24,7 @@ namespace turbin.sikker.core.Controllers
         // Get specific Checklist based on given Id
         [HttpGet("GetChecklist")]
         [SwaggerOperation(Summary = "Get checklist by ID", Description = "Retrieves a checklist by their ID.")]
-        [SwaggerResponse(200, "Success", typeof(Checklist))]
+        [SwaggerResponse(200, "Success", typeof(ChecklistResponseDto))]
         [SwaggerResponse(404, "Checklist not found")]
         public IActionResult GetChecklistById(string id)
         {
@@ -40,7 +40,7 @@ namespace turbin.sikker.core.Controllers
         // Get all existing Checklists 
         [HttpGet("GetAllChecklists")]
         [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<Checklist>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistMultipleResponseDto>))]
         public IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists()
         {
             return _checklistService.GetAllChecklists();
@@ -59,7 +59,7 @@ namespace turbin.sikker.core.Controllers
         // Creates a new Checklist
         [HttpPost("AddChecklist")]
         [SwaggerOperation(Summary = "Create a new checklist", Description = "Creates a new checklist.")]
-        [SwaggerResponse(201, "Checklist created", typeof(Checklist))]
+        [SwaggerResponse(201, "Checklist created", typeof(ChecklistViewNoUserDto))]
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateChecklist(ChecklistCreateDto checklist)
         {

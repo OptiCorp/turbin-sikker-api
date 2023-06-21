@@ -15,6 +15,20 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
+        public IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists()
+        {
+            return _context.Checklist.Include(c => c.CreatedByUser)
+                                     .Select(c => new ChecklistMultipleResponseDto
+                                     {
+                                         Id = c.Id,
+                                         Title = c.Title,
+                                         User = c.CreatedByUser,
+                                         Status = c.Status,
+                                         CreatedDate = c.CreatedDate,
+                                         UpdatedDate = c.UpdatedDate
+                                     }).ToList();
+        }
+
         public ChecklistResponseDto GetChecklistById(string id)
         {
             return _context.Checklist.Include(c => c.CreatedByUser)
@@ -30,21 +44,7 @@ namespace turbin.sikker.core.Services
                                          Tasks = c.ChecklistTasks
                                      })
                                      .FirstOrDefault(checklist => checklist.Id == id);
-            
-        }
 
-        public IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists()
-        {
-            return _context.Checklist.Include(c => c.CreatedByUser)
-                                     .Select(c => new ChecklistMultipleResponseDto
-                                     {
-                                         Id = c.Id,
-                                         Title = c.Title,
-                                         User = c.CreatedByUser,
-                                         Status = c.Status,
-                                         CreatedDate = c.CreatedDate,
-                                         UpdatedDate = c.UpdatedDate
-                                     }).ToList();
         }
 
         public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)

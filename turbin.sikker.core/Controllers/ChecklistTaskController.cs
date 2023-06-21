@@ -25,7 +25,7 @@ namespace turbin.sikker.core.Controllers
         //Get all tasks
         [HttpGet("GetAllTasks")]
         [SwaggerOperation(Summary = "Get all tasks", Description = "Retrieves a list of all tasks.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
         public IEnumerable<ChecklistTaskResponseDto> GetAllTasks()
         {
             return _checklistTaskService.GetAllTasks();
@@ -34,7 +34,7 @@ namespace turbin.sikker.core.Controllers
         // Get specific form task based on given Id
         [HttpGet("GetChecklistTask")]
         [SwaggerOperation(Summary = "Get checklist task by ID", Description = "Retrieves a checklist task by their ID.")]
-        [SwaggerResponse(200, "Success", typeof(ChecklistTask))]
+        [SwaggerResponse(200, "Success", typeof(ChecklistTaskResponseDto))]
         [SwaggerResponse(404, "Checklist task not found")]
         public IActionResult GetChecklistTaskById(string id)
         {
@@ -50,7 +50,7 @@ namespace turbin.sikker.core.Controllers
         //Get all tasks by Category
         [HttpGet("GetAllTasksByCategoryId")]
         [SwaggerOperation(Summary = "Get all tasks with CategoryId", Description = "Retrieves a list of all tasks with CategoryId.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskByCategoryResponseDto>))]
         public IActionResult GetAllTasksByCategoryId(string id)
         {
             var category = _categoryService.GetCategoryById(id);
@@ -66,7 +66,7 @@ namespace turbin.sikker.core.Controllers
         //Get all tasks by Checklist
         [HttpGet("GetAllTasksByChecklistId")]
         [SwaggerOperation(Summary = "Get all tasks with ChecklistId", Description = "Retrieves a list of all tasks with ChecklistId.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
         public IActionResult GetAllTasksByChecklistId(string id)
         {
             var checklist = _checklistService.GetChecklistById(id);
@@ -81,7 +81,7 @@ namespace turbin.sikker.core.Controllers
         // Creates a new form task
         [HttpPost("AddChecklistTask")]
         [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task")]
-        [SwaggerResponse(201, "Checklist task created", typeof(ChecklistTask))]
+        [SwaggerResponse(201, "Checklist task created", typeof(ChecklistTaskResponseDto))]
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
         {
