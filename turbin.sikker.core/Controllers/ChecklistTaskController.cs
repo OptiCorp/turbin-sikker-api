@@ -14,16 +14,19 @@ namespace turbin.sikker.core.Controllers
     {
         private readonly IChecklistService _checklistService;
         private readonly IChecklistTaskService _checklistTaskService;
-        public ChecklistTaskController(IChecklistService checklistService, IChecklistTaskService checklistTaskService)
+        private readonly ICategoryService _categoryService;
+        public ChecklistTaskController(IChecklistService checklistService, IChecklistTaskService checklistTaskService, ICategoryService categoryService)
         {
             _checklistService = checklistService;
+            _categoryService = categoryService;
             _checklistTaskService = checklistTaskService;
+
         }
         //Get all tasks
         [HttpGet("GetAllTasks")]
         [SwaggerOperation(Summary = "Get all tasks", Description = "Retrieves a list of all tasks.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
-        public IEnumerable<ChecklistTask> GetAllTasks()
+        public IEnumerable<ChecklistTaskResponseDto> GetAllTasks()
         {
             return _checklistTaskService.GetAllTasks();
         }
@@ -38,7 +41,7 @@ namespace turbin.sikker.core.Controllers
             var ChecklistTask = _checklistTaskService.GetChecklistTaskById(id);
             if (ChecklistTask == null)
             {
-                return NotFound();
+                return NotFound("Task not found");
             }
 
             return Ok(ChecklistTask);
@@ -46,20 +49,33 @@ namespace turbin.sikker.core.Controllers
 
         //Get all tasks by Category
         [HttpGet("GetAllTasksByCategoryId")]
-        [SwaggerOperation(Summary = "Get all tasks with Category Id", Description = "Retrieves a list of all tasks with Category Id.")]
+        [SwaggerOperation(Summary = "Get all tasks with CategoryId", Description = "Retrieves a list of all tasks with CategoryId.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
-        public IEnumerable<ChecklistTaskByCategoryResponseDto> GetAllTasksByCategoryId(string id)
+        public IActionResult GetAllTasksByCategoryId(string id)
         {
-            return _checklistTaskService.GetAllTasksByCategoryId(id);
+            var category = _categoryService.GetCategoryById(id);
+            if (category == null)
+            {
+                return NotFound("Category not found");
+            }
+
+            var tasks = _checklistTaskService.GetAllTasksByCategoryId(id);
+            return Ok(tasks);
         }
 
         //Get all tasks by Checklist
         [HttpGet("GetAllTasksByChecklistId")]
-        [SwaggerOperation(Summary = "Get all tasks with Checklist Id", Description = "Retrieves a list of all tasks with Checklist Id.")]
+        [SwaggerOperation(Summary = "Get all tasks with ChecklistId", Description = "Retrieves a list of all tasks with ChecklistId.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTask>))]
-        public IEnumerable<ChecklistTask> GetAllTasksByChecklistId(string id)
+        public IActionResult GetAllTasksByChecklistId(string id)
         {
-            return _checklistTaskService.GetAllTasksByChecklistId(id);
+            var checklist = _checklistService.GetChecklistById(id);
+            if(checklist == null)
+            {
+                return NotFound("Checklist not found");
+            }  
+            var tasks = _checklistTaskService.GetAllTasksByChecklistId(id);
+            return Ok(tasks);
         }
 
         // Creates a new form task
@@ -69,6 +85,18 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
         {
+            var category = _categoryService.GetCategoryById(checklistTask.CategoryId);
+            var tasks = _checklistTaskService.GetAllTasks();
+
+            if (category == null)
+            {
+                return NotFound("Category not found");
+            }
+
+            if (_checklistTaskService.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
+            {
+                return Conflict("Task already exists");
+            }
             if (ModelState.IsValid)
             {
                 var taskId = _checklistTaskService.CreateChecklistTask(checklistTask);
@@ -89,10 +117,15 @@ namespace turbin.sikker.core.Controllers
         {
 
             var checklistTask = _checklistTaskService.GetChecklistTaskById(id);
+            var category = _categoryService.GetCategoryById(updatedChecklistTask.CategoryId);
 
             if (checklistTask == null)
             {
-                return NotFound();
+                return NotFound("Task not found");
+            }
+            if(category == null)
+            {
+                return NotFound("Category not found");
             }
 
             _checklistTaskService.UpdateChecklistTask(id, updatedChecklistTask);
@@ -113,12 +146,12 @@ namespace turbin.sikker.core.Controllers
 
             if (checklist == null || task == null)
             {
-                return NotFound();
+                return NotFound("Task or Checklist does not exist");
             }
 
             _checklistTaskService.AddTaskToChecklist(checklistId, taskId);
 
-            return Ok("Task added to successfully");
+            return Ok("Task added to checklist successfully");
         }
 
 
@@ -132,7 +165,7 @@ namespace turbin.sikker.core.Controllers
             var checklistTask = _checklistTaskService.GetChecklistTaskById(id);
             if (checklistTask == null)
             {
-                return NotFound();
+                return NotFound("Task not found");
             }
             _checklistTaskService.DeleteChecklistTask(id);
             

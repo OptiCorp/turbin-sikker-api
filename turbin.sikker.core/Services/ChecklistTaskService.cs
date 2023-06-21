@@ -12,14 +12,31 @@ namespace turbin.sikker.core.Services
         {
             _context = context;
         }
-        public IEnumerable<ChecklistTask> GetAllTasks()
+        public IEnumerable<ChecklistTaskResponseDto> GetAllTasks()
         {
-            return _context.Checklist_Task.ToList();
+            return _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
+            {
+                Id = ct.Id,
+                Description = ct.Description,
+                Category = new Category
+                {
+                    Id = ct.Category.Id,
+                    Name = ct.Category.Name
+                }
+            }).ToList();
         }
 
-        public ChecklistTask GetChecklistTaskById(string id)
+        public ChecklistTaskResponseDto GetChecklistTaskById(string id)
         {
-            return _context.Checklist_Task.Include(ct =>ct.Category).FirstOrDefault(ct => ct.Id == id);
+            return _context.Checklist_Task.Include(ct =>ct.Category).Select(ct => new ChecklistTaskResponseDto {
+                Id = ct.Id,
+                Description = ct.Description,
+                Category = new Category
+                {
+                    Id = ct.Category.Id,
+                    Name = ct.Category.Name
+                }
+            }).FirstOrDefault(ct => ct.Id == id);
             
         }
         
@@ -100,6 +117,12 @@ namespace turbin.sikker.core.Services
                 _context.Checklist_Task.Remove(checklistTask);
                 _context.SaveChanges();
             }
+        }
+
+        //TEST THIS
+        public bool TaskExists(IEnumerable<ChecklistTaskResponseDto> tasks, string categoryId, string description)
+        {
+            return tasks.Any(t => t.Category.Id == categoryId && t.Description == description);
         }
     }
 }
