@@ -66,9 +66,9 @@ namespace turbin.sikker.core
             //BjørnOle
             //var connectionString = "Data Source=localhost;Initial Catalog=turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
             //Malin
-            var connectionString = "Server =.\\SQLEXPRESS; Database = turbinsikkerdb; Trusted_Connection = True; TrustServerCertificate = Yes;";
-
-
+            //var connectionString = "Server =.\\SQLEXPRESS; Database = turbinsikkerdb; Trusted_Connection = True; TrustServerCertificate = Yes;";
+            //Katrine
+            var connectionString = "Data Source=localhost;Initial Catalog=Turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
 
 
 
