@@ -2,6 +2,7 @@
 using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
+using System.Threading.Tasks;
 
 namespace turbin.sikker.core.Services
 {
@@ -14,15 +15,36 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
-        public Checklist GetChecklistById(string id)
+        public ChecklistResponseDto GetChecklistById(string id)
         {
-            return _context.Checklist.Include(c => c.CreatedByUser).Include(c => c.ChecklistTasks).FirstOrDefault(checklist => checklist.Id == id);
+            return _context.Checklist.Include(c => c.CreatedByUser)
+                                     .Include(c => c.ChecklistTasks)
+                                     .Select(c => new ChecklistResponseDto
+                                     {
+                                         Id = c.Id,
+                                         Title = c.Title,
+                                         User = c.CreatedByUser,
+                                         Status = c.Status,
+                                         CreatedDate = c.CreatedDate,
+                                         UpdatedDate = c.UpdatedDate,
+                                         Tasks = c.ChecklistTasks
+                                     })
+                                     .FirstOrDefault(checklist => checklist.Id == id);
             
         }
 
-        public IEnumerable<Checklist> GetAllChecklists()
+        public IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists()
         {
-            return _context.Checklist.Include(c => c.CreatedByUser).Include(c => c.ChecklistTasks).ToList();
+            return _context.Checklist.Include(c => c.CreatedByUser)
+                                     .Select(c => new ChecklistMultipleResponseDto
+                                     {
+                                         Id = c.Id,
+                                         Title = c.Title,
+                                         User = c.CreatedByUser,
+                                         Status = c.Status,
+                                         CreatedDate = c.CreatedDate,
+                                         UpdatedDate = c.UpdatedDate
+                                     }).ToList();
         }
 
         public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)
@@ -77,7 +99,6 @@ namespace turbin.sikker.core.Services
 
         public void DeleteChecklist(string id)
         {
-
             var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
             if (checklist != null)
             {
@@ -85,6 +106,11 @@ namespace turbin.sikker.core.Services
                 checklist.Status = ChecklistStatus.Inactive;
                 _context.SaveChanges();
             }
+        }
+
+        public bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title)
+        {
+            return checklists.Any(c => c.User.Id == userId && c.Title == title);
         }
     }
 }

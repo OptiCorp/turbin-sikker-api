@@ -38,7 +38,7 @@ namespace turbin.sikker.core.Controllers
             var Category = _categoryService.GetCategoryById(id);
             if (Category == null)
             {
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             return Ok(Category);
@@ -77,7 +77,7 @@ namespace turbin.sikker.core.Controllers
 
             if (category == null)
             {
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             _categoryService.UpdateCategory(id, updatedCategory);
@@ -95,7 +95,7 @@ namespace turbin.sikker.core.Controllers
 
             if (category == null)
             {
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             _categoryService.DeleteCategory(id);
