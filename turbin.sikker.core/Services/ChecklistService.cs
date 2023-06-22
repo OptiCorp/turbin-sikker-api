@@ -85,13 +85,17 @@ namespace turbin.sikker.core.Services
             if (checklist != null)
             {
                 if(updatedChecklist.Title != null)
-                { 
                     checklist.Title = updatedChecklist.Title;
-                }
+
                 if (updatedChecklist.Status != null)
                 {
-                    checklist.Status = updatedChecklist.Status;
+                    if (updatedChecklist.Status == "Inactive")
+                        checklist.Status = ChecklistStatus.Inactive;
+
+                    if (updatedChecklist.Status == "Active")
+                        checklist.Status = ChecklistStatus.Active;
                 }
+
                 checklist.UpdatedDate = DateTime.Now;
 
                 _context.SaveChanges();
