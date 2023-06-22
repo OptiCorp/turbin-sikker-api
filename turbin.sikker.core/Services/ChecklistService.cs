@@ -31,19 +31,20 @@ namespace turbin.sikker.core.Services
 
         public ChecklistResponseDto GetChecklistById(string id)
         {
-            return _context.Checklist.Include(c => c.CreatedByUser)
-                                     .Include(c => c.ChecklistTasks)
-                                     .Select(c => new ChecklistResponseDto
-                                     {
-                                         Id = c.Id,
-                                         Title = c.Title,
-                                         User = c.CreatedByUser,
-                                         Status = c.Status,
-                                         CreatedDate = c.CreatedDate,
-                                         UpdatedDate = c.UpdatedDate,
-                                         Tasks = c.ChecklistTasks
-                                     })
-                                     .FirstOrDefault(checklist => checklist.Id == id);
+            var checklist = _context.Checklist.Include(c => c.CreatedByUser)
+                                      .Include(c => c.ChecklistTasks)
+                                      .FirstOrDefault(checklist => checklist.Id == id);
+            
+           return new ChecklistResponseDto
+           {
+                Id = checklist.Id,
+                Title = checklist.Title,
+                User = checklist.CreatedByUser,
+                Status = checklist.Status,
+                CreatedDate = checklist.CreatedDate,
+                UpdatedDate = checklist.UpdatedDate,
+                Tasks = checklist.ChecklistTasks
+           };
 
         }
 

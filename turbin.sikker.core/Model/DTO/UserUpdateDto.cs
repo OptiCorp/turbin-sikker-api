@@ -19,9 +19,7 @@ namespace turbin.sikker.core.Model.DTO
         [StringLength(150)]
         public string? UserRoleId { get; set; }
 
-        [EnumDataType(typeof(UserStatus))]
-        public UserStatus Status { get; set; }
+        public string? Status { get; set; }
 
-        public DateTime? UpdatedDate { get; }
     }
 }

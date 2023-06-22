@@ -22,6 +22,7 @@ namespace turbin.sikker.core.Controllers
             _checklistTaskService = checklistTaskService;
 
         }
+
         //Get all tasks
         [HttpGet("GetAllTasks")]
         [SwaggerOperation(Summary = "Get all tasks", Description = "Retrieves a list of all tasks.")]
@@ -58,7 +59,6 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("Category not found");
             }
-
             var tasks = _checklistTaskService.GetAllTasksByCategoryId(id);
             return Ok(tasks);
         }
@@ -153,7 +153,6 @@ namespace turbin.sikker.core.Controllers
 
             return Ok("Task added to checklist successfully");
         }
-
 
         // Deletes form task based on given Id
         [HttpDelete("DeleteChecklistTask")]
