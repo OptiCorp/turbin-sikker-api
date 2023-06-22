@@ -80,10 +80,12 @@ namespace turbin.sikker.core.Services
                     user.UserRoleId = updatedUserDto.UserRoleId;
 
                 if (updatedUserDto.Status != null)
+                { 
                     if (updatedUserDto.Status == "Active")
                         user.Status = UserStatus.Active;
-                    else if (updatedUserDto.Status == "Inactive")
+                    if (updatedUserDto.Status == "Inactive")
                         user.Status = UserStatus.Inactive;
+                }
 
                 user.UpdatedDate = DateTime.Now;
 
