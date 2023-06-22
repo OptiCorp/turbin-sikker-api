@@ -108,7 +108,11 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("Checklist not found");
             }
-
+            if (updatedChecklist.Status != null)
+            {
+                if(updatedChecklist.Status != "Active" && updatedChecklist.Status != "Inactive")
+                    return Conflict("Status must be 'Active' or 'Inactive'");
+            }
             _checklistService.UpdateChecklist( id,  updatedChecklist);
 
             return NoContent();
