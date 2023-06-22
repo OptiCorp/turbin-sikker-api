@@ -26,7 +26,7 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllUsers")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<UserDto> GetUsers()
         {
             return _userService.GetUsers();
         }
@@ -134,6 +134,11 @@ namespace turbin.sikker.core.Controllers
             {
                 return Conflict("Email is already in taken");
             }
+            if (!_userService.IsValidStatus(updatedUser.Status))
+            {
+                return Conflict("Invalid status");
+            }
+
 
             var user = _userService.GetUserById(id);
 
