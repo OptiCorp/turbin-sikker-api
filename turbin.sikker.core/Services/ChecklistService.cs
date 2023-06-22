@@ -23,29 +23,17 @@ namespace turbin.sikker.core.Services
                                          Id = c.Id,
                                          Title = c.Title,
                                          User = c.CreatedByUser,
-                                         Status = c.Status,
+                                         Status = c.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                                          CreatedDate = c.CreatedDate,
                                          UpdatedDate = c.UpdatedDate
                                      }).ToList();
         }
 
-        public ChecklistResponseDto GetChecklistById(string id)
+        public Checklist GetChecklistById(string id)
         {
-            var checklist = _context.Checklist.Include(c => c.CreatedByUser)
+            return _context.Checklist.Include(c => c.CreatedByUser)
                                       .Include(c => c.ChecklistTasks)
                                       .FirstOrDefault(checklist => checklist.Id == id);
-            
-           return new ChecklistResponseDto
-           {
-                Id = checklist.Id,
-                Title = checklist.Title,
-                User = checklist.CreatedByUser,
-                Status = checklist.Status,
-                CreatedDate = checklist.CreatedDate,
-                UpdatedDate = checklist.UpdatedDate,
-                Tasks = checklist.ChecklistTasks
-           };
-
         }
 
         public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)
@@ -54,7 +42,7 @@ namespace turbin.sikker.core.Services
                                      .Select(c => new ChecklistViewNoUserDto{
                                          Id = c.Id,
                                          Title = c.Title,
-                                         Status = c.Status,
+                                         Status = c.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                                          CreatedDate = c.CreatedDate,
                                          UpdatedDate = c.UpdatedDate
                                      })

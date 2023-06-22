@@ -19,7 +19,15 @@ namespace turbin.sikker.core.Controllers
             _checklistService = context;
             _userService = userService;
         }
-      
+
+        // Get all existing Checklists 
+        [HttpGet("GetAllChecklists")]
+        [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistMultipleResponseDto>))]
+        public IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists()
+        {
+            return _checklistService.GetAllChecklists();
+        }
 
         // Get specific Checklist based on given Id
         [HttpGet("GetChecklist")]
@@ -33,17 +41,18 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("Checklist not found");
             }
+            var checklistDto = new ChecklistResponseDto
+            {
+                Id = checklist.Id,
+                Title = checklist.Title,
+                User = checklist.CreatedByUser,
+                Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
+                CreatedDate = checklist.CreatedDate,
+                UpdatedDate = checklist.UpdatedDate,
+                Tasks = checklist.ChecklistTasks
+            };
 
-            return Ok(checklist);
-        }
-
-        // Get all existing Checklists 
-        [HttpGet("GetAllChecklists")]
-        [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistMultipleResponseDto>))]
-        public IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists()
-        {
-            return _checklistService.GetAllChecklists();
+            return Ok(checklistDto);
         }
 
         // Get all Checklists by userId

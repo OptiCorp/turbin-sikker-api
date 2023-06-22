@@ -6,7 +6,7 @@ namespace turbin.sikker.core.Services
 {
     public interface IChecklistService
     {
-        ChecklistResponseDto GetChecklistById(string id);
+        Checklist GetChecklistById(string id);
         IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists();
         IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string userId);
         void UpdateChecklist(string id, ChecklistEditDto checklist);
