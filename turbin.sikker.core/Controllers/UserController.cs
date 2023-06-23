@@ -133,19 +133,28 @@ namespace turbin.sikker.core.Controllers
                 return Conflict("Username is already taken");
             }
 
-            if (!_userRoleService.IsValidUserRole(userRoles, updatedUser.UserRoleId))
+            if (!string.IsNullOrEmpty(updatedUser.UserRoleId))
             {
-                return Conflict("Invalid user role");
+                if (!_userRoleService.IsValidUserRole(userRoles, updatedUser.UserRoleId))
+                {
+                    return Conflict("Invalid user role id");
+                }
             }
+
 
             if (existingUser.Email != updatedUser.Email && _userService.IsEmailTaken(users, updatedUser.Email))
             {
                 return Conflict("Email is already in taken");
             }
-            if (!_userService.IsValidStatus(updatedUser.Status))
+
+            if (!string.IsNullOrEmpty(updatedUser.Status))
             {
-                return Conflict("Invalid status");
+                if (!_userService.IsValidStatus(updatedUser.Status))
+                {
+                    return Conflict("Invalid status");
+                }
             }
+
 
 
             var user = _userService.GetUserById(id);
