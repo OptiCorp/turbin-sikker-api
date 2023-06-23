@@ -48,7 +48,7 @@ namespace turbin.sikker.core.Services
 
         public IEnumerable<UserDto> GetUsers()
         {
-            return _context.User.Include(u => u.UserRole).Select(u => new UserDto
+            return _context.User.Include(u => u.UserRole).Where(s => s.Status == UserStatus.Active).Select(u => new UserDto
             {
                 Id = u.Id,
                 FirstName = u.FirstName,
