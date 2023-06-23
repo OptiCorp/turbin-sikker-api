@@ -1,19 +1,17 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app/turbin.sikker.core
-EXPOSE 80
-
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["turbin.sikker.core.csproj", "./turbin.sikker.core/"]
-RUN dotnet restore "./turbin.sikker.core/turbin.sikker.core.csproj"
-COPY . .
-WORKDIR "/src/turbin.sikker.core"
-RUN dotnet build "turbin.sikker.core.csproj" -c Release -o /app/build
+WORKDIR /source
 
-FROM build AS publish
-RUN dotnet publish "turbin.sikker.core.csproj" -c Release -o /app/publish /p:UseAppHost=false
+COPY *.sln .
+COPY *.csproj .
+RUN dotnet restore
 
-FROM base AS final
-WORKDIR /app/turbin.sikker.core
-COPY --from=publish /app/publish .
+# copy everything else and build app
+COPY . ./turbin.sikker.core/
+WORKDIR /source/turbin.sikker.core
+RUN dotnet publish -c release -r linux-x64 --self-contained true -o /app
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "localserverturbin.dll"]
