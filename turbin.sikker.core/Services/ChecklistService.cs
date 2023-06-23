@@ -38,7 +38,7 @@ namespace turbin.sikker.core.Services
 
         public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)
         {
-            return _context.Checklist.Where(c => c.CreatedBy == id)
+            return _context.Checklist.Where(c => c.CreatedBy == id && c.Status == ChecklistStatus.Active)
                                      .Select(c => new ChecklistViewNoUserDto{
                                          Id = c.Id,
                                          Title = c.Title,

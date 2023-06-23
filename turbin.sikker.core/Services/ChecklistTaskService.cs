@@ -96,11 +96,13 @@ namespace turbin.sikker.core.Services
                 {
                     checklistTask.CategoryId = updatedChecklistTask.CategoryId;
                 }
+                    
+
                 if(checklistTask.Description != null)
                 {
                     checklistTask.Description = updatedChecklistTask.Description;
                 }
-
+                    
                 _context.SaveChanges();
             }
         }

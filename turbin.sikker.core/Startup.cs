@@ -9,9 +9,6 @@ using turbin.sikker.core.Services;
 using Duende.IdentityServer.Stores;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-
-
-
 namespace turbin.sikker.core
 
 {
@@ -69,7 +66,6 @@ namespace turbin.sikker.core
             //var connectionString = "Server =.\\SQLEXPRESS; Database = turbinsikkerdb; Trusted_Connection = True; TrustServerCertificate = Yes;";
             //Katrine
             //var connectionString = "Data Source=localhost;Initial Catalog=Turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
-
 
 
             services.AddDbContext<TurbinSikkerDbContext>(options =>
