@@ -7,8 +7,10 @@ namespace turbin.sikker.core.Model
     {
         [Display(Name = "Active")]
         Active,
-        [Display(Name = "Inactive")]
-        Inactive
+        [Display(Name = "Disabled")]
+        Disabled,
+        [Display(Name = "Deleted")]
+        Deleted,
     }
     public class User
     {

@@ -29,7 +29,7 @@ namespace turbin.sikker.core.Services
         public bool IsValidStatus(string value)
         {
             string lowerCaseValue = value.ToLower();
-            return lowerCaseValue == "active" || lowerCaseValue == "inactive";
+            return lowerCaseValue == "active" || lowerCaseValue == "disabled" || lowerCaseValue == "deleted";
         }
 
         private static string GetUserStatus(UserStatus status)
@@ -38,8 +38,10 @@ namespace turbin.sikker.core.Services
             {
                 case UserStatus.Active:
                     return "Active";
-                case UserStatus.Inactive:
-                    return "Inactive";
+                case UserStatus.Disabled:
+                    return "Disabled";
+                case UserStatus.Deleted:
+                    return "Deleted";
                 default:
                     return "Active";
             }
@@ -49,6 +51,22 @@ namespace turbin.sikker.core.Services
         public IEnumerable<UserDto> GetUsers()
         {
             return _context.User.Include(u => u.UserRole).Where(s => s.Status == UserStatus.Active).Select(u => new UserDto
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                Username = u.Username,
+                UserRole = u.UserRole,
+                Status = GetUserStatus(u.Status),
+                CreatedDate = u.CreatedDate,
+                UpdatedDate = u.UpdatedDate,
+            }).ToList();
+        }
+
+        public IEnumerable<UserDto> GetAllUsers()
+        {
+            return _context.User.Include(u => u.UserRole).Select(u => new UserDto
             {
                 Id = u.Id,
                 FirstName = u.FirstName,
@@ -117,9 +135,13 @@ namespace turbin.sikker.core.Services
                     {
                         user.Status = UserStatus.Active;
                     }
-                    else if (status == "inactive")
+                    else if (status == "disabled")
                     {
-                        user.Status = UserStatus.Inactive;
+                        user.Status = UserStatus.Disabled;
+                    }
+                    else if (status == "deleted")
+                    {
+                        user.Status = UserStatus.Deleted;
                     }
                 }
 
@@ -136,7 +158,7 @@ namespace turbin.sikker.core.Services
 
             if (user != null)
             {
-                user.Status = UserStatus.Inactive;
+                user.Status = UserStatus.Deleted;
                 _context.SaveChanges();
             }
         }
