@@ -2,12 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /source
 
 RUN pwd
-# List the files and folders in the current directory and save the output to a file
-RUN ls -1 > file_list.txt
-
-# Print the contents of the file_list.txt file
-RUN cat file_list.txt
-
+RUN ls -1 
 
 COPY *.sln .
 COPY *.csproj .
