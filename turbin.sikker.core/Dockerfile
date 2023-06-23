@@ -1,20 +1,23 @@
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
+WORKDIR /source
 
-RUN pwd
-RUN ls -1 
-
+# Copy and restore NuGet dependencies
 COPY *.sln .
-COPY *.csproj .
+COPY turbin.sikker.core/*.csproj ./turbin.sikker.core/
 RUN dotnet restore
 
-# copy everything else and build app
-COPY . ./turbin.sikker.core/
-WORKDIR /src/turbin.sikker.core
-RUN dotnet publish -c release -r linux-x64 --self-contained true -o /app
+# Copy the rest of the source code and build the application
+COPY turbin.sikker.core/. ./turbin.sikker.core/
+WORKDIR /source/turbin.sikker.core
+RUN dotnet build -c Release --no-restore
 
-# final stage/image
+# Publish the application
+RUN dotnet publish -c Release -o /app --no-restore
+
+# Final stage
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=build /app ./
-ENTRYPOINT ["dotnet", "localserverturbin.dll"]
+COPY --from=build /app .
+
+ENTRYPOINT ["dotnet", "turbin.sikker.core.dll"]
