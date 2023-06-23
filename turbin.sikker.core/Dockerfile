@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /source
+WORKDIR /src
 
 RUN pwd
 RUN ls -1 
@@ -10,7 +10,7 @@ RUN dotnet restore
 
 # copy everything else and build app
 COPY . ./turbin.sikker.core/
-WORKDIR /source/turbin.sikker.core
+WORKDIR /src/turbin.sikker.core
 RUN dotnet publish -c release -r linux-x64 --self-contained true -o /app
 
 # final stage/image
