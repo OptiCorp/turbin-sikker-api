@@ -13,7 +13,6 @@ COPY turbin.sikker.core ./turbin.sikker.core/
 WORKDIR /source/turbin.sikker.core
 RUN dotnet publish -c release -r linux-x64 --self-contained true -o /app
 
-RUN mkdir -p bin/Release/net6.0/linux-x64
 # Final stage
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
