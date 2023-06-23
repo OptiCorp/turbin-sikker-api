@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /source
 
 # Copy and restore NuGet dependencies
-COPY *.sln .
 COPY turbin.sikker.core/*.csproj ./turbin.sikker.core/
+COPY *.sln .
 RUN dotnet restore
 
 # Copy the rest of the source code and build the application
