@@ -7,6 +7,7 @@ namespace turbin.sikker.core.Services
     public interface IUserService
     {
         IEnumerable<UserDto> GetUsers();
+        IEnumerable<UserDto> GetAllUsers();
         User GetUserByUsername(string name);
         User GetUserById(string id);
         void UpdateUser(string id, UserUpdateDto user);

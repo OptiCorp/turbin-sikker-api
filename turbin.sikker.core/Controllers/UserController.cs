@@ -31,6 +31,14 @@ namespace turbin.sikker.core.Controllers
             return _userService.GetUsers();
         }
 
+        [HttpGet("GetAllUsersAdmin")]
+        [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<UserDto>))]
+        public IEnumerable<UserDto> GetAllUsers()
+        {
+            return _userService.GetAllUsers();
+        }
+
         [HttpGet("GetUser")]
         [SwaggerOperation(Summary = "Get user by ID", Description = "Retrieves a user by their ID.")]
         [SwaggerResponse(200, "Success", typeof(User))]
@@ -159,7 +167,7 @@ namespace turbin.sikker.core.Controllers
         public IActionResult DeleteUser(string id)
         {
             var user = _userService.GetUserById(id);
-            if (user.Status == UserStatus.Inactive)
+            if (user.Status == UserStatus.Deleted)
             {
                 return Conflict("User already deleted");
             }
