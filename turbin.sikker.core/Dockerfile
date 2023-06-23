@@ -4,7 +4,7 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["turbin.sikker.core.csproj", "./turbin.sikker.core"]
+COPY ["turbin.sikker.core.csproj", "./"]
 RUN dotnet restore "./turbin.sikker.core/turbin.sikker.core.csproj"
 COPY . .
 WORKDIR "/src/turbin.sikker.core"
@@ -17,4 +17,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "localserverturbin.dll"]
-
