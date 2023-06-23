@@ -72,7 +72,7 @@ namespace turbin.sikker.core.Controllers
             }
         }
 
-        // Creates a new user role
+        // Updates user role
         [HttpPost("UpdateUserRole")]
         [SwaggerOperation(Summary = "Update user role by ID", Description = "Updates an existing user role by its ID.")]
         [SwaggerResponse(201, "User role updated", typeof(UserRole))]
@@ -101,14 +101,19 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User role not found")]
         public IActionResult DeleteUserRole(string id)
         {
-            var userRole = _userRoleService.GetUserRoleById(id);
+            UserRole userRoleToDelete = _userRoleService.GetUserRoleById(id);
 
-            if (userRole == null)
+            if (userRoleToDelete == null)
             {
                 return NotFound();
             }
 
-            _userRoleService.DeleteUserRole(id);
+            if (_userRoleService.IsUserRoleInUse(userRoleToDelete))
+            {
+                return Conflict($"Conflict: Unable to delete the {userRoleToDelete.Name} role.\nReason: There are users currently assigned to this role.");
+            }
+
+            _userRoleService.DeleteUserRole(userRoleToDelete.Id);
 
             return NoContent();
         }
