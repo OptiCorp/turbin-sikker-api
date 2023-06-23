@@ -4,10 +4,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["turbin.sikker.core.csproj", "."]
-RUN dotnet restore "./turbin.sikker.core.csproj"
+COPY ["turbin.sikker.core.csproj", "./turbin.sikker.core"]
+RUN dotnet restore "./turbin.sikker.core/turbin.sikker.core.csproj"
 COPY . .
-WORKDIR "/src/."
+WORKDIR "/src/turbin.sikker.core."
 RUN dotnet build "turbin.sikker.core.csproj" -c Release -o /app/build
 
 FROM build AS publish
