@@ -6,6 +6,7 @@ WORKDIR /source
 COPY turbin.sikker.core/*.sln ./turbin.sikker.core/
 COPY turbin.sikker.core/*.csproj ./turbin.sikker.core/
 WORKDIR ./turbin.sikker.core
+RUN dotnet clean
 RUN dotnet restore
 
 # Copy the rest of the source code and build the application
