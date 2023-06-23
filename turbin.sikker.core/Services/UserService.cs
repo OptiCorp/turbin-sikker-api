@@ -16,20 +16,50 @@ namespace turbin.sikker.core.Services
         }
 
 
-        public bool IsUserNameTaken(IEnumerable<User> users, string userName)
+        public bool IsUserNameTaken(IEnumerable<UserDto> users, string userName)
         {
             return users.Any(u => u.Username == userName);
         }
 
-        public bool IsEmailTaken(IEnumerable<User> users, string userEmail)
+        public bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail)
         {
             return users.Any(u => u.Email == userEmail);
         }
 
-
-        public IEnumerable<User> GetUsers()
+        public bool IsValidStatus(string value)
         {
-            return _context.User.Include(u => u.UserRole).ToList();
+            string lowerCaseValue = value.ToLower();
+            return lowerCaseValue == "active" || lowerCaseValue == "inactive";
+        }
+
+        private static string GetUserStatus(UserStatus status)
+        {
+            switch (status)
+            {
+                case UserStatus.Active:
+                    return "Active";
+                case UserStatus.Inactive:
+                    return "Inactive";
+                default:
+                    return "Active";
+            }
+        }
+
+
+        public IEnumerable<UserDto> GetUsers()
+        {
+            return _context.User.Include(u => u.UserRole).Select(u => new UserDto
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                Username = u.Username,
+                UserRole = u.UserRole,
+                Status = GetUserStatus(u.Status),
+                CreatedDate = u.CreatedDate,
+                UpdatedDate = u.UpdatedDate,
+            }).ToList();
         }
 
         public User GetUserById(string id)
@@ -80,16 +110,23 @@ namespace turbin.sikker.core.Services
                     user.UserRoleId = updatedUserDto.UserRoleId;
 
                 if (updatedUserDto.Status != null)
-                { 
-                    if (updatedUserDto.Status == "Active")
+                {
+                    string status = updatedUserDto.Status.ToLower();
+
+                    if (status == "active")
+                    {
                         user.Status = UserStatus.Active;
-                    if (updatedUserDto.Status == "Inactive")
+                    }
+                    else if (status == "inactive")
+                    {
                         user.Status = UserStatus.Inactive;
+                    }
                 }
 
                 user.UpdatedDate = DateTime.Now;
 
                 _context.SaveChanges();
+
             }
         }
 
