@@ -11,10 +11,7 @@ RUN dotnet restore
 # Copy the rest of the source code and build the application
 COPY turbin.sikker.core ./turbin.sikker.core/
 WORKDIR /source/turbin.sikker.core
-RUN dotnet build -c Release --no-restore
-
-# Publish the application
-RUN dotnet publish -c Release -o /app --no-restore
+RUN dotnet publish -c release -r linux-x64 --self-contained true -o /app
 
 # Final stage
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
