@@ -7,7 +7,7 @@ WORKDIR /src
 COPY ["turbin.sikker.core.csproj", "./turbin.sikker.core"]
 RUN dotnet restore "./turbin.sikker.core/turbin.sikker.core.csproj"
 COPY . .
-WORKDIR "/src/turbin.sikker.core."
+WORKDIR "/src/turbin.sikker.core"
 RUN dotnet build "turbin.sikker.core.csproj" -c Release -o /app/build
 
 FROM build AS publish
