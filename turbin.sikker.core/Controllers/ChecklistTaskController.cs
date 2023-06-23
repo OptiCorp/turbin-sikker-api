@@ -117,15 +117,18 @@ namespace turbin.sikker.core.Controllers
         {
 
             var checklistTask = _checklistTaskService.GetChecklistTaskById(id);
-            var category = _categoryService.GetCategoryById(updatedChecklistTask.CategoryId);
 
             if (checklistTask == null)
             {
                 return NotFound("Task not found");
             }
-            if(category == null)
+            if (updatedChecklistTask.CategoryId != null)
             {
-                return NotFound("Category not found");
+                var category = _categoryService.GetCategoryById(updatedChecklistTask.CategoryId);
+                if (category == null)
+                {
+                    return NotFound("Category not found");
+                }
             }
 
             _checklistTaskService.UpdateChecklistTask(id, updatedChecklistTask);
