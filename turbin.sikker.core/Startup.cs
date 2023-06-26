@@ -9,6 +9,11 @@ using turbin.sikker.core.Services;
 using Duende.IdentityServer.Stores;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using FluentValidation.AspNetCore;
+using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Validation;
+using FluentValidation;
+
 namespace turbin.sikker.core
 
 {
@@ -56,6 +61,7 @@ namespace turbin.sikker.core
             services.AddScoped<IPunchService, PunchService>();
 
 
+
             // Add DbContext
             //var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
 
@@ -73,6 +79,12 @@ namespace turbin.sikker.core
                 ));
 
             services.AddControllers();
+            services.AddFluentValidationAutoValidation();
+            services.AddScoped<IValidator<UserCreateDto>, UserCreateValidator>();
+            services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
+
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
