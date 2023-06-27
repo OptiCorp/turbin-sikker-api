@@ -12,7 +12,7 @@ namespace turbin.sikker.core.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    [Route("GetAllCategories")]
+    [Route("api")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -20,7 +20,7 @@ namespace turbin.sikker.core.Controllers
         {
             _categoryService = categoryService;
         }
-        [HttpGet]
+        [HttpGet("GetAllCategories")]
         [SwaggerOperation(Summary = "Get all categories", Description = "Retrieves a list of all categories.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
         public IEnumerable<Category> GetAllCategories()
@@ -43,24 +43,24 @@ namespace turbin.sikker.core.Controllers
 
             return Ok(Category);
         }
-        
+
         // Creates a new Category
         [HttpPost("AddCategory")]
         [SwaggerOperation(Summary = "Create a new category", Description = "Create a new Category")]
         [SwaggerResponse(201, "Category created", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateCategory(CategoryRequestDto category)
+        public async Task<IActionResult> CreateCategory(CategoryRequestDto category)
         {
             var categories = _categoryService.GetAllCategories();
-            if(_categoryService.isCategoryNametaken(categories, category.Name))
+            if (_categoryService.isCategoryNametaken(categories, category.Name))
             {
                 return Conflict("Category " + category.Name + " already exists");
             }
             if (ModelState.IsValid)
             {
-                var categoryId = _categoryService.CreateCategory(category);
+                var categoryId = await _categoryService.CreateCategory(category);
                 var newCategory = _categoryService.GetCategoryById(categoryId);
-                return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId}, newCategory);
+                return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, newCategory);
             }
             return BadRequest(ModelState);
         }
