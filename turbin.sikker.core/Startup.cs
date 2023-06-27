@@ -63,11 +63,11 @@ namespace turbin.sikker.core
 
 
             // Add DbContext
-            //var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
+            var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
 
             //DEVELOPMENT CONNECTION STRING
             //BjørnOle
-            var connectionString = "Data Source=localhost;Initial Catalog=turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
+            //var connectionString = "Data Source=localhost;Initial Catalog=turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
             //Malin
             //var connectionString = "Server =.\\SQLEXPRESS; Database = turbinsikkerdb; Trusted_Connection = True; TrustServerCertificate = Yes;";
             //Katrine
@@ -135,13 +135,14 @@ namespace turbin.sikker.core
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
-                dbContext.Database.Migrate();
             }
             else
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            dbContext.Database.Migrate();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
