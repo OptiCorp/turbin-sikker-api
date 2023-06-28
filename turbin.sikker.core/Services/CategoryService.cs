@@ -24,14 +24,15 @@ namespace turbin.sikker.core.Services
             return _context.Category.FirstOrDefault(category => category.Id == id);
         }
 
-        public string CreateCategory(CategoryRequestDto categoryDto)
+      
+        public async Task<string> CreateCategory(CategoryRequestDto categoryDto)
         {
             var category = new Category
             {
                 Name = categoryDto.Name
             };
             _context.Category.Add(category);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             string categoryId = category.Id;
 

@@ -9,7 +9,7 @@ namespace turbin.sikker.core.Services
         IEnumerable<Category> GetAllCategories();
         Category GetCategoryById(string id);
         void UpdateCategory(string id, CategoryRequestDto category);
-        string CreateCategory(CategoryRequestDto category);
+        Task<string> CreateCategory(CategoryRequestDto category);
         void DeleteCategory(string id);
         bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName);
     }
