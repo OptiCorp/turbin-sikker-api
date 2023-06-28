@@ -62,6 +62,11 @@ namespace turbin.sikker.core
 
 
 
+            services.AddControllers();
+            services.AddFluentValidationAutoValidation();
+            services.AddScoped<IValidator<UserCreateDto>, UserCreateValidator>();
+            services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
+
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
 
@@ -78,10 +83,6 @@ namespace turbin.sikker.core
                 options.UseSqlServer(connectionString
                 ));
 
-            services.AddControllers();
-            services.AddFluentValidationAutoValidation();
-            services.AddScoped<IValidator<UserCreateDto>, UserCreateValidator>();
-            services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
 
 
 
