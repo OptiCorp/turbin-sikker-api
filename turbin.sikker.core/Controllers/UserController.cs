@@ -73,7 +73,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpPost("AddUser")]
         [SwaggerOperation(Summary = "Create a new user", Description = "Creates a new user.")]
-        [SwaggerResponse(201, "User created", typeof(User))]
+        [SwaggerResponse(201, "User created", typeof(UserCreateDto))]
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateUser(UserCreateDto user)
         {
@@ -91,10 +91,10 @@ namespace turbin.sikker.core.Controllers
                 return Conflict("Email is already in taken");
             }
 
-            if (_userService.IsUserNameTaken(users, user.Username))
-            {
-                return Conflict("Username is taken");
-            }
+            //if (_userService.IsUsernameTaken(users, user.Username))
+            //{
+            //    return Conflict("Username is taken");
+            //}
 
             if (ModelState.IsValid)
             {
@@ -128,7 +128,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound();
             }
 
-            if (existingUser.Username != updatedUser.Username && _userService.IsUserNameTaken(users, updatedUser.Username))
+            if (existingUser.Username != updatedUser.Username && _userService.IsUsernameTaken(users, updatedUser.Username))
             {
                 return Conflict("Username is already taken");
             }
@@ -153,15 +153,6 @@ namespace turbin.sikker.core.Controllers
                 {
                     return Conflict("Invalid status");
                 }
-            }
-
-
-
-            var user = _userService.GetUserById(id);
-
-            if (user == null)
-            {
-                return NotFound();
             }
 
             _userService.UpdateUser(id, updatedUser);

@@ -13,9 +13,10 @@ namespace turbin.sikker.core.Services
         void UpdateUser(string id, UserUpdateDto user);
         void CreateUser(UserCreateDto user);
         void DeleteUser(string id);
-        bool IsUserNameTaken(IEnumerable<UserDto> users, string userName);
+        bool IsUsernameTaken(IEnumerable<UserDto> users, string username);
         bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail);
         bool IsValidStatus(string value);
     }
 }
+
 

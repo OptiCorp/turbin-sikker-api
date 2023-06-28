@@ -16,9 +16,9 @@ namespace turbin.sikker.core.Services
         }
 
 
-        public bool IsUserNameTaken(IEnumerable<UserDto> users, string userName)
+        public bool IsUsernameTaken(IEnumerable<UserDto> users, string username)
         {
-            return users.Any(u => u.Username == userName);
+            return users.Any(u => u.Username == username);
         }
 
         public bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail)
