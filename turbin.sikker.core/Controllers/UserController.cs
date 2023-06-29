@@ -81,20 +81,23 @@ namespace turbin.sikker.core.Controllers
 
             var users = _userService.GetUsers();
 
-            if (!_userRoleService.IsValidUserRole(userRoles, user.UserRoleId))
-            {
-                return Conflict("Invalid user role");
-            }
 
-            if (_userService.IsEmailTaken(users, user.Email))
-            {
-                return Conflict("Email is already in taken");
-            }
+            // --- Moved logic to User create Validator ---
+            //if (!_userRoleService.IsValidUserRole(userRoles, user.UserRoleId))
+            //{
+            //    return Conflict("Invalid user role");
+            //}
+
+            //if (_userService.IsEmailTaken(users, user.Email))
+            //{
+            //    return Conflict("Email is already in taken");
+            //}
 
             //if (_userService.IsUsernameTaken(users, user.Username))
             //{
             //    return Conflict("Username is taken");
             //}
+            // ---  ---
 
             if (ModelState.IsValid)
             {
