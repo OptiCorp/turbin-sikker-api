@@ -361,6 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ------
 .DS_Store
 turbin.sikker.core/drive/
 turbin.sikker.core/turbinapi.tar
+turbin.sikker.core/controller.txt
+turbin.sikker.core/Controllers/TEST.cs
