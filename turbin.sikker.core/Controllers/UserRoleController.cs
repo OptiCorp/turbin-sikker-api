@@ -5,6 +5,7 @@ using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
+
 namespace turbin.sikker.core.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -13,6 +14,8 @@ namespace turbin.sikker.core.Controllers
     public class UserRoleController : ControllerBase
     {
         private readonly IUserRoleService _userRoleService;
+
+
 
         public UserRoleController(IUserRoleService userRoleService)
         {
@@ -53,12 +56,12 @@ namespace turbin.sikker.core.Controllers
         public IActionResult CreateUserRole(UserRoleCreateDto userRole)
         {
 
-            var checkUserRoleExist = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
+            //var checkUserRoleExist = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
 
-            if (checkUserRoleExist != null)
-            {
-                return Conflict("Userrole already exist");
-            }
+            //if (checkUserRoleExist != null)
+            //{
+            //    return Conflict("Userrole already exist");
+            //}
 
             if (ModelState.IsValid)
             {
@@ -75,7 +78,7 @@ namespace turbin.sikker.core.Controllers
         // Updates user role
         [HttpPost("UpdateUserRole")]
         [SwaggerOperation(Summary = "Update user role by ID", Description = "Updates an existing user role by its ID.")]
-        [SwaggerResponse(201, "User role updated", typeof(UserRole))]
+        [SwaggerResponse(201, "User role updated", typeof(UserRoleUpdateDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
         public IActionResult UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole)
@@ -112,6 +115,7 @@ namespace turbin.sikker.core.Controllers
             {
                 return Conflict($"Conflict: Unable to delete the {userRoleToDelete.Name} role.\nReason: There are users currently assigned to this role.");
             }
+
 
             _userRoleService.DeleteUserRole(userRoleToDelete.Id);
 
