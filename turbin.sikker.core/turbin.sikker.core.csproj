@@ -29,11 +29,13 @@
     <None Remove="Services\" />
     <None Remove="Validation\" />
     <None Remove="Validation\UserValidations\" />
+    <None Remove="Validation\UserRoleValidations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="Services\" />
     <Folder Include="Validation\" />
     <Folder Include="Validation\UserValidations\" />
+    <Folder Include="Validation\UserRoleValidations\" />
   </ItemGroup>
 </Project>

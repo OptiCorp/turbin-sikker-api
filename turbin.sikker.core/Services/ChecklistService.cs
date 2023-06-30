@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace turbin.sikker.core.Services
 {
-	public class ChecklistService : IChecklistService
-	{
+    public class ChecklistService : IChecklistService
+    {
         public readonly TurbinSikkerDbContext _context;
 
         public ChecklistService(TurbinSikkerDbContext context)
@@ -33,13 +33,15 @@ namespace turbin.sikker.core.Services
         {
             return _context.Checklist.Include(c => c.CreatedByUser)
                                       .Include(c => c.ChecklistTasks)
+                                        .ThenInclude(task => task.Category)
                                       .FirstOrDefault(checklist => checklist.Id == id);
         }
 
         public IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string id)
         {
             return _context.Checklist.Where(c => c.CreatedBy == id && c.Status == ChecklistStatus.Active)
-                                     .Select(c => new ChecklistViewNoUserDto{
+                                     .Select(c => new ChecklistViewNoUserDto
+                                     {
                                          Id = c.Id,
                                          Title = c.Title,
                                          Status = c.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
@@ -72,7 +74,7 @@ namespace turbin.sikker.core.Services
 
             if (checklist != null)
             {
-                if(updatedChecklist.Title != null)
+                if (updatedChecklist.Title != null)
                     checklist.Title = updatedChecklist.Title;
 
                 if (updatedChecklist.Status != null)

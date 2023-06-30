@@ -11,8 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
 using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Model;
 using turbin.sikker.core.Validation;
 using FluentValidation;
+using turbin.sikker.core.Validation.UserValidations;
+using turbin.sikker.core.Validation.UserRoleValidations;
+
 
 namespace turbin.sikker.core
 
@@ -66,6 +70,10 @@ namespace turbin.sikker.core
             services.AddFluentValidationAutoValidation();
             services.AddScoped<IValidator<UserCreateDto>, UserCreateValidator>();
             services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
+            services.AddScoped<IValidator<UserRoleCreateDto>, UserRoleCreateValidator>();
+            services.AddScoped<IValidator<UserRoleUpdateDto>, UserRoleUpdateValidator>();
+
+            services.AddScoped<IValidator<UserRole>, UserRoleDeleteValidator>();
 
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
