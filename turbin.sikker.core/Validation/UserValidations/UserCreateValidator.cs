@@ -3,7 +3,7 @@ using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Services;
 
 
-namespace turbin.sikker.core.Validation
+namespace turbin.sikker.core.Validation.UserValidations
 {
     public class UserCreateValidator : AbstractValidator<UserCreateDto>
     {
@@ -50,4 +50,3 @@ namespace turbin.sikker.core.Validation
 
     }
 }
-

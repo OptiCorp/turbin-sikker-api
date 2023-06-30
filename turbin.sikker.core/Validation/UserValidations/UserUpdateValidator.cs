@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using turbin.sikker.core.Model.DTO;
 
-namespace turbin.sikker.core.Validation
+namespace turbin.sikker.core.Validation.UserValidations
 {
     public class UserUpdateValidator : AbstractValidator<UserUpdateDto>
     {
