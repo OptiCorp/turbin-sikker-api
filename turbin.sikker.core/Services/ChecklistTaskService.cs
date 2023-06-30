@@ -4,8 +4,8 @@ using turbin.sikker.core.Model.DTO.TaskDtos;
 
 namespace turbin.sikker.core.Services
 {
-	public class ChecklistTaskService : IChecklistTaskService
-	{
+    public class ChecklistTaskService : IChecklistTaskService
+    {
         public readonly TurbinSikkerDbContext _context;
 
         public ChecklistTaskService(TurbinSikkerDbContext context)
@@ -28,7 +28,8 @@ namespace turbin.sikker.core.Services
 
         public ChecklistTaskResponseDto GetChecklistTaskById(string id)
         {
-            return _context.Checklist_Task.Include(ct =>ct.Category).Select(ct => new ChecklistTaskResponseDto {
+            return _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
+            {
                 Id = ct.Id,
                 Description = ct.Description,
                 Category = new Category
@@ -37,9 +38,9 @@ namespace turbin.sikker.core.Services
                     Name = ct.Category.Name
                 }
             }).FirstOrDefault(ct => ct.Id == id);
-            
+
         }
-        
+
         public IEnumerable<ChecklistTaskByCategoryResponseDto> GetAllTasksByCategoryId(string categoryId)
         {
             return _context.Checklist_Task.Where(ct => ct.CategoryId == categoryId).Select(ct => new ChecklistTaskByCategoryResponseDto
@@ -92,17 +93,17 @@ namespace turbin.sikker.core.Services
 
             if (checklistTask != null)
             {
-                if(checklistTask.CategoryId != null)
+                if (checklistTask.CategoryId != null)
                 {
                     checklistTask.CategoryId = updatedChecklistTask.CategoryId;
                 }
-                    
 
-                if(checklistTask.Description != null)
+
+                if (checklistTask.Description != null)
                 {
                     checklistTask.Description = updatedChecklistTask.Description;
                 }
-                    
+
                 _context.SaveChanges();
             }
         }
