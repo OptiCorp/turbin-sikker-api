@@ -25,7 +25,7 @@ namespace turbin.sikker.core.Validation
                 .Matches("^[a-zA-Z0-9_.-]+$").WithMessage("Username can only contain letters, numbers, underscores, periods or hyphens.");
             RuleFor(user => user.Email)
                 .Must(BeUniqueEmail).WithMessage("Email is already taken.")
-                .Matches("^[a-zA-Z0-9_.-]+$").WithMessage("Email can only contain letters, numbers, underscores, periods or hyphens.");
+                .Matches("^[a-zA-Z0-9_.-@]+$").WithMessage("Email can only contain letters, numbers, underscores, periods or hyphens.");
             RuleFor(user => user.UserRoleId)
                 .NotNull().NotEmpty().WithMessage("User role id is required.")
                 .Length(36).WithMessage("Invalid user role id.")

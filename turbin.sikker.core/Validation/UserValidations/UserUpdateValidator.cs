@@ -20,7 +20,7 @@ namespace turbin.sikker.core.Validation
                 .WithMessage("Invalid user role id.");
             RuleFor(user => user.Email).EmailAddress()
                 .WithMessage("Email address is not valid.")
-                .Matches("^[a-zA-Z0-9_.-]+$").WithMessage("Email can only contain letters, numbers, underscores, periods or hyphens.");
+                .Matches("^[a-zA-Z0-9_.-@]+$").WithMessage("Email can only contain letters, numbers, underscores, periods or hyphens.");
         }
     }
 }
