@@ -1,8 +1,8 @@
 ---
 name: Issue Report
-about: Describe this issue template's purpose here.
+about: Report an issue
 title: ''
-labels: documentation
+labels: bug
 assignees: ''
 
 ---
