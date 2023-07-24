@@ -3,7 +3,7 @@ name: Issue Report
 about: Describe this issue template's purpose here.
 title: ''
 labels: documentation
-assignees: bjornole-kodehode
+assignees: ''
 
 ---
 
