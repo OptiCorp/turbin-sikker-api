@@ -1,8 +1,8 @@
 ---
 name: Issue Report
-about: Report an issue
+about: Create a new ticket for an issue.
 title: ''
-labels: bug
+labels: Issue
 assignees: ''
 
 ---
