@@ -16,7 +16,7 @@ using turbin.sikker.core.Validation;
 using FluentValidation;
 using turbin.sikker.core.Validation.UserValidations;
 using turbin.sikker.core.Validation.UserRoleValidations;
-
+using turbin.sikker.core.Common;
 
 namespace turbin.sikker.core
 
@@ -64,16 +64,17 @@ namespace turbin.sikker.core
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IPunchService, PunchService>();
 
-
+            services.AddScoped<ValidationHelper>();
 
             services.AddControllers();
-            services.AddFluentValidationAutoValidation();
-            services.AddScoped<IValidator<UserCreateDto>, UserCreateValidator>();
-            services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
-            services.AddScoped<IValidator<UserRoleCreateDto>, UserRoleCreateValidator>();
-            services.AddScoped<IValidator<UserRoleUpdateDto>, UserRoleUpdateValidator>();
+            services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
+            //services.AddFluentValidationAutoValidation();
+            //services.AddScoped<IValidator<UserCreateDto>, UserCreateValidator>();
+            //services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
+            //services.AddScoped<IValidator<UserRoleCreateDto>, UserRoleCreateValidator>();
+            //services.AddScoped<IValidator<UserRoleUpdateDto>, UserRoleUpdateValidator>();
 
-            services.AddScoped<IValidator<UserRole>, UserRoleDeleteValidator>();
+            //services.AddScoped<IValidator<UserRole>, UserRoleDeleteValidator>();
 
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
