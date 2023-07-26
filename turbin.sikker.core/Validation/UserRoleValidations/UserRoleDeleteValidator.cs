@@ -32,3 +32,7 @@ namespace turbin.sikker.core.Validation.UserRoleValidations
     }
 }
 
+//Remove this file? since dont want to check if userrole is deleted in this validator but in the controller.
+//REF: Fluent Validation is responsible for validating the UserUpdateDto(UserRoleUpdateDto) contents only,
+//while the check for the user's status and returning a "Conflict" response is done outside of Fluent Validation,
+//as part of the delete operation's business logic.

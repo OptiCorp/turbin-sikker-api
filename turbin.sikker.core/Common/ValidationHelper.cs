@@ -32,10 +32,17 @@ namespace turbin.sikker.core.Common
             return _userRoleService.IsValidUserRole(userRoles, userRoleId);
         }
 
+        public bool BeUniqueUserRole(string userRoleName)
+        {
+            var userRoles = _userRoleService.GetUserRoles();
+            return !userRoles.Any(userRole => userRole.Name.ToLower() == userRoleName.ToLower());
+        }
+
         public bool BeValidStatus(string status)
         {
             return _userService.IsValidStatus(status);
         }
+
     }
 }
 

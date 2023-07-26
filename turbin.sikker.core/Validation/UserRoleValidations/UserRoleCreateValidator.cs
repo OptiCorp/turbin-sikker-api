@@ -1,27 +1,19 @@
 ﻿using FluentValidation;
 using turbin.sikker.core.Model.DTO;
-using turbin.sikker.core.Services;
+using turbin.sikker.core.Common;
 
 namespace turbin.sikker.core.Validation.UserRoleValidations
 {
     public class UserRoleCreateValidator : AbstractValidator<UserRoleCreateDto>
     {
-        private readonly IUserRoleService _userRoleService;
+        private readonly ValidationHelper _validationHelper;
 
-        public UserRoleCreateValidator(IUserRoleService userRoleService)
+        public UserRoleCreateValidator(ValidationHelper validationHelper)
         {
-            _userRoleService = userRoleService;
-
+            _validationHelper = validationHelper;
 
             RuleFor(userRole => userRole.Name).NotEmpty().NotNull()
-                .Must(BeUniqueUserRole).WithMessage("User role already exist.");
-
-        }
-        bool BeUniqueUserRole(string userRoleName)
-        {
-            var userRoles = _userRoleService.GetUserRoles();
-
-            return !userRoles.Any(userRole => userRole.Name.ToLower() == userRoleName.ToLower());
+                .Must(_validationHelper.BeUniqueUserRole).WithMessage("User role already exist.");
         }
     }
 }
