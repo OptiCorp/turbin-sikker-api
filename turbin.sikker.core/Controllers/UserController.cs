@@ -5,6 +5,9 @@ using turbin.sikker.core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using turbin.sikker.core.Model.DTO;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -75,8 +78,26 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new user", Description = "Creates a new user.")]
         [SwaggerResponse(201, "User created", typeof(UserCreateDto))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateUser(UserCreateDto user)
+        public IActionResult CreateUser(UserCreateDto user, [FromServices] IValidator<UserCreateDto> validator)
         {
+
+            ValidationResult validationResult = validator.Validate(user);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+
+                return ValidationProblem(modelStateDictionary);
+            }
+
             var userRoles = _userRoleService.GetUserRoles();
 
             var users = _userService.GetUsers();
@@ -99,16 +120,11 @@ namespace turbin.sikker.core.Controllers
             //}
             // ---  ---
 
-            if (ModelState.IsValid)
-            {
-                _userService.CreateUser(user);
-                var newUser = _userService.GetUserByUsername(user.Username);
-                return CreatedAtAction(nameof(GetUserById), newUser);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+            _userService.CreateUser(user);
+            var newUser = _userService.GetUserByUsername(user.Username);
+            return CreatedAtAction(nameof(GetUserById), newUser);
+
+
 
         }
 
@@ -117,8 +133,24 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "User updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult UpdateUser(string id, UserUpdateDto updatedUser)
+        public IActionResult UpdateUser(string id, UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
         {
+
+            ValidationResult validationResult = validator.Validate(updatedUser);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
 
             var userRoles = _userRoleService.GetUserRoles();
 
@@ -126,37 +158,37 @@ namespace turbin.sikker.core.Controllers
 
             var existingUser = _userService.GetUserById(id);
 
-            if (existingUser == null)
-            {
-                return NotFound();
-            }
+            //if (existingUser == null)
+            //{
+            //    return NotFound();
+            //}
 
-            if (existingUser.Username != updatedUser.Username && _userService.IsUsernameTaken(users, updatedUser.Username))
-            {
-                return Conflict("Username is already taken");
-            }
+            //if (existingUser.Username != updatedUser.Username && _userService.IsUsernameTaken(users, updatedUser.Username))
+            //{
+            //    return Conflict("Username is already taken");
+            //}
 
-            if (!string.IsNullOrEmpty(updatedUser.UserRoleId))
-            {
-                if (!_userRoleService.IsValidUserRole(userRoles, updatedUser.UserRoleId))
-                {
-                    return Conflict("Invalid user role id");
-                }
-            }
+            //if (!string.IsNullOrEmpty(updatedUser.UserRoleId))
+            //{
+            //    if (!_userRoleService.IsValidUserRole(userRoles, updatedUser.UserRoleId))
+            //    {
+            //        return Conflict("Invalid user role id");
+            //    }
+            //}
 
 
-            if (existingUser.Email != updatedUser.Email && _userService.IsEmailTaken(users, updatedUser.Email))
-            {
-                return Conflict("Email is already in taken");
-            }
+            //if (existingUser.Email != updatedUser.Email && _userService.IsEmailTaken(users, updatedUser.Email))
+            //{
+            //    return Conflict("Email is already in taken");
+            //}
 
-            if (!string.IsNullOrEmpty(updatedUser.Status))
-            {
-                if (!_userService.IsValidStatus(updatedUser.Status))
-                {
-                    return Conflict("Invalid status");
-                }
-            }
+            //if (!string.IsNullOrEmpty(updatedUser.Status))
+            //{
+            //    if (!_userService.IsValidStatus(updatedUser.Status))
+            //    {
+            //        return Conflict("Invalid status");
+            //    }
+            //}
 
             _userService.UpdateUser(id, updatedUser);
 
