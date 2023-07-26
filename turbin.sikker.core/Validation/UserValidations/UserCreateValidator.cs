@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using turbin.sikker.core.Model.DTO;
-using turbin.sikker.core.Services;
 using turbin.sikker.core.Common;
 
 
@@ -9,13 +8,9 @@ namespace turbin.sikker.core.Validation.UserValidations
     public class UserCreateValidator : AbstractValidator<UserCreateDto>
     {
         private readonly ValidationHelper _validationHelper;
-        //private readonly IUserService _userService;
-        //private readonly IUserRoleService _userRoleService;
+
         public UserCreateValidator(ValidationHelper validationHelper)
         {
-            //_userService = userService;
-
-            //_userRoleService = userRoleService;
             _validationHelper = validationHelper;
 
             RuleFor(user => user.FirstName).NotNull().NotEmpty().Length(1, 50)
@@ -34,22 +29,5 @@ namespace turbin.sikker.core.Validation.UserValidations
                 .Length(36).WithMessage("Invalid user role id.")
                 .Must(_validationHelper.BeValidUserRole).WithMessage("Entered user role was not found.");
         }
-        //private bool BeUniqueUsername(string username)
-        //{
-        //    var users = _userService.GetAllUsers();
-        //    return !_userService.IsUsernameTaken(users, username);
-        //}
-        //private bool BeUniqueEmail(string email)
-        //{
-        //    var users = _userService.GetAllUsers();
-        //    return !_userService.IsEmailTaken(users, email);
-        //}
-
-        //private bool BeValidUserRole(string userRoleId)
-        //{
-        //    var userRoles = _userRoleService.GetUserRoles();
-        //    return _userRoleService.IsValidUserRole(userRoles, userRoleId);
-        //}
-
     }
 }

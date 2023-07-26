@@ -102,30 +102,9 @@ namespace turbin.sikker.core.Controllers
 
             var users = _userService.GetUsers();
 
-
-            // --- Moved logic to User create Validator ---
-            //if (!_userRoleService.IsValidUserRole(userRoles, user.UserRoleId))
-            //{
-            //    return Conflict("Invalid user role");
-            //}
-
-            //if (_userService.IsEmailTaken(users, user.Email))
-            //{
-            //    return Conflict("Email is already in taken");
-            //}
-
-            //if (_userService.IsUsernameTaken(users, user.Username))
-            //{
-            //    return Conflict("Username is taken");
-            //}
-            // ---  ---
-
             _userService.CreateUser(user);
             var newUser = _userService.GetUserByUsername(user.Username);
             return CreatedAtAction(nameof(GetUserById), newUser);
-
-
-
         }
 
         [HttpPost("UpdateUser")]
@@ -151,44 +130,6 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
-
-            var userRoles = _userRoleService.GetUserRoles();
-
-            var users = _userService.GetUsers();
-
-            var existingUser = _userService.GetUserById(id);
-
-            //if (existingUser == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //if (existingUser.Username != updatedUser.Username && _userService.IsUsernameTaken(users, updatedUser.Username))
-            //{
-            //    return Conflict("Username is already taken");
-            //}
-
-            //if (!string.IsNullOrEmpty(updatedUser.UserRoleId))
-            //{
-            //    if (!_userRoleService.IsValidUserRole(userRoles, updatedUser.UserRoleId))
-            //    {
-            //        return Conflict("Invalid user role id");
-            //    }
-            //}
-
-
-            //if (existingUser.Email != updatedUser.Email && _userService.IsEmailTaken(users, updatedUser.Email))
-            //{
-            //    return Conflict("Email is already in taken");
-            //}
-
-            //if (!string.IsNullOrEmpty(updatedUser.Status))
-            //{
-            //    if (!_userService.IsValidStatus(updatedUser.Status))
-            //    {
-            //        return Conflict("Invalid status");
-            //    }
-            //}
 
             _userService.UpdateUser(id, updatedUser);
 

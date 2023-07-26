@@ -57,13 +57,6 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateUserRole(UserRoleCreateDto userRole, [FromServices] IValidator<UserRoleCreateDto> validator)
         {
-
-            //var checkUserRoleExist = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
-
-            //if (checkUserRoleExist != null)
-            //{
-            //    return Conflict("Userrole already exist");
-            //}
             ValidationResult validationResult = validator.Validate(userRole);
 
             if (!validationResult.IsValid)
