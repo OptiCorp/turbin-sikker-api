@@ -1,27 +1,20 @@
 ﻿using FluentValidation;
 using turbin.sikker.core.Model.DTO;
-using turbin.sikker.core.Services;
+using turbin.sikker.core.Common;
 
 namespace turbin.sikker.core.Validation.UserRoleValidations
 {
     public class UserRoleUpdateValidator : AbstractValidator<UserRoleUpdateDto>
     {
-        private readonly IUserRoleService _userRoleService;
+        private readonly ValidationHelper _validationHelper;
 
-        public UserRoleUpdateValidator(IUserRoleService userRoleService)
+        public UserRoleUpdateValidator(ValidationHelper validationHelper)
         {
-            _userRoleService = userRoleService;
-
+            _validationHelper = validationHelper;
 
             RuleFor(userRole => userRole.Name).NotEmpty().NotNull()
-                .Must(BeUniqueUserRole).WithMessage("User role name is taken.");
+                .Must(_validationHelper.BeUniqueUserRole).WithMessage("User role name is taken.");
 
-        }
-        bool BeUniqueUserRole(string userRoleName)
-        {
-            var userRoles = _userRoleService.GetUserRoles();
-
-            return !userRoles.Any(userRole => userRole.Name.ToLower() == userRoleName.ToLower());
         }
     }
 }

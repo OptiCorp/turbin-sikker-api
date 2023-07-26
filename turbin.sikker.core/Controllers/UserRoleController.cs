@@ -4,7 +4,9 @@ using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
-
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -53,7 +55,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new user role", Description = "Create a new user role")]
         [SwaggerResponse(201, "User role created", typeof(UserRole))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateUserRole(UserRoleCreateDto userRole)
+        public IActionResult CreateUserRole(UserRoleCreateDto userRole, [FromServices] IValidator<UserRoleCreateDto> validator)
         {
 
             //var checkUserRoleExist = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
@@ -62,17 +64,27 @@ namespace turbin.sikker.core.Controllers
             //{
             //    return Conflict("Userrole already exist");
             //}
+            ValidationResult validationResult = validator.Validate(userRole);
 
-            if (ModelState.IsValid)
+            if (!validationResult.IsValid)
             {
-                _userRoleService.CreateUserRole(userRole);
-                var newUserRole = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
-                return CreatedAtAction(nameof(GetUserRoleById), newUserRole);
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+
+            _userRoleService.CreateUserRole(userRole);
+            var newUserRole = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
+            return CreatedAtAction(nameof(GetUserRoleById), newUserRole);
+
         }
 
         // Updates user role
@@ -81,8 +93,25 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "User role updated", typeof(UserRoleUpdateDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole)
+        public IActionResult UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole, [FromServices] IValidator<UserRoleUpdateDto> validator)
         {
+
+            ValidationResult validationResult = validator.Validate(updatedUserRole);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
             var userRole = _userRoleService.GetUserRoleById(id);
 
 
@@ -94,7 +123,7 @@ namespace turbin.sikker.core.Controllers
 
             _userRoleService.UpdateUserRole(id, updatedUserRole);
 
-            return NoContent();
+            return Ok($"User role updated, changed name to '{updatedUserRole.Name}'.");
         }
 
         // Deletes user role based on given Id
@@ -119,7 +148,7 @@ namespace turbin.sikker.core.Controllers
 
             _userRoleService.DeleteUserRole(userRoleToDelete.Id);
 
-            return NoContent();
+            return Ok($"User role: '{userRoleToDelete.Name}' deleted.");
         }
     }
 
