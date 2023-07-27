@@ -1,13 +1,11 @@
 ﻿using FluentValidation;
 using turbin.sikker.core.Model.DTO;
-using turbin.sikker.core.Services;
 using turbin.sikker.core.Common;
 
 namespace turbin.sikker.core.Validation.UserValidations
 {
     public class UserUpdateValidator : AbstractValidator<UserUpdateDto>
     {
-        //private readonly IUserService _userService;
         private readonly ValidationHelper _validationHelper;
         public UserUpdateValidator(ValidationHelper validationHelper)
         {
