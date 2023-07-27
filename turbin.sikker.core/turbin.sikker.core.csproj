@@ -31,6 +31,7 @@
     <None Remove="Validation\UserValidations\" />
     <None Remove="Validation\UserRoleValidations\" />
     <None Remove="Common\" />
+    <None Remove="Validation\CategoryValidations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -39,5 +40,6 @@
     <Folder Include="Validation\UserValidations\" />
     <Folder Include="Validation\UserRoleValidations\" />
     <Folder Include="Common\" />
+    <Folder Include="Validation\CategoryValidations\" />
   </ItemGroup>
 </Project>

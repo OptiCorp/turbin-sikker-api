@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Model.DTO.CategoryDtos;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -31,7 +34,7 @@ namespace turbin.sikker.core.Controllers
         // Get specific Category based on given Id
         [HttpGet("GetCategory")]
         [SwaggerOperation(Summary = "Get category by ID", Description = "Retrives a category by the ID.")]
-        [SwaggerResponse(200, "Success", typeof (Category))]
+        [SwaggerResponse(200, "Success", typeof(Category))]
         [SwaggerResponse(400, "Category not found")]
         public IActionResult GetCategoryById(string id)
         {
@@ -49,20 +52,34 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new category", Description = "Create a new Category")]
         [SwaggerResponse(201, "Category created", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
-        public async Task<IActionResult> CreateCategory(CategoryRequestDto category)
+        public async Task<IActionResult> CreateCategory(CategoryRequestDto category, [FromServices] IValidator<CategoryRequestDto> validator)
         {
+
+            ValidationResult validationResult = validator.Validate(category);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
             var categories = _categoryService.GetAllCategories();
             if (_categoryService.isCategoryNametaken(categories, category.Name))
             {
-                return Conflict("Category " + category.Name + " already exists");
+                return Conflict($"Category '{category.Name}' already exists.");
             }
-            if (ModelState.IsValid)
-            {
-                var categoryId = await _categoryService.CreateCategory(category);
-                var newCategory = _categoryService.GetCategoryById(categoryId);
-                return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, newCategory);
-            }
-            return BadRequest(ModelState);
+
+            var categoryId = await _categoryService.CreateCategory(category);
+            var newCategory = _categoryService.GetCategoryById(categoryId);
+            return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, newCategory);
         }
 
         [HttpPost("UpdateCategory")]
@@ -70,19 +87,39 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
-        public IActionResult UpdateCategory(string id, CategoryRequestDto updatedCategory)
+        public IActionResult UpdateCategory(string id, CategoryRequestDto updatedCategory, [FromServices] IValidator<CategoryRequestDto> validator)
         {
+            ValidationResult validationResult = validator.Validate(updatedCategory);
 
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
             var category = _categoryService.GetCategoryById(id);
 
             if (category == null)
             {
                 return NotFound("Category not found");
             }
+            var categories = _categoryService.GetAllCategories();
+
+            if (_categoryService.isCategoryNametaken(categories, category.Name))
+            {
+                return Conflict($"Category already exists.");
+            }
 
             _categoryService.UpdateCategory(id, updatedCategory);
 
-            return NoContent();
+            return Ok($"Category renamed to '{category.Name}'");
         }
         // Deletes Category based on given Id
         [HttpDelete("DeleteCategory")]
