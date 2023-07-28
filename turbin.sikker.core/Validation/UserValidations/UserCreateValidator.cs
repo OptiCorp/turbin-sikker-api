@@ -18,11 +18,9 @@ namespace turbin.sikker.core.Validation.UserValidations
             RuleFor(user => user.LastName).NotNull().NotEmpty().Length(1, 50)
                 .Matches("^[a-zA-ZæøåÆØÅ]+$").WithMessage("Last name can only contain letters.");
             RuleFor(user => user.Username).NotNull().NotEmpty()
-                .Length(4, 50).WithMessage("Username must be atleast 4 characters long.")
-                .Must(_validationHelper.BeUnqiueUsername).WithMessage("Username is taken.")
+                .Length(4, 50).WithMessage("Username must be at least 4 characters long.")
                 .Matches("^[a-zA-Z0-9_.-]+$").WithMessage("Username can only contain letters, numbers, underscores, periods or hyphens.");
             RuleFor(user => user.Email)
-                .Must(_validationHelper.BeUnqiueEmail).WithMessage("Email is already taken.")
                 .Matches("^[a-zA-Z0-9_.-@]+$").WithMessage("Email can only contain letters, numbers, underscores, periods or hyphens.");
             RuleFor(user => user.UserRoleId)
                 .NotNull().NotEmpty().WithMessage("User role id is required.")
