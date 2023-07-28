@@ -23,7 +23,6 @@ namespace turbin.sikker.core.Validation.UserValidations
             RuleFor(user => user.Email)
                 .Matches("^[a-zA-Z0-9_.-@]+$").WithMessage("Email can only contain letters, numbers, underscores, periods or hyphens.");
             RuleFor(user => user.UserRoleId)
-                .NotNull().NotEmpty().WithMessage("User role id is required.")
                 .Length(36).WithMessage("Invalid user role id.")
                 .Must(_validationHelper.BeValidUserRole).WithMessage("Entered user role was not found.");
         }
