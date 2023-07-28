@@ -47,6 +47,13 @@ namespace turbin.sikker.core.Services
             }
         }
 
+        public string GetInspectorRoleId()
+        {
+            var inspectorRole = _context.UserRole.FirstOrDefault(role => role.Name == "Inspector");
+            return inspectorRole.Id;
+
+        }
+
 
         public IEnumerable<UserDto> GetUsers()
         {
@@ -101,7 +108,6 @@ namespace turbin.sikker.core.Services
                 UserRoleId = userDto.UserRoleId,
                 CreatedDate = DateTime.Now,
             };
-
             _context.User.Add(user);
             _context.SaveChanges();
         }

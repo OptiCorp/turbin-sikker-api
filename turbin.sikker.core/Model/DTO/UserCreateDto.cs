@@ -20,8 +20,7 @@ namespace turbin.sikker.core.Model.DTO
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         [StringLength(150)]
-        public string UserRoleId { get; set; }
+        public string? UserRoleId { get; set; }
     }
 }

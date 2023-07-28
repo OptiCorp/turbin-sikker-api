@@ -17,6 +17,7 @@ namespace turbin.sikker.core.Services
         bool IsUsernameTaken(IEnumerable<UserDto> users, string username);
         bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail);
         bool IsValidStatus(string value);
+        string GetInspectorRoleId();
     }
 }
 

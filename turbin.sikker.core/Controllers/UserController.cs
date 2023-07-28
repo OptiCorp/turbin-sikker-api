@@ -80,21 +80,35 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateUser(UserCreateDto user, [FromServices] IValidator<UserCreateDto> validator)
         {
-            ValidationResult validationResult = validator.Validate(user);
 
-            if (!validationResult.IsValid)
+            string inspectorRoleId = _userService.GetInspectorRoleId();
+
+            if (string.IsNullOrEmpty(user.UserRoleId))
             {
-                var modelStateDictionary = new ModelStateDictionary();
+                user.UserRoleId = inspectorRoleId;
+            }
 
-                foreach (ValidationFailure failure in validationResult.Errors)
+
+            if (!string.IsNullOrEmpty(user.UserRoleId))
+            {
+
+
+                ValidationResult validationResult = validator.Validate(user);
+
+                if (!validationResult.IsValid)
                 {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage
-                        );
-                }
+                    var modelStateDictionary = new ModelStateDictionary();
 
-                return ValidationProblem(modelStateDictionary);
+                    foreach (ValidationFailure failure in validationResult.Errors)
+                    {
+                        modelStateDictionary.AddModelError(
+                            failure.PropertyName,
+                            failure.ErrorMessage
+                            );
+                    }
+
+                    return ValidationProblem(modelStateDictionary);
+                }
             }
 
             var users = _userService.GetUsers();
