@@ -15,6 +15,7 @@ namespace turbin.sikker.core.Services
         void DeleteUserRole(string id);
         bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId);
         bool IsUserRoleInUse(UserRole userRole);
+        bool IsUserRoleNameTaken(IEnumerable<UserRole> userRoles, string userRoleName);
     }
 }
 

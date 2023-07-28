@@ -72,7 +72,12 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
+            var userRoles = _userRoleService.GetUserRoles();
 
+            if (_userRoleService.IsUserRoleNameTaken(userRoles, userRole.Name))
+            {
+                return Conflict($"The user role '{userRole.Name}' already exists.");
+            }
 
             _userRoleService.CreateUserRole(userRole);
             var newUserRole = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
@@ -104,6 +109,15 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
+
+
+            var userRoles = _userRoleService.GetUserRoles();
+
+            if (_userRoleService.IsUserRoleNameTaken(userRoles, updatedUserRole.Name))
+            {
+                return Conflict($"The user role '{updatedUserRole.Name}' already exists.");
+            }
+
 
             var userRole = _userRoleService.GetUserRoleById(id);
 
