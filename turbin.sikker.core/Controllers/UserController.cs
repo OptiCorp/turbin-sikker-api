@@ -80,7 +80,6 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateUser(UserCreateDto user, [FromServices] IValidator<UserCreateDto> validator)
         {
-
             ValidationResult validationResult = validator.Validate(user);
 
             if (!validationResult.IsValid)
@@ -98,9 +97,21 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
+            var users = _userService.GetUsers();
+
+
+            if (_userService.IsUsernameTaken(users, user.Username))
+            {
+                return Conflict($"The username '{user.Username}' is taken.");
+            }
+
+            if (_userService.IsEmailTaken(users, user.Email))
+            {
+                return Conflict("Invalid email");
+            }
+
             var userRoles = _userRoleService.GetUserRoles();
 
-            var users = _userService.GetUsers();
 
             _userService.CreateUser(user);
             var newUser = _userService.GetUserByUsername(user.Username);
@@ -114,6 +125,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User not found")]
         public IActionResult UpdateUser(string id, UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
         {
+            var users = _userService.GetUsers();
 
             ValidationResult validationResult = validator.Validate(updatedUser);
 
@@ -131,13 +143,23 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
+            if (_userService.IsUsernameTaken(users, updatedUser.Username))
+            {
+                return Conflict($"The username '{updatedUser.Username}' is taken.");
+            }
+
+            if (_userService.IsEmailTaken(users, updatedUser.Email))
+            {
+                return Conflict("Invalid email.");
+            }
+
             _userService.UpdateUser(id, updatedUser);
 
             return NoContent();
         }
 
-        [HttpDelete("DeleteUser")]
-        [SwaggerOperation(Summary = "Delete user by ID", Description = "Deletes a user by their ID.")]
+        [HttpDelete("SoftDeleteUser")]
+        [SwaggerOperation(Summary = "Soft delete user by ID", Description = "Deletes a user by their ID, sets the status of the user as \"deleted\" in the system without actually removing them from the database.")]
         [SwaggerResponse(204, "User deleted")]
         [SwaggerResponse(404, "User not found")]
         public IActionResult DeleteUser(string id)
@@ -155,6 +177,24 @@ namespace turbin.sikker.core.Controllers
             _userService.DeleteUser(id);
 
             return NoContent();
+        }
+
+        [HttpDelete("HardDeleteUser")]
+        [SwaggerOperation(Summary = "Hard delete user by ID", Description = "Deletes a user by their ID, permanently deletes the user from the system, including removing their data from the database")]
+        [SwaggerResponse(204, "User deleted")]
+        [SwaggerResponse(404, "User not found")]
+        public IActionResult HardDeleteUser(string id)
+        {
+            var user = _userService.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _userService.HardDeleteUser(id);
+
+            return Ok($"User: '{user.Username}' deleted");
         }
     }
 }

@@ -163,6 +163,17 @@ namespace turbin.sikker.core.Services
             }
         }
 
+        public void HardDeleteUser(string id)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Id == id);
+
+            if (user != null)
+            {
+                _context.User.Remove(user);
+                _context.SaveChanges();
+            }
+        }
+
     }
 
 }
