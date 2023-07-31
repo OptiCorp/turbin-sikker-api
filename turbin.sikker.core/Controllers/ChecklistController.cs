@@ -5,6 +5,9 @@ using System;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -70,29 +73,42 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new checklist", Description = "Creates a new checklist.")]
         [SwaggerResponse(201, "Checklist created", typeof(ChecklistViewNoUserDto))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateChecklist(ChecklistCreateDto checklist)
+        public IActionResult CreateChecklist(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> validator)
         {
-            var checklists  = _checklistService.GetAllChecklists();
+
+            ValidationResult validationResult = validator.Validate(checklist);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
+            var checklists = _checklistService.GetAllChecklists();
             var user = _userService.GetUserById(checklist.CreatedBy);
 
-            if(user == null)
+            if (user == null)
             {
                 return NotFound("User not found");
             }
-            if(_checklistService.checklistExists(checklists, checklist.CreatedBy, checklist.Title))
+            if (_checklistService.checklistExists(checklists, checklist.CreatedBy, checklist.Title))
             {
                 return Conflict("You already have a checklist by that name");
             }
 
-            if (ModelState.IsValid)
-            {
-                var newChecklistId= _checklistService.CreateChecklist(checklist);
-                var newChecklist = _checklistService.GetChecklistById(newChecklistId);
 
-                return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
-            }
+            var newChecklistId = _checklistService.CreateChecklist(checklist);
+            var newChecklist = _checklistService.GetChecklistById(newChecklistId);
 
-            return BadRequest(ModelState);
+            return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
         }
 
         [HttpPost("UpdateChecklist")]
@@ -100,8 +116,27 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "Checklist updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Checklist not found")]
-        public IActionResult UpdateChecklist(string id, ChecklistEditDto updatedChecklist)
+        public IActionResult UpdateChecklist(string id, ChecklistEditDto updatedChecklist, [FromServices] IValidator<ChecklistEditDto> validator)
         {
+
+
+            ValidationResult validationResult = validator.Validate(updatedChecklist);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
+
             var checklist = _checklistService.GetChecklistById(id);
 
             if (checklist == null)
@@ -110,10 +145,10 @@ namespace turbin.sikker.core.Controllers
             }
             if (updatedChecklist.Status != null)
             {
-                if(updatedChecklist.Status != "Active" && updatedChecklist.Status != "Inactive")
+                if (updatedChecklist.Status.ToLower() != "active" && updatedChecklist.Status.ToLower() != "inactive")
                     return Conflict("Status must be 'Active' or 'Inactive'");
             }
-            _checklistService.UpdateChecklist( id,  updatedChecklist);
+            _checklistService.UpdateChecklist(id, updatedChecklist);
 
             return NoContent();
         }
