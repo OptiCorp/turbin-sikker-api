@@ -33,6 +33,7 @@
     <None Remove="Common\" />
     <None Remove="Validation\CategoryValidations\" />
     <None Remove="Validation\ChecklistValidations\" />
+    <None Remove="Validation\ChecklistTaskValidations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -43,5 +44,6 @@
     <Folder Include="Common\" />
     <Folder Include="Validation\CategoryValidations\" />
     <Folder Include="Validation\ChecklistValidations\" />
+    <Folder Include="Validation\ChecklistTaskValidations\" />
   </ItemGroup>
 </Project>

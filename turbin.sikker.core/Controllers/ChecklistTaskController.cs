@@ -5,6 +5,9 @@ using System;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
 using turbin.sikker.core.Model.DTO.TaskDtos;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -70,10 +73,10 @@ namespace turbin.sikker.core.Controllers
         public IActionResult GetAllTasksByChecklistId(string id)
         {
             var checklist = _checklistService.GetChecklistById(id);
-            if(checklist == null)
+            if (checklist == null)
             {
                 return NotFound("Checklist not found");
-            }  
+            }
             var tasks = _checklistTaskService.GetAllTasksByChecklistId(id);
             return Ok(tasks);
         }
@@ -83,8 +86,25 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task")]
         [SwaggerResponse(201, "Checklist task created", typeof(ChecklistTaskResponseDto))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
+        public IActionResult CreateChecklistTask(ChecklistTaskRequestDto checklistTask, [FromServices] IValidator<ChecklistTaskRequestDto> validator)
         {
+
+            ValidationResult validationResult = validator.Validate(checklistTask);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
             var category = _categoryService.GetCategoryById(checklistTask.CategoryId);
             var tasks = _checklistTaskService.GetAllTasks();
 
@@ -97,14 +117,10 @@ namespace turbin.sikker.core.Controllers
             {
                 return Conflict("Task already exists");
             }
-            if (ModelState.IsValid)
-            {
-                var taskId = _checklistTaskService.CreateChecklistTask(checklistTask);
-                var newTask = _checklistTaskService.GetChecklistTaskById(taskId);
-                return CreatedAtAction(nameof(GetChecklistTaskById), new { id = taskId }, newTask);
-            }
 
-            return BadRequest(ModelState);
+            var taskId = _checklistTaskService.CreateChecklistTask(checklistTask);
+            var newTask = _checklistTaskService.GetChecklistTaskById(taskId);
+            return CreatedAtAction(nameof(GetChecklistTaskById), new { id = taskId }, newTask);
         }
 
         // Edit a form task
@@ -113,8 +129,24 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "Checklist task updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Checklist task not found")]
-        public IActionResult UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask)
+        public IActionResult UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask, [FromServices] IValidator<ChecklistTaskRequestDto> validator)
         {
+
+            ValidationResult validationResult = validator.Validate(updatedChecklistTask);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
 
             var checklistTask = _checklistTaskService.GetChecklistTaskById(id);
 
@@ -170,7 +202,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Task not found");
             }
             _checklistTaskService.DeleteChecklistTask(id);
-            
+
 
             return NoContent();
         }
