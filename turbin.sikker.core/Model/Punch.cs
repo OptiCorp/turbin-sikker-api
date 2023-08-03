@@ -3,33 +3,56 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
-	enum Severity { Minor, Major, Critical }
-	enum Status { Pending, Approved, Rejected }
-		
-	public class Punch
-	{
+    enum Severity { Minor, Major, Critical }
+    public enum PunchStatus
+    {
+        [Display(Name = "Pending")]
+        Pending,
+        [Display(Name = "Approved")]
+        Approved,
+        [Display(Name = "Rejected")]
+        Rejected
+    }
+
+    public class Punch
+    {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 
-		[Required]
-		[StringLength(50)]
-		public string FormId { get; set; }
-
         [Required]
         [StringLength(50)]
-        public string UserId { get; set; }
+        public string ChecklistId { get; set; }
 
-        //public DateOnly CreatedDate { get; set; }
+        //[Required]
+        //[StringLength(450)]
+        //public string UserId { get; set; }
+
+        [Required]
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+
+        [StringLength(450)]
+        public string CreatedBy { get; set; }
+
+        public User? CreatedByUser { get; }
 
         [Required]
         [StringLength(1500)]
         public string PunchDescription { get; set; }
 
-		public int Severity { get; set; }
 
-        public int PunchStatus { get; set; }
+        // Enum? ('Minor', 'Major', 'Critical')
+        public int Severity { get; set; }
 
-		public Byte Active { get; set; }
-	}
+        // Enum? ('Pending', 'Approved', 'Rejected') 
+        //public int PunchStatus { get; set; }
+
+        [EnumDataType(typeof(PunchStatus))]
+        public PunchStatus Status { get; set; }
+
+        // Boolean? 
+        public Byte Active { get; set; }
+    }
 }
 
