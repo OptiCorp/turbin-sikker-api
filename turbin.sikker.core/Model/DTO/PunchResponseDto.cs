@@ -19,6 +19,8 @@ namespace turbin.sikker.core.Model.DTO
 
         public string CreatedBy { get; set; }
 
+        public User? User { get; set; }
+
     }
 }
 

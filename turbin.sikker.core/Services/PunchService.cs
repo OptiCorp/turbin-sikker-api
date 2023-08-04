@@ -30,7 +30,7 @@ namespace turbin.sikker.core.Services
 
         public Punch GetPunchById(string id)
         {
-            return _context.Punch.Include(p => p.CreatedByUser)
+            return _context.Punch.Include(p => p.CreatedByUser).ThenInclude(u => u.UserRole)
                                     .FirstOrDefault(p => p.Id == id);
         }
 

@@ -19,7 +19,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetPunch")]
         [SwaggerOperation(Summary = "Get punch by ID", Description = "Retrieves a punch by their ID.")]
-        [SwaggerResponse(200, "Success", typeof(Punch))]
+        [SwaggerResponse(200, "Success", typeof(PunchResponseDto))]
         [SwaggerResponse(404, "Punch not found")]
         public IActionResult GetPunchById(string id)
         {
@@ -37,7 +37,9 @@ namespace turbin.sikker.core.Controllers
                 UpdatedDate = punch.UpdatedDate,
                 Severity = punch.Severity,
                 Status = _punchService.GetPunchStatus(punch.Status),
-                CreatedBy = punch.CreatedBy,
+                User = punch.CreatedByUser,
+                Active = punch.Active,
+                CreatedBy = punch.CreatedBy
             };
 
             return Ok(punchDto);
