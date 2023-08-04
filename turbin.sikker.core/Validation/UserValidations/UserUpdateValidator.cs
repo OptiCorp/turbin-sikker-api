@@ -13,9 +13,9 @@ namespace turbin.sikker.core.Validation.UserValidations
             _validationHelper = validationHelper;
 
             RuleFor(user => user.FirstName).NotNull().NotEmpty().Length(1, 50)
-                .Matches("^[a-zA-ZæøåÆØÅ]+$").WithMessage("First name can only contain letters.");
+                .Matches("^[a-zA-ZæøåÆØÅ ]+$").WithMessage("First name can only contain letters.");
             RuleFor(user => user.LastName).NotNull().NotEmpty().Length(1, 50)
-                .Matches("^[a-zA-ZæøåÆØÅ]+$").WithMessage("Last name can only contain letters.");
+                .Matches("^[a-zA-ZæøåÆØÅ ]+$").WithMessage("Last name can only contain letters.");
             RuleFor(user => user.Username).NotNull().NotEmpty().Length(4, 50)
                 .When(user => !string.IsNullOrWhiteSpace(user.Username))
                 .WithMessage("Username must be atleast 4 characters long.")
