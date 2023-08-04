@@ -50,7 +50,7 @@ namespace turbin.sikker.core.Services
         public string GetInspectorRoleId()
         {
             var inspectorRole = _context.UserRole.FirstOrDefault(role => role.Name == "Inspector");
-            return inspectorRole.Id;
+            return inspectorRole?.Id;
 
         }
 

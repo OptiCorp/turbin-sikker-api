@@ -4,7 +4,7 @@ using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core
 {
-    public class TurbinSikkerDbContext: DbContext
+    public class TurbinSikkerDbContext : DbContext
     {
         public TurbinSikkerDbContext(DbContextOptions<TurbinSikkerDbContext> options) : base(options)
         {
@@ -33,6 +33,7 @@ namespace turbin.sikker.core
             UserConfigurations.Configure(modelBuilder);
             ChecklistConfigurations.Configure(modelBuilder);
             TaskConfigurations.Configure(modelBuilder);
+            PunchConfigurations.Configure(modelBuilder);
         }
 
     }

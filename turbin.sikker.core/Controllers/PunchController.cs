@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
 
@@ -25,26 +26,42 @@ namespace turbin.sikker.core.Controllers
             var punch = _punchService.GetPunchById(id);
             if (punch == null)
             {
-                return NotFound();
+                return NotFound("Punch not found.");
             }
 
-            return Ok(punch);
+            var punchDto = new PunchResponseDto
+            {
+                Id = punch.Id,
+                PunchDescription = punch.PunchDescription,
+                CreatedDate = punch.CreatedDate,
+                UpdatedDate = punch.UpdatedDate,
+                Severity = punch.Severity,
+                Status = _punchService.GetPunchStatus(punch.Status),
+                CreatedBy = punch.CreatedBy,
+            };
+
+            return Ok(punchDto);
         }
 
 
         [HttpPost("AddPunch")]
         [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]
-        [SwaggerResponse(201, "Punch created", typeof(Punch))]
+        [SwaggerResponse(201, "Punch created", typeof(PunchCreateDto))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult PostPunch(Punch punch)
+        public IActionResult PostPunch(PunchCreateDto punch)
         {
-            if (ModelState.IsValid)
-            {
-                _punchService.CreatePunch(punch);
-                return CreatedAtAction(nameof(GetPunchById), new { id = punch.Id }, punch);
-            }
+            //if (ModelState.IsValid)
+            //{
+            //    _punchService.CreatePunch(punch);
+            //    return CreatedAtAction(nameof(GetPunchById), punch);
+            //}
 
-            return BadRequest(ModelState);
+
+
+            var newPunchId = _punchService.CreatePunch(punch);
+            var newPunch = _punchService.GetPunchById(newPunchId);
+
+            return CreatedAtAction(nameof(GetPunchById), new { id = newPunchId }, newPunch);
         }
 
         [HttpPost("UpdatePunch")]
@@ -52,23 +69,23 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "Punch updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Punch not found")]
-        public IActionResult UpdatePunch(string id, Punch updatedPunch)
+        public IActionResult UpdatePunch(string id, PunchUpdateDto updatedPunch)
         {
-            if (id != updatedPunch.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != updatedPunch.Id)
+            //{
+            //    return BadRequest();
+            //}
 
             var punch = _punchService.GetPunchById(id);
 
             if (punch == null)
             {
-                return NotFound();
+                return NotFound("Punch not found.");
             }
 
-            _punchService.UpdatePunch(updatedPunch);
+            _punchService.UpdatePunch(id, updatedPunch);
 
-            return NoContent();
+            return Ok("Punch updated.");
         }
 
 

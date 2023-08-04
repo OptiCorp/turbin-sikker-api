@@ -58,4 +58,16 @@ namespace turbin.sikker.core.Configuration
                 .HasKey(c => c.Id);
         }
     }
+
+    public static class PunchConfigurations
+    {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Punch>()
+                .HasOne(p => p.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
+    }
 }
