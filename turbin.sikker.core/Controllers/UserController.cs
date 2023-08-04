@@ -111,7 +111,7 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            var users = _userService.GetUsers();
+            var users = _userService.GetAllUsers();
 
 
             if (_userService.IsUsernameTaken(users, user.Username))
@@ -139,7 +139,8 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User not found")]
         public IActionResult UpdateUser(string id, UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
         {
-            var users = _userService.GetUsers();
+            var users = _userService.GetAllUsers();
+            users = users.Where(u => u.Id != id);
 
             ValidationResult validationResult = validator.Validate(updatedUser);
 
