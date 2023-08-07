@@ -11,6 +11,7 @@ namespace turbin.sikker.core.Services
         string CreatePunch(PunchCreateDto punch);
         void DeletePunch(string id);
         string GetPunchStatus(PunchStatus status);
+        bool IsValidStatus(string value);
     }
 }
 

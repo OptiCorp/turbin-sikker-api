@@ -13,6 +13,13 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
+        public bool IsValidStatus(string value)
+        {
+            string lowerCaseValue = value.ToLower();
+            return lowerCaseValue == "pending" || lowerCaseValue == "approved" || lowerCaseValue == "rejected";
+        }
+
+
         public string GetPunchStatus(PunchStatus status)
         {
             switch (status)
@@ -64,12 +71,21 @@ namespace turbin.sikker.core.Services
                 punch.PunchDescription = updatedPunch.PunchDescription;
                 if (updatedPunch.Status != null)
                 {
-                    if (updatedPunch.Status == "Pending")
+
+                    string status = updatedPunch.Status.ToLower();
+
+                    if (status == "pending")
+                    {
                         punch.Status = PunchStatus.Pending;
-                    if (updatedPunch.Status == "Approved")
+                    }
+                    if (status == "approved")
+                    {
                         punch.Status = PunchStatus.Approved;
-                    if (updatedPunch.Status == "Rejected")
+                    }
+                    if (status == "rejected")
+                    {
                         punch.Status = PunchStatus.Rejected;
+                    }
                 }
                 punch.Severity = updatedPunch.Severity;
                 //punch.UserId = updatedPunch.UserId;
