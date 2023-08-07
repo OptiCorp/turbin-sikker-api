@@ -12,9 +12,14 @@ namespace turbin.sikker.core.Controllers
     public class PunchController : ControllerBase
     {
         private readonly IPunchService _punchService;
-        public PunchController(IPunchService punchService)
+        private readonly IUserService _userService;
+        private readonly IChecklistService _checklistService;
+
+        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService)
         {
             _punchService = punchService;
+            _userService = userService;
+            _checklistService = checklistService;
         }
 
         [HttpGet("GetPunch")]
@@ -39,7 +44,8 @@ namespace turbin.sikker.core.Controllers
                 Status = _punchService.GetPunchStatus(punch.Status),
                 User = punch.CreatedByUser,
                 Active = punch.Active,
-                CreatedBy = punch.CreatedBy
+                CreatedBy = punch.CreatedBy,
+                ChecklistId = punch.ChecklistId
             };
 
             return Ok(punchDto);
@@ -57,6 +63,20 @@ namespace turbin.sikker.core.Controllers
             //    _punchService.CreatePunch(punch);
             //    return CreatedAtAction(nameof(GetPunchById), punch);
             //}
+
+            var user = _userService.GetUserById(punch.CreatedBy);
+            var checklist = _checklistService.GetChecklistById(punch.ChecklistId);
+
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            if (checklist == null)
+            {
+                return NotFound("Could not find specified checklist.");
+            }
 
 
 
@@ -79,10 +99,27 @@ namespace turbin.sikker.core.Controllers
             //}
 
             var punch = _punchService.GetPunchById(id);
+            var checklist = _checklistService.GetChecklistById(updatedPunch.ChecklistId);
+
 
             if (punch == null)
             {
                 return NotFound("Punch not found.");
+            }
+
+            if (checklist == null)
+            {
+                return NotFound("Could not find specified checklist.");
+            }
+
+            if (updatedPunch.Status != null)
+            {
+                string statusMessage = updatedPunch.Status.ToLower();
+
+                if (!_punchService.IsValidStatus(statusMessage))
+                {
+                    return Conflict("Status must be either 'Pending', 'Approved', or 'Rejected'.");
+                }
             }
 
             _punchService.UpdatePunch(id, updatedPunch);

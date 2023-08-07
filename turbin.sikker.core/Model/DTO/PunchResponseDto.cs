@@ -5,6 +5,8 @@ namespace turbin.sikker.core.Model.DTO
     {
         public string? Id { get; set; }
 
+        public string ChecklistId { get; set; }
+
         public string Status { get; set; }
 
         public DateTime CreatedDate { get; set; }
