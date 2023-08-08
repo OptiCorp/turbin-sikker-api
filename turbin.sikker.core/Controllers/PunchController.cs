@@ -40,7 +40,7 @@ namespace turbin.sikker.core.Controllers
                 PunchDescription = punch.PunchDescription,
                 CreatedDate = punch.CreatedDate,
                 UpdatedDate = punch.UpdatedDate,
-                Severity = punch.Severity,
+                Severity = punch.Severity.ToString(),
                 Status = _punchService.GetPunchStatus(punch.Status),
                 User = punch.CreatedByUser,
                 Active = punch.Active,
