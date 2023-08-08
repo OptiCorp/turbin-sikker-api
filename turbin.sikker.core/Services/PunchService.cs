@@ -35,6 +35,21 @@ namespace turbin.sikker.core.Services
             }
         }
 
+        public string GetPunchSeverity(PunchSeverity status)
+        {
+            switch (status)
+            {
+                case PunchSeverity.Minor:
+                    return "Minor";
+                case PunchSeverity.Major:
+                    return "Major";
+                case PunchSeverity.Critical:
+                    return "Critical";
+                default:
+                    return "Critical";
+            }
+        }
+
         public Punch GetPunchById(string id)
         {
             return _context.Punch.Include(p => p.CreatedByUser).ThenInclude(u => u.UserRole)
@@ -43,13 +58,15 @@ namespace turbin.sikker.core.Services
 
         public string CreatePunch(PunchCreateDto punchDto)
         {
+
             var punch = new Punch
             {
-                PunchDescription = punchDto.PunchDescrption,
+                PunchDescription = punchDto.PunchDescription,
                 CreatedBy = punchDto.CreatedBy,
                 ChecklistId = punchDto.ChecklistId,
                 //UserId = punchDto.UserId,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                Severity = Enum.Parse<PunchSeverity>(punchDto.Severity)
             };
 
             _context.Punch.Add(punch);
@@ -87,7 +104,25 @@ namespace turbin.sikker.core.Services
                         punch.Status = PunchStatus.Rejected;
                     }
                 }
-                punch.Severity = updatedPunch.Severity;
+
+                if (updatedPunch.Severity != null)
+                {
+                    string severity = updatedPunch.Severity.ToLower();
+
+                    if (severity == "minor")
+                    {
+                        punch.Severity = PunchSeverity.Minor;
+                    }
+                    if (severity == "major")
+                    {
+                        punch.Severity = PunchSeverity.Major;
+                    }
+                    if (severity == "critical")
+                    {
+                        punch.Severity = PunchSeverity.Critical;
+                    }
+                }
+
                 //punch.UserId = updatedPunch.UserId;
 
                 punch.UpdatedDate = DateTime.Now;

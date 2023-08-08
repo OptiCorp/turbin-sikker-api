@@ -5,11 +5,14 @@ namespace turbin.sikker.core.Model.DTO
     {
         public string CreatedBy { get; set; }
 
-        public string PunchDescrption { get; set; }
+        public string PunchDescription { get; set; }
 
         public string ChecklistId { get; set; }
 
-        public int Severity { get; set; }
+        public string Severity { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
 
         //public string UserId { get; set; }
     }

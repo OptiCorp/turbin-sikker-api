@@ -3,7 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
-    enum Severity { Minor, Major, Critical }
+    public enum PunchSeverity
+    {
+        [Display(Name = "Minor")]
+        Minor,
+        [Display(Name = "Major")]
+        Major,
+        [Display(Name = "Critical")]
+        Critical
+    }
     public enum PunchStatus
     {
         [Display(Name = "Pending")]
@@ -43,10 +51,11 @@ namespace turbin.sikker.core.Model
 
 
         // Enum? ('Minor', 'Major', 'Critical')
-        public int Severity { get; set; }
+        //public int Severity { get; set; }
 
-        // Enum? ('Pending', 'Approved', 'Rejected') 
-        //public int PunchStatus { get; set; }
+
+        [EnumDataType(typeof(PunchSeverity))]
+        public PunchSeverity Severity { get; set; }
 
         [EnumDataType(typeof(PunchStatus))]
         public PunchStatus Status { get; set; }
