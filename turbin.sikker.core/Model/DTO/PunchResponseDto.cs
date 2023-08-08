@@ -15,7 +15,7 @@ namespace turbin.sikker.core.Model.DTO
 
         public string PunchDescription { get; set; }
 
-        public int Severity { get; set; }
+        public string Severity { get; set; }
 
         public Byte Active { get; set; }
 
