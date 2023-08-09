@@ -8,6 +8,8 @@ namespace turbin.sikker.core.Model.DTO
         [StringLength(150)]
         public string Username { get; set; }
 
+        public string AzureAdUserId { get; set; }
+
         [Required]
         [StringLength(150)]
         public string FirstName { get; set; }

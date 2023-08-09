@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230808132536_add-checklist-to-user")]
+    partial class addchecklisttouser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("ChecklistTasksId");
 
-                    b.ToTable("ChecklistToTaskLink", (string)null);
+                    b.ToTable("ChecklistToTaskLink");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Category", b =>
@@ -50,7 +53,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Checklist", b =>
@@ -77,11 +80,16 @@ namespace turbin.sikker.core.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Checklist", (string)null);
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Checklist");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.ChecklistTask", b =>
@@ -102,7 +110,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Checklist_Task", (string)null);
+                    b.ToTable("Checklist_Task");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
@@ -145,7 +153,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Punch", (string)null);
+                    b.ToTable("Punch");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Upload", b =>
@@ -164,7 +172,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Upload", (string)null);
+                    b.ToTable("Upload");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.User", b =>
@@ -172,10 +180,6 @@ namespace turbin.sikker.core.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AzureAdUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -215,7 +219,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("UserRoleId");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.UserRole", b =>
@@ -232,7 +236,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRole", (string)null);
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("ChecklistToTaskLink", b =>
@@ -257,6 +261,10 @@ namespace turbin.sikker.core.Migrations
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("turbin.sikker.core.Model.User", null)
+                        .WithMany("RecievedChecklists")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("CreatedByUser");
                 });
@@ -292,6 +300,11 @@ namespace turbin.sikker.core.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRole");
+                });
+
+            modelBuilder.Entity("turbin.sikker.core.Model.User", b =>
+                {
+                    b.Navigation("RecievedChecklists");
                 });
 #pragma warning restore 612, 618
         }

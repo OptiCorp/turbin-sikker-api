@@ -68,6 +68,7 @@ namespace turbin.sikker.core.Services
                 Status = GetUserStatus(u.Status),
                 CreatedDate = u.CreatedDate,
                 UpdatedDate = u.UpdatedDate,
+                AzureAdUserId = u.AzureAdUserId
             }).ToList();
         }
 
@@ -84,12 +85,18 @@ namespace turbin.sikker.core.Services
                 Status = GetUserStatus(u.Status),
                 CreatedDate = u.CreatedDate,
                 UpdatedDate = u.UpdatedDate,
+                AzureAdUserId = u.AzureAdUserId
             }).ToList();
         }
 
         public User GetUserById(string id)
         {
             return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.Id == id);
+        }
+
+        public User GetUserByAzureAdUserId(string azureAdUserId)
+        {
+            return _context.User.FirstOrDefault(u => u.AzureAdUserId == azureAdUserId);
         }
 
         public User GetUserByUsername(string username)
@@ -101,6 +108,7 @@ namespace turbin.sikker.core.Services
         {
             var user = new User
             {
+                AzureAdUserId = userDto.AzureAdUserId,
                 Username = userDto.Username,
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName,

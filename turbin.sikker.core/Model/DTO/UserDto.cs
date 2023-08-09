@@ -9,6 +9,8 @@ namespace turbin.sikker.core.Model.DTO
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
+        public string AzureAdUserId { get; set; }
+
         [Required]
         [StringLength(50)]
         public string FirstName { get; set; }

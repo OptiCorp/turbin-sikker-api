@@ -58,6 +58,22 @@ namespace turbin.sikker.core.Controllers
             return Ok(user);
         }
 
+        [HttpGet("GetUserByAzureAdUserId")]
+        [SwaggerOperation(Summary = "Get Azure AD user by ID", Description = "Retrieves a Azure AD user by their ID.")]
+        [SwaggerResponse(200, "Success", typeof(User))]
+        [SwaggerResponse(404, "Azure AD user not found")]
+        public IActionResult GetUserByAzureAdUserId(string azureAdUserId)
+        {
+            var user = _userService.GetUserByAzureAdUserId(azureAdUserId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
         [HttpGet("GetUserByUserName")]
         [SwaggerOperation(Summary = "Get user by username", Description = "Retrieves a user by their username.")]
         [SwaggerResponse(200, "Success", typeof(User))]
