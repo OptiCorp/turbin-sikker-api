@@ -9,6 +9,7 @@ namespace turbin.sikker.core.Services
         IEnumerable<UserDto> GetUsers();
         IEnumerable<UserDto> GetAllUsers();
         User GetUserByUsername(string name);
+        User GetUserByAzureAdUserId(string azureAdUserId);
         User GetUserById(string id);
         void UpdateUser(string id, UserUpdateDto user);
         void CreateUser(UserCreateDto user);

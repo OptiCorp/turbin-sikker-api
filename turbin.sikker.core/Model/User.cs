@@ -18,6 +18,9 @@ namespace turbin.sikker.core.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
+
+        public string AzureAdUserId { get; set; }
+
         [Required]
         [StringLength(150)]
         public string UserRoleId { get; set; }
