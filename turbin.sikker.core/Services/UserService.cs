@@ -96,7 +96,7 @@ namespace turbin.sikker.core.Services
 
         public User GetUserByAzureAdUserId(string azureAdUserId)
         {
-            return _context.User.FirstOrDefault(u => u.AzureAdUserId == azureAdUserId);
+            return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.AzureAdUserId == azureAdUserId);
         }
 
         public User GetUserByUsername(string username)
