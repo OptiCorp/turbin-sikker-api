@@ -14,25 +14,27 @@ namespace turbin.sikker.core.Model
     }
 
     public class Checklist
-	{
+    {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 
-		[Required]
+        [Required]
         [StringLength(50)]
         public string Title { get; set; }
 
         [EnumDataType(typeof(ChecklistStatus))]
         public ChecklistStatus Status { get; set; }
 
-		public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 
         public string CreatedBy { get; set; }
 
         public User? CreatedByUser { get; }
-        public ICollection<ChecklistTask>? ChecklistTasks { get;  }
+        public ICollection<ChecklistTask>? ChecklistTasks { get; }
+
+        //public ICollection<ChecklistWorkflow>? ChecklistWorkflows { get; set; }
 
     }
 }

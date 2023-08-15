@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System.Security.Cryptography;
-using turbin.sikker.core.Model;
+﻿using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +7,13 @@ namespace turbin.sikker.core.Services
     public class UserService : IUserService
     {
         private readonly TurbinSikkerDbContext _context;
+        private readonly IChecklistWorkflowService _checklistWorkflowService; // Add this field
 
-        public UserService(TurbinSikkerDbContext context)
+
+        public UserService(TurbinSikkerDbContext context, IChecklistWorkflowService checklistWorkflowService)
         {
             _context = context;
+            _checklistWorkflowService = checklistWorkflowService;
         }
 
 
@@ -54,39 +55,85 @@ namespace turbin.sikker.core.Services
 
         }
 
-
         public IEnumerable<UserDto> GetUsers()
         {
-            return _context.User.Include(u => u.UserRole).Where(s => s.Status == UserStatus.Active).Select(u => new UserDto
+            using (var dbContext = _context)
             {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Email = u.Email,
-                Username = u.Username,
-                UserRole = u.UserRole,
-                Status = GetUserStatus(u.Status),
-                CreatedDate = u.CreatedDate,
-                UpdatedDate = u.UpdatedDate,
-                AzureAdUserId = u.AzureAdUserId
-            }).ToList();
+                var users = dbContext.User
+                    .Include(u => u.UserRole)
+                    .Where(u => u.Status == UserStatus.Active)
+                    .ToList();
+
+                var userDtos = new List<UserDto>();
+
+                foreach (var user in users)
+                {
+                    var userDto = new UserDto
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        Username = user.Username,
+                        UserRole = user.UserRole,
+                        Status = GetUserStatus(user.Status),
+                        CreatedDate = user.CreatedDate,
+                        UpdatedDate = user.UpdatedDate,
+                        AzureAdUserId = user.AzureAdUserId
+                    };
+
+                    if (!string.IsNullOrEmpty(user.Id))
+                    {
+                        userDto.ChecklistWorkflows = _checklistWorkflowService.GetAllChecklistWorkflowsByUserId(user.Id).ToList();
+                    }
+                    else
+                    {
+                        userDto.ChecklistWorkflows = new List<ChecklistWorkflow>();
+                    }
+
+                    userDtos.Add(userDto);
+                }
+
+                return userDtos;
+            }
         }
+
 
         public IEnumerable<UserDto> GetAllUsers()
         {
-            return _context.User.Include(u => u.UserRole).Select(u => new UserDto
+            using (var dbContext = _context)
             {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Email = u.Email,
-                Username = u.Username,
-                UserRole = u.UserRole,
-                Status = GetUserStatus(u.Status),
-                CreatedDate = u.CreatedDate,
-                UpdatedDate = u.UpdatedDate,
-                AzureAdUserId = u.AzureAdUserId
-            }).ToList();
+                var users = dbContext.User
+                    .Include(u => u.UserRole)
+                    .ToList();
+                var userDtos = new List<UserDto>();
+                foreach (var user in users)
+                {
+                    var userDto = new UserDto
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        Username = user.Username,
+                        UserRole = user.UserRole,
+                        Status = GetUserStatus(user.Status),
+                        CreatedDate = user.CreatedDate,
+                        UpdatedDate = user.UpdatedDate,
+                        AzureAdUserId = user.AzureAdUserId
+                    };
+                    if (!string.IsNullOrEmpty(user.Id))
+                    {
+                        userDto.ChecklistWorkflows = _checklistWorkflowService.GetAllChecklistWorkflowsByUserId(user.Id).ToList();
+                    }
+                    else
+                    {
+                        userDto.ChecklistWorkflows = new List<ChecklistWorkflow>();
+                    }
+                    userDtos.Add(userDto);
+                }
+                return userDtos;
+            }
         }
 
         public User GetUserById(string id)
@@ -103,6 +150,7 @@ namespace turbin.sikker.core.Services
         {
             return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.Username == username);
         }
+
 
         public void CreateUser(UserCreateDto userDto)
         {

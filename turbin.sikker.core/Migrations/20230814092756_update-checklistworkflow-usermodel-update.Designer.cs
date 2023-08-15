@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230814092756_update-checklistworkflow-usermodel-update")]
+    partial class updatechecklistworkflowusermodelupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,8 +115,11 @@ namespace turbin.sikker.core.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RecipientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -121,11 +127,17 @@ namespace turbin.sikker.core.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("WorkflowChecklistId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChecklistId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("WorkflowChecklistId");
 
                     b.ToTable("ChecklistWorkflow");
                 });
@@ -297,6 +309,29 @@ namespace turbin.sikker.core.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("turbin.sikker.core.Model.ChecklistWorkflow", b =>
+                {
+                    b.HasOne("turbin.sikker.core.Model.Checklist", null)
+                        .WithMany("ChecklistWorkflows")
+                        .HasForeignKey("ChecklistId");
+
+                    b.HasOne("turbin.sikker.core.Model.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("turbin.sikker.core.Model.Checklist", "Checklist")
+                        .WithMany()
+                        .HasForeignKey("WorkflowChecklistId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Checklist");
+
+                    b.Navigation("Recipient");
+                });
+
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
                 {
                     b.HasOne("turbin.sikker.core.Model.User", "CreatedByUser")
@@ -317,6 +352,11 @@ namespace turbin.sikker.core.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRole");
+                });
+
+            modelBuilder.Entity("turbin.sikker.core.Model.Checklist", b =>
+                {
+                    b.Navigation("ChecklistWorkflows");
                 });
 #pragma warning restore 612, 618
         }

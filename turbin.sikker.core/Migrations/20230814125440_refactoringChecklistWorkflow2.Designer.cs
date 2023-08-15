@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230814125440_refactoringChecklistWorkflow2")]
+    partial class refactoringChecklistWorkflow2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,9 +114,9 @@ namespace turbin.sikker.core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ChecklistId")
+                    b.Property<string>("ChecklistWorkflowId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -123,9 +126,13 @@ namespace turbin.sikker.core.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChecklistWorkflowId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ChecklistWorkflow");
                 });
@@ -295,6 +302,25 @@ namespace turbin.sikker.core.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("turbin.sikker.core.Model.ChecklistWorkflow", b =>
+                {
+                    b.HasOne("turbin.sikker.core.Model.Checklist", "Checklist")
+                        .WithMany()
+                        .HasForeignKey("ChecklistWorkflowId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("turbin.sikker.core.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Checklist");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
