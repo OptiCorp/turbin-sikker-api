@@ -153,31 +153,6 @@ namespace turbin.sikker.core.Controllers
             return NoContent();
         }
 
-        [HttpPost("SendChecklistToUser")]
-        [SwaggerOperation(Summary = "Send checklist to user by user id", Description = "Sends checklist using checklist id to user using the user id")]
-        [SwaggerResponse(200, "Checklist sent")]
-        [SwaggerResponse(400, "Invalid request")]
-        [SwaggerResponse(404, "Checklist or user not found")]
-        public IActionResult SendChecklistToUser(string checklistId, string recipientId)
-        {
-            var checklist = _checklistService.GetChecklistById(checklistId);
-            var user = _userService.GetUserById(recipientId);
-
-
-            if (checklist == null)
-            {
-                return NotFound("Checklist not found.");
-            }
-
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
-
-            _checklistService.SendChecklistToUser(checklist.Id, user.Id);
-            return Ok($"Checklist is sent to {user.FirstName}.");
-        }
-
         // Deletes Checklist based on given Id
         [HttpDelete("DeleteChecklist")]
         [SwaggerOperation(Summary = "Delete checklist by ID", Description = "Deletes a checklist by their ID.")]

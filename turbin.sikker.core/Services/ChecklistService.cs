@@ -92,25 +92,6 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public void SendChecklistToUser(string checklistId, string recipientId)
-        {
-            var checkList = _context.Checklist.FirstOrDefault(c => c.Id == checklistId);
-
-            var user = _context.User.FirstOrDefault(u => u.Id == recipientId);
-
-            var checklistWorkFlow = new ChecklistWorkflow
-            {
-
-                ChecklistId = checkList.Id,
-                UserId = user.Id,
-                Status = CurrentChecklistStatus.Sent,
-                UpdatedDate = DateTime.Now,
-            };
-
-            _context.ChecklistWorkflow.Add(checklistWorkFlow);
-            _context.SaveChanges();
-        }
-
         public void DeleteChecklist(string id)
         {
             var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
