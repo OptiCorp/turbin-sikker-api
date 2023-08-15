@@ -12,6 +12,7 @@ namespace turbin.sikker.core.Services
         void UpdateChecklist(string id, ChecklistEditDto checklist);
         string CreateChecklist(ChecklistCreateDto checklist);
         void DeleteChecklist(string id);
+        void HardDeleteChecklist(string id);
         bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title);
     }
 }

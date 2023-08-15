@@ -108,6 +108,37 @@ namespace turbin.sikker.core.Services
             }
         }
 
+        public void UpdateChecklistTaskInChecklist(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask)
+        {
+            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == taskId);
+            var newChecklistTask = new ChecklistTask
+            {
+                CategoryId = "",
+                Description = ""
+            };
+            var checklist = _context.Checklist.FirstOrDefault(c => c.Id == checklistId);
+
+            if (checklistTask != null)
+            {
+                if (checklistTask.CategoryId != null)
+                {
+                    newChecklistTask.CategoryId = updatedChecklistTask.CategoryId;
+                }
+
+
+                if (checklistTask.Description != null)
+                {
+                    newChecklistTask.Description = updatedChecklistTask.Description;
+                }
+
+                _context.Checklist_Task.Add(newChecklistTask);
+                checklist.ChecklistTasks.Add(newChecklistTask);
+                checklist.ChecklistTasks.Remove(checklistTask);
+
+                _context.SaveChanges();
+            }
+        }
+
         public void AddTaskToChecklist(string checklistId, string taskId)
         {
             var checklist = _context.Checklist.FirstOrDefault(c => c.Id == checklistId);

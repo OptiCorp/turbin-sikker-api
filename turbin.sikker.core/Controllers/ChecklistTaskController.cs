@@ -125,12 +125,34 @@ namespace turbin.sikker.core.Controllers
 
         // Edit a form task
         [HttpPost("UpdateChecklistTask")]
-        [SwaggerOperation(Summary = "Update checklist task by ID", Description = "Updates an existing checklist task by their ID.")]
+        [SwaggerOperation(Summary = "Update checklist task by task ID and checklist ID", Description = "Updates an existing checklist task by their ID.")]
         [SwaggerResponse(204, "Checklist task updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Checklist task not found")]
-        public IActionResult UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask, [FromServices] IValidator<ChecklistTaskRequestDto> validator)
+        public IActionResult UpdateChecklistTask(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask, [FromServices] IValidator<ChecklistTaskRequestDto> validator)
         {
+
+            var checklist = _checklistService.GetChecklistById(checklistId);
+            var contains = false;
+
+
+            if (checklist == null)
+            {
+                return NotFound("This task does not exist");
+            }
+
+            foreach (ChecklistTask task in checklist.ChecklistTasks)
+            {
+                if (task.Id == taskId)
+                {
+                    contains = true;
+                }
+            }
+
+            if (contains == false) 
+            {
+                return NotFound("This task does not exist in this checklist");
+            }
 
             ValidationResult validationResult = validator.Validate(updatedChecklistTask);
 
@@ -148,7 +170,7 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var checklistTask = _checklistTaskService.GetChecklistTaskById(id);
+            var checklistTask = _checklistTaskService.GetChecklistTaskById(taskId);
 
             if (checklistTask == null)
             {
@@ -163,10 +185,12 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            _checklistTaskService.UpdateChecklistTask(id, updatedChecklistTask);
+            _checklistTaskService.UpdateChecklistTaskInChecklist(taskId, checklistId, updatedChecklistTask);
+
 
             return NoContent();
         }
+
 
         //Add task to Checklist
         [HttpPost("AddTaskToChecklist")]

@@ -103,6 +103,16 @@ namespace turbin.sikker.core.Services
             }
         }
 
+        public void HardDeleteChecklist(string id)
+        {
+            var checklist = _context.Checklist.FirstOrDefault(checklist => checklist.Id == id);
+            if (checklist != null) 
+            {
+                _context.Checklist.Remove(checklist);
+                _context.SaveChanges();
+            }
+        }
+
         public bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title)
         {
             return checklists.Any(c => c.User.Id == userId && c.Title == title);
