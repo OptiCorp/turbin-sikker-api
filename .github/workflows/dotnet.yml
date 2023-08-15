@@ -1,13 +1,13 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: Build and deploy Docker to VM
 
 on:
   push:
     branches: [ "master", "CI/CD" ]
   pull_request:
-    branches: [ "master", "CI/CD" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -39,4 +39,36 @@ jobs:
         name: website
         path: turbin.sikker.core/website/**
         if-no-files-found: error
-  
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+
+    - name: Make new image
+      run: docker build -t turbinapi:latest
+
+    - name: Save image as tar file
+      run: docker save turbinapi > turbinapi.tar
+
+    - name: Send tar file 1
+      run: scp turbinapi.tar malin@20.251.37.226:~/turbinapi.tar
+    
+    - name: SSH into VM
+      run: ssh malin@20.251.37.226
+
+    - name: Stop container
+      run: docker stop api
+    
+    - name: Delete container
+      run: docker rm api
+
+    - name: Make new container
+      run: docker run --name api -p 8080:80 turbinapi:latest
+    
+    - name: Load new image
+      run: docker load -i turbinapi.tar
+    
+    - name: Start container
+      run: docker start <container_name>, ie docker start api
