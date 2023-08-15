@@ -30,6 +30,8 @@ namespace turbin.sikker.core.Model.DTO
 
         public UserRole? UserRole { get; set; }
 
+        public List<ChecklistWorkflow> ChecklistWorkflows { get; set; }
+
         public string Status { get; set; }
 
         [Required]

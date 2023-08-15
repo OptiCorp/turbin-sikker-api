@@ -63,29 +63,17 @@ namespace turbin.sikker.core
             services.AddScoped<IChecklistTaskService, ChecklistTaskService>();
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IPunchService, PunchService>();
+            services.AddScoped<IChecklistWorkflowService, ChecklistWorkflowService>();
 
             services.AddScoped<ValidationHelper>();
 
             services.AddControllers();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
-            //services.AddFluentValidationAutoValidation();
-            //services.AddScoped<IValidator<UserCreateDto>, UserCreateValidator>();
-            //services.AddScoped<IValidator<UserUpdateDto>, UserUpdateValidator>();
-            //services.AddScoped<IValidator<UserRoleCreateDto>, UserRoleCreateValidator>();
-            //services.AddScoped<IValidator<UserRoleUpdateDto>, UserRoleUpdateValidator>();
 
-            //services.AddScoped<IValidator<UserRole>, UserRoleDeleteValidator>();
 
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
 
-            //DEVELOPMENT CONNECTION STRING
-            //BjørnOle
-            //var connectionString = "Data Source=localhost;Initial Catalog=turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
-            //Malin
-            //var connectionString = "Server =.\\SQLEXPRESS; Database = turbinsikkerdb; Trusted_Connection = True; TrustServerCertificate = Yes;";
-            //Katrine
-            //var connectionString = "Data Source=localhost;Initial Catalog=Turbinsikkerdb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
 
 
             services.AddDbContext<TurbinSikkerDbContext>(options =>
