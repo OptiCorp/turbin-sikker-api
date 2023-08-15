@@ -16,6 +16,14 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
+
+        public bool DoesUserHaveChecklist(string userId, string checklistId)
+        {
+            bool userHasChecklist = _context.ChecklistWorkflow.Any(workflow => workflow.UserId == userId && workflow.ChecklistId == checklistId);
+
+            return userHasChecklist;
+        }
+
         public ChecklistWorkflow GetChecklistWorflowById(string id)
         {
             return _context.ChecklistWorkflow.Find(id);
@@ -31,15 +39,31 @@ namespace turbin.sikker.core.Services
             return _context.ChecklistWorkflow.Where(cw => cw.UserId == userId).ToList();
         }
 
-        public void UpdateChecklistWorkflow(ChecklistWorkflow checklistWorkflow)
+        public void UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow)
         {
-            _context.Entry(checklistWorkflow).State = EntityState.Modified;
+
+            var checklistWorkFlow = _context.ChecklistWorkflow.FirstOrDefault(checklistWorkflow => checklistWorkflow.Id == id);
+
+            if (checklistWorkFlow != null)
+            {
+                if (checklistWorkFlow.Status != null)
+                {
+                    checklistWorkFlow.Status = updatedChecklistWorkflow.Status;
+                }
+                if (checklistWorkFlow.UserId != null)
+                {
+                    checklistWorkFlow.UserId = updatedChecklistWorkflow.UserId;
+                }
+            }
+            checklistWorkFlow.UpdatedDate = DateTime.Now;
+            //_context.Entry(checklistWorkflow).State = EntityState.Modified;
             _context.SaveChanges();
         }
 
         public string CreateChecklistWorkflow(ChecklistWorkflow checklistWorkflow)
         {
             _context.ChecklistWorkflow.Add(checklistWorkflow);
+            checklistWorkflow.UpdatedDate = DateTime.Now;
             _context.SaveChanges();
             return checklistWorkflow.Id;
         }

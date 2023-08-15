@@ -15,16 +15,16 @@ namespace turbin.sikker.core.Model
     public class ChecklistWorkflow
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        public string ChecklistId { get; set; }
+        public string? ChecklistId { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [EnumDataType(typeof(CurrentChecklistStatus))]
-        public CurrentChecklistStatus Status { get; set; }
+        public CurrentChecklistStatus? Status { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
     }
 }

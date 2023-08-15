@@ -14,9 +14,12 @@ namespace turbin.sikker.core.Controllers
     {
         private readonly IChecklistWorkflowService _workflowService;
 
-        public ChecklistWorkflowController(IChecklistWorkflowService workflowService)
+        private readonly TurbinSikkerDbContext _context;
+
+        public ChecklistWorkflowController(IChecklistWorkflowService workflowService, TurbinSikkerDbContext context)
         {
             _workflowService = workflowService;
+            _context = context;
         }
 
         [HttpGet("GetAllChecklistWorkflows")]
@@ -54,7 +57,18 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "Checklist workflow created", typeof(ChecklistWorkflow))]
         public IActionResult CreateChecklistWorkflow(ChecklistWorkflow workflow)
         {
+
+            bool userHasChecklist = _workflowService.DoesUserHaveChecklist(workflow.UserId, workflow.ChecklistId);
+
+            if (userHasChecklist)
+            {
+                return Conflict($"User already has that checklist");
+            }
+
             string newWorkflowId = _workflowService.CreateChecklistWorkflow(workflow);
+
+
+
             return CreatedAtAction(nameof(GetChecklistWorkflowById), new { id = newWorkflowId }, workflow);
         }
 
@@ -71,7 +85,7 @@ namespace turbin.sikker.core.Controllers
             }
 
             updatedWorkflow.Id = id;
-            _workflowService.UpdateChecklistWorkflow(updatedWorkflow);
+            _workflowService.UpdateChecklistWorkflow(id, updatedWorkflow);
 
             return NoContent();
         }
