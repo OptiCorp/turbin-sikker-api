@@ -8,6 +8,7 @@ using turbin.sikker.core.Model.DTO.ChecklistDtos;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using turbin.sikker.core.Model.DTO.TaskDtos;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -17,10 +18,14 @@ namespace turbin.sikker.core.Controllers
     {
         private readonly IChecklistService _checklistService;
         private readonly IUserService _userService;
-        public ChecklistController(IChecklistService context, IUserService userService)
+        private readonly IChecklistTaskService _checklistTaskService;
+        private readonly ICategoryService _categoryService;
+        public ChecklistController(IChecklistService context, IUserService userService, IChecklistTaskService checklistTaskService, ICategoryService categoryService)
         {
             _checklistService = context;
             _userService = userService;
+            _checklistTaskService = checklistTaskService;
+            _categoryService = categoryService;
         }
 
         // Get all existing Checklists 
@@ -110,6 +115,106 @@ namespace turbin.sikker.core.Controllers
 
             return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
         }
+
+
+        [HttpPost("AddChecklistWithTasks")]
+        [SwaggerOperation(Summary = "Create a new checklist with tasks", Description = "Creates a new checklist.")]
+        [SwaggerResponse(201, "Checklist created", typeof(ChecklistViewNoUserDto))]
+        [SwaggerResponse(400, "Invalid request")]
+        public IActionResult CreateChecklistWithTasks(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> checklistValidator, [FromServices] IValidator<ChecklistTaskRequestDto> checklistTaskValidator)
+        {
+
+
+            ValidationResult checklistValidationResult = checklistValidator.Validate(checklist);
+
+            if (!checklistValidationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in checklistValidationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
+            var checklists = _checklistService.GetAllChecklists();
+            var user = _userService.GetUserById(checklist.CreatedBy);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            if (_checklistService.checklistExists(checklists, checklist.CreatedBy, checklist.Title))
+            {
+                return Conflict("You already have a checklist by that name");
+            }
+
+            var newChecklistId = _checklistService.CreateChecklist(checklist);
+            var newChecklist = _checklistService.GetChecklistById(newChecklistId);
+
+
+            if (checklist.ChecklistTasks.Count() > 0)
+            {
+                foreach (ChecklistTaskRequestDto checklistTask in checklist.ChecklistTasks)
+                {
+                    ValidationResult checklistTaskValidationResult = checklistTaskValidator.Validate(checklistTask);
+
+                    if (!checklistTaskValidationResult.IsValid)
+                    {
+                        var modelStateDictionary = new ModelStateDictionary();
+
+                        foreach (ValidationFailure failure in checklistTaskValidationResult.Errors)
+                        {
+                            modelStateDictionary.AddModelError(
+                                failure.PropertyName,
+                                failure.ErrorMessage
+                                );
+                        }
+                        _checklistService.HardDeleteChecklist(newChecklistId);
+                        return ValidationProblem(modelStateDictionary);
+                    }
+
+                    var category = _categoryService.GetCategoryById(checklistTask.CategoryId);
+                    var tasks = _checklistTaskService.GetAllTasks();
+
+                    if (category == null)
+                    {
+                        _checklistService.HardDeleteChecklist(newChecklistId);
+                        return NotFound("Category not found");
+                    }
+                }
+
+
+                for (int i = 0; i < checklist.ChecklistTasks.Count(); i++)
+                {
+                    var tasks = _checklistTaskService.GetAllTasks();
+                    var checklistTask = checklist.ChecklistTasks.ElementAt(i);
+
+                    if (_checklistTaskService.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
+                    {
+                        var task = tasks.FirstOrDefault(t => t.Category.Id == checklistTask.CategoryId && t.Description == checklistTask.Description);
+                        _checklistTaskService.AddTaskToChecklist(newChecklistId, task.Id);
+                        continue;
+                    }
+
+                    var taskId = _checklistTaskService.CreateChecklistTask(checklistTask);
+
+
+                    _checklistTaskService.AddTaskToChecklist(newChecklistId, taskId);
+                }
+                
+            }
+
+            
+
+            return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
+
+        }
+
 
         [HttpPost("UpdateChecklist")]
         [SwaggerOperation(Summary = "Update checklist by ID", Description = "Updates an existing checklist by their ID.")]
