@@ -47,7 +47,7 @@ jobs:
     steps:
 
     - name: Make new image
-      run: docker build -t turbinapi:latest .
+      run: docker build -t Dockerfile:latest .
       working-directory: ./turbin.sikker.core
 
     - name: Save image as tar file
