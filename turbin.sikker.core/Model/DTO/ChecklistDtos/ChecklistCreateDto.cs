@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using turbin.sikker.core.Model.DTO.TaskDtos;
 
 namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
@@ -11,7 +12,7 @@ namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 
             public string CreatedBy { get; set; }
 
-
+            public ICollection<ChecklistTaskRequestDto>? ChecklistTasks { get; set; }
         
     }
 }
