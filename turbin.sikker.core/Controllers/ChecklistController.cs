@@ -73,6 +73,15 @@ namespace turbin.sikker.core.Controllers
         }
 
 
+        [HttpGet("GetChecklistsByName")]
+        [SwaggerOperation(Summary = "Search checklists by name", Description = "Retrieves all checklist which include search word.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistViewNoUserDto>))]
+        public IEnumerable<ChecklistMultipleResponseDto> SearchChecklistByName(string searchString)
+        {
+            return _checklistService.SearchChecklistByName(searchString);
+        }
+
+
         // Creates a new Checklist
         [HttpPost("AddChecklist")]
         [SwaggerOperation(Summary = "Create a new checklist", Description = "Creates a new checklist.")]
@@ -117,13 +126,13 @@ namespace turbin.sikker.core.Controllers
         }
 
 
+        //Creates a checklist and adds tasks
         [HttpPost("AddChecklistWithTasks")]
         [SwaggerOperation(Summary = "Create a new checklist with tasks", Description = "Creates a new checklist.")]
         [SwaggerResponse(201, "Checklist created", typeof(ChecklistViewNoUserDto))]
         [SwaggerResponse(400, "Invalid request")]
         public IActionResult CreateChecklistWithTasks(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> checklistValidator, [FromServices] IValidator<ChecklistTaskRequestDto> checklistTaskValidator)
         {
-
 
             ValidationResult checklistValidationResult = checklistValidator.Validate(checklist);
 
@@ -156,61 +165,49 @@ namespace turbin.sikker.core.Controllers
             var newChecklistId = _checklistService.CreateChecklist(checklist);
             var newChecklist = _checklistService.GetChecklistById(newChecklistId);
 
-
-            if (checklist.ChecklistTasks.Count() > 0)
+            foreach (ChecklistTaskRequestDto checklistTask in checklist.ChecklistTasks)
             {
-                foreach (ChecklistTaskRequestDto checklistTask in checklist.ChecklistTasks)
+                ValidationResult checklistTaskValidationResult = checklistTaskValidator.Validate(checklistTask);
+
+                if (!checklistTaskValidationResult.IsValid)
                 {
-                    ValidationResult checklistTaskValidationResult = checklistTaskValidator.Validate(checklistTask);
+                    var modelStateDictionary = new ModelStateDictionary();
 
-                    if (!checklistTaskValidationResult.IsValid)
+                    foreach (ValidationFailure failure in checklistTaskValidationResult.Errors)
                     {
-                        var modelStateDictionary = new ModelStateDictionary();
-
-                        foreach (ValidationFailure failure in checklistTaskValidationResult.Errors)
-                        {
-                            modelStateDictionary.AddModelError(
-                                failure.PropertyName,
-                                failure.ErrorMessage
-                                );
-                        }
-                        _checklistService.HardDeleteChecklist(newChecklistId);
-                        return ValidationProblem(modelStateDictionary);
+                        modelStateDictionary.AddModelError(
+                            failure.PropertyName,
+                            failure.ErrorMessage
+                            );
                     }
-
-                    var category = _categoryService.GetCategoryById(checklistTask.CategoryId);
-                    var tasks = _checklistTaskService.GetAllTasks();
-
-                    if (category == null)
-                    {
-                        _checklistService.HardDeleteChecklist(newChecklistId);
-                        return NotFound("Category not found");
-                    }
+                    _checklistService.HardDeleteChecklist(newChecklistId);
+                    return ValidationProblem(modelStateDictionary);
                 }
 
+                var category = _categoryService.GetCategoryById(checklistTask.CategoryId);
 
-                for (int i = 0; i < checklist.ChecklistTasks.Count(); i++)
+                if (category == null)
                 {
-                    var tasks = _checklistTaskService.GetAllTasks();
-                    var checklistTask = checklist.ChecklistTasks.ElementAt(i);
-
-                    if (_checklistTaskService.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
-                    {
-                        var task = tasks.FirstOrDefault(t => t.Category.Id == checklistTask.CategoryId && t.Description == checklistTask.Description);
-                        _checklistTaskService.AddTaskToChecklist(newChecklistId, task.Id);
-                        continue;
-                    }
-
-                    var taskId = _checklistTaskService.CreateChecklistTask(checklistTask);
-
-
-                    _checklistTaskService.AddTaskToChecklist(newChecklistId, taskId);
+                    _checklistService.HardDeleteChecklist(newChecklistId);
+                    return NotFound("Category not found");
                 }
-                
             }
 
-            
+            foreach (ChecklistTaskRequestDto checklistTask in checklist.ChecklistTasks)
+            {
+                var tasks = _checklistTaskService.GetAllTasks();
 
+                if(_checklistTaskService.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
+                {
+                    var task = tasks.FirstOrDefault(t => t.Category.Id == checklistTask.CategoryId && t.Description == checklistTask.Description);
+                    _checklistTaskService.AddTaskToChecklist(newChecklistId, task.Id);
+                    continue;
+                }
+
+                var taskId = _checklistTaskService.CreateChecklistTask(checklistTask);
+                _checklistTaskService.AddTaskToChecklist(newChecklistId, taskId);
+            }
+            
             return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
 
         }

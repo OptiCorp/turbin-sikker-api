@@ -23,6 +23,7 @@ namespace turbin.sikker.core.Controllers
         {
             _categoryService = categoryService;
         }
+
         [HttpGet("GetAllCategories")]
         [SwaggerOperation(Summary = "Get all categories", Description = "Retrieves a list of all categories.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
@@ -46,6 +47,16 @@ namespace turbin.sikker.core.Controllers
 
             return Ok(Category);
         }
+
+
+        [HttpGet("GetCategoriesByName")]
+        [SwaggerOperation(Summary = "Search for checklists", Description = "Retrieves a list of all categories which contains the search word.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
+        public IEnumerable<Category> SearchCategoryByName(string searchString)
+        {
+            return _categoryService.SearchCategoryByName(searchString);
+        }
+
 
         // Creates a new Category
         [HttpPost("AddCategory")]

@@ -24,6 +24,10 @@ namespace turbin.sikker.core.Services
             return _context.Category.FirstOrDefault(category => category.Id == id);
         }
 
+        public IEnumerable<Category> SearchCategoryByName(string searchString)
+        {
+            return _context.Category.Where(c => c.Name.Contains(searchString)).ToList();
+        }
       
         public async Task<string> CreateCategory(CategoryRequestDto categoryDto)
         {

@@ -51,6 +51,21 @@ namespace turbin.sikker.core.Services
                                      .ToList();
         }
 
+        public IEnumerable<ChecklistMultipleResponseDto> SearchChecklistByName(string searchString)
+        {
+            return _context.Checklist.Where(c => c.Title.Contains(searchString))
+                                     .Select(c => new ChecklistMultipleResponseDto
+                                     {
+                                        Id = c.Id,
+                                        Title = c.Title,
+                                        User = c.CreatedByUser,
+                                        Status = c.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
+                                        CreatedDate = c.CreatedDate,
+                                        UpdatedDate = c.UpdatedDate
+                                     })
+                                     .ToList();
+        }
+
         public string CreateChecklist(ChecklistCreateDto checklistDto)
         {
             var checklist = new Checklist
