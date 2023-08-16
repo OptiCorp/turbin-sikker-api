@@ -70,6 +70,20 @@ namespace turbin.sikker.core.Services
             return tasks;
         }
 
+        public IEnumerable<ChecklistTaskResponseDto> GetTasksByDescription(string searchString)
+        {
+            return _context.Checklist_Task.Where(ct => ct.Description.Contains(searchString)).Select(ct => new ChecklistTaskResponseDto
+            {
+                Id = ct.Id,
+                Description = ct.Description,
+                Category = new Category
+                {
+                    Id = ct.Category.Id,
+                    Name = ct.Category.Name
+                }
+            }).ToList();
+        }
+
 
         public string CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
         {

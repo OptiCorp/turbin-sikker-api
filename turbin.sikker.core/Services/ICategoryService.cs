@@ -8,6 +8,7 @@ namespace turbin.sikker.core.Services
     {
         IEnumerable<Category> GetAllCategories();
         Category GetCategoryById(string id);
+        IEnumerable<Category> SearchCategoryByName(string searchString);
         void UpdateCategory(string id, CategoryRequestDto category);
         Task<string> CreateCategory(CategoryRequestDto category);
         void DeleteCategory(string id);

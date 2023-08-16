@@ -9,6 +9,7 @@ namespace turbin.sikker.core.Services
         Checklist GetChecklistById(string id);
         IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists();
         IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string userId);
+        IEnumerable<ChecklistMultipleResponseDto> SearchChecklistByName(string searchString);
         void UpdateChecklist(string id, ChecklistEditDto checklist);
         string CreateChecklist(ChecklistCreateDto checklist);
         void DeleteChecklist(string id);

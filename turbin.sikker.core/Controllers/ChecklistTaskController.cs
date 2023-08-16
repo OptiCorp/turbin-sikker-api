@@ -81,6 +81,14 @@ namespace turbin.sikker.core.Controllers
             return Ok(tasks);
         }
 
+        [HttpGet("GetTasksByDescription")]
+        [SwaggerOperation(Summary = "Get all tasks with description", Description = "Retrieves a list of all tasks which match the search.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
+        public IEnumerable<ChecklistTaskResponseDto> GetTasksByDescription(string searchString)
+        {
+            return _checklistTaskService.GetTasksByDescription(searchString);
+        }
+
         // Creates a new form task
         [HttpPost("AddChecklistTask")]
         [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task")]
@@ -154,6 +162,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("This task does not exist in this checklist");
             }
 
+
             ValidationResult validationResult = validator.Validate(updatedChecklistTask);
 
             if (!validationResult.IsValid)
@@ -176,6 +185,7 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("Task not found");
             }
+
             if (updatedChecklistTask.CategoryId != null)
             {
                 var category = _categoryService.GetCategoryById(updatedChecklistTask.CategoryId);
