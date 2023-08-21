@@ -53,12 +53,10 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build turbinsikker-api --configuration Release
-        working-directory: ./turbin.sikker.core
+        run: dotnet build turbin.sikker.core --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish turbinsikker-api -c Release -o ${{env.DOTNET_ROOT}}/myapp
-        working-directory: ./turbin.sikker.core
+        run: dotnet publish turbin.sikker.core -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
