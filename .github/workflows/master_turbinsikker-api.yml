@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  TURBINSIKKER_PACKAGE_PATH: './turbin.sikker.core/'
+  TURBINSIKKER_PACKAGE_PATH: './turbin.sikker.core/bin/Debug/net6.0'
 
 jobs:
   build:
