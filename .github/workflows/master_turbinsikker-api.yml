@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  TURBINSIKKER_PACKAGE_PATH: './turbin.sikker.core/bin/Debug/net6.0'
+  TURBINSIKKER_PACKAGE_PATH: './turbin.sikker.core/'
 
 jobs:
   build:
@@ -33,11 +33,11 @@ jobs:
         run: dotnet publish -c Release -o ${{env.TURBINSIKKER_PACKAGE_PATH}}
         working-directory: ./turbin.sikker.core
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: .net-app
-          path: ${{env.TURBINSIKKER_PACKAGE_PATH}}
+      # - name: Upload artifact for deployment job
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: .net-app
+      #     path: ${{env.TURBINSIKKER_PACKAGE_PATH}}
 
   deploy:
     runs-on: windows-latest
@@ -47,10 +47,10 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: .net-app
+      # - name: Download artifact from build job
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: .net-app
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
