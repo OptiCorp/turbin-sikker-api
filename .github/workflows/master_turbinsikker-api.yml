@@ -27,11 +27,11 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
-        # working-directory: ./turbin.sikker.core
+        working-directory: ./turbin.sikker.core
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.TURBINSIKKER_PACKAGE_PATH}}
-        # working-directory: ./turbin.sikker.core
+        working-directory: ./turbin.sikker.core
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
