@@ -27,14 +27,14 @@ jobs:
         working-directory: ./turbin.sikker.core
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./published
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
         working-directory: ./turbin.sikker.core
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ./published
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -48,7 +48,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: .net-app
-          path: ./published
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -57,4 +56,4 @@ jobs:
           app-name: 'turbinsikker-api'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5370688701CA48E7BF36E18E86E75873 }}
-          package: ./published
+          package: .
