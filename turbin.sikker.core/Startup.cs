@@ -18,6 +18,7 @@ using turbin.sikker.core.Validation.UserValidations;
 using turbin.sikker.core.Validation.UserRoleValidations;
 using turbin.sikker.core.Common;
 
+
 namespace turbin.sikker.core
 
 {
@@ -102,8 +103,8 @@ namespace turbin.sikker.core
             services.AddAuthentication()
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Audience = "95763e09-e04c-48a8-99a6-a878ed99d774";
-                    options.Authority = "https://login.microsoftonline.com/df4dc9e8-cc4f-4792-a55e-36f7e1d92c47/v2.0";
+                    options.Audience = "b1bc9eb7-71fc-43c4-a888-ae73c72be014";
+                    options.Authority = "https://login.microsoftonline.com/2d89021a-6a8a-4063-a9fe-b4777c4088f1/";
                     options.RequireHttpsMetadata = false; //Bad? 
                 });
 
