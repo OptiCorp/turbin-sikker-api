@@ -116,7 +116,7 @@ namespace turbin.sikker.core
             //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
             //        );
             //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build(); 
             //});
 
             services.AddAuthentication().AddIdentityServerJwt();
