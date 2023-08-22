@@ -12,8 +12,8 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    [Migration("20230815114522_refactoringChecklistWorkflow4")]
-    partial class refactoringChecklistWorkflow4
+    [Migration("20230822115307_fixingChecklistIdChecklistWorkflow")]
+    partial class fixingChecklistIdChecklistWorkflow
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
