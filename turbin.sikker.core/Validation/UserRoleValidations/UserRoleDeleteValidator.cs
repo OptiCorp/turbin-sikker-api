@@ -26,7 +26,7 @@ namespace turbin.sikker.core.Validation.UserRoleValidations
 
         private bool NotInUse(string id)
         {
-            UserRole userRole = _userRoleService.GetUserRoleById(id);
+            UserRole userRole = _userRoleService.GetUserRoleById(id).Result;
             return userRole == null || !_context.User.Any(user => user.UserRole == userRole);
         }
     }

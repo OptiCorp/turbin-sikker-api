@@ -14,38 +14,38 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
-        public bool IsUserRoleNameTaken(IEnumerable<UserRole> userRoles, string userRoleName)
-        {
-            return userRoles.Any(role => role.Name == userRoleName);
-        }
-        public bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId)
-        {
-            return userRoles.Any(role => role.Id == userRoleId);
-        }
+        // public bool IsUserRoleNameTaken(IEnumerable<UserRole> userRoles, string userRoleName)
+        // {
+        //     return userRoles.Any(role => role.Name == userRoleName);
+        // }
+        // public bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId)
+        // {
+        //     return userRoles.Any(role => role.Id == userRoleId);
+        // }
 
-        public bool IsUserRoleInUse(UserRole userRole)
+        public async Task<bool> IsUserRoleInUse(UserRole userRole)
         {
-            return _context.User.Any(user => user.UserRole == userRole);
-        }
-
-        public IEnumerable<UserRole> GetUserRoles()
-        {
-            return _context.UserRole.ToList();
+            return  await _context.User.AnyAsync(user => user.UserRole == userRole);
         }
 
-
-        public UserRole GetUserRoleById(string id)
+        public async Task<IEnumerable<UserRole>> GetUserRoles()
         {
-            return _context.UserRole.FirstOrDefault(userRole => userRole.Id == id);
+            return await _context.UserRole.ToListAsync();
+        }
+
+
+        public async Task<UserRole> GetUserRoleById(string id)
+        {
+            return await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == id);
 
         }
 
-        public UserRole GetUserRoleByUserRoleName(string userRoleName)
+        public async Task<UserRole> GetUserRoleByUserRoleName(string userRoleName)
         {
-            return _context.UserRole.FirstOrDefault(userRole => userRole.Name == userRoleName);
+            return await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Name == userRoleName);
         }
 
-        public void CreateUserRole(UserRoleCreateDto userRoleDto)
+        public async void CreateUserRole(UserRoleCreateDto userRoleDto)
         {
             var userRole = new UserRole
             {
@@ -53,30 +53,30 @@ namespace turbin.sikker.core.Services
             };
 
             _context.UserRole.Add(userRole);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateUserRole(string userRoleId, UserRoleUpdateDto updatedUserRole)
+        public async void UpdateUserRole(string userRoleId, UserRoleUpdateDto updatedUserRole)
         {
-            var userRole = _context.UserRole.FirstOrDefault(userRole => userRole.Id == userRoleId);
+            var userRole = await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == userRoleId);
 
             if (userRole != null)
             {
                 if (updatedUserRole.Name != null) userRole.Name = updatedUserRole.Name;
 
-                _context.SaveChanges();
+                _context.SaveChangesAsync();
             }
         }
 
-        public void DeleteUserRole(string id)
+        public async void DeleteUserRole(string id)
         {
 
-            var userRole = _context.UserRole.FirstOrDefault(userRole => userRole.Id == id);
+            var userRole = await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == id);
 
             if (userRole != null)
             {
                 _context.UserRole.Remove(userRole);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
         }

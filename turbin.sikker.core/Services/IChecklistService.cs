@@ -6,15 +6,15 @@ namespace turbin.sikker.core.Services
 {
     public interface IChecklistService
     {
-        Checklist GetChecklistById(string id);
-        IEnumerable<ChecklistMultipleResponseDto> GetAllChecklists();
-        IEnumerable<ChecklistViewNoUserDto> GetAllChecklistsByUserId(string userId);
-        IEnumerable<ChecklistMultipleResponseDto> SearchChecklistByName(string searchString);
+        Task<Checklist> GetChecklistById(string id);
+        Task<IEnumerable<ChecklistMultipleResponseDto>> GetAllChecklists();
+        Task<IEnumerable<ChecklistViewNoUserDto>> GetAllChecklistsByUserId(string userId);
+        Task<IEnumerable<ChecklistMultipleResponseDto>> SearchChecklistByName(string searchString);
         void UpdateChecklist(string id, ChecklistEditDto checklist);
-        string CreateChecklist(ChecklistCreateDto checklist);
+        Task<string> CreateChecklist(ChecklistCreateDto checklist);
         void DeleteChecklist(string id);
         void HardDeleteChecklist(string id);
-        bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title);
+        // bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title);
     }
 }
 

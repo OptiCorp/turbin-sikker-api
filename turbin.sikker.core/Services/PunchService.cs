@@ -13,50 +13,50 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
-        public bool IsValidStatus(string value)
+        // public bool IsValidStatus(string value)
+        // {
+        //     string lowerCaseValue = value.ToLower();
+        //     return lowerCaseValue == "pending" || lowerCaseValue == "approved" || lowerCaseValue == "rejected";
+        // }
+
+
+        // public string GetPunchStatus(PunchStatus status)
+        // {
+        //     switch (status)
+        //     {
+        //         case PunchStatus.Pending:
+        //             return "Pending";
+        //         case PunchStatus.Approved:
+        //             return "Approved";
+        //         case PunchStatus.Rejected:
+        //             return "Rejected";
+        //         default:
+        //             return "Pending";
+        //     }
+        // }
+
+        // public string GetPunchSeverity(PunchSeverity status)
+        // {
+        //     switch (status)
+        //     {
+        //         case PunchSeverity.Minor:
+        //             return "Minor";
+        //         case PunchSeverity.Major:
+        //             return "Major";
+        //         case PunchSeverity.Critical:
+        //             return "Critical";
+        //         default:
+        //             return "Critical";
+        //     }
+        // }
+
+        public async Task<Punch> GetPunchById(string id)
         {
-            string lowerCaseValue = value.ToLower();
-            return lowerCaseValue == "pending" || lowerCaseValue == "approved" || lowerCaseValue == "rejected";
+            return await _context.Punch.Include(p => p.CreatedByUser).ThenInclude(u => u.UserRole)
+                                    .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-
-        public string GetPunchStatus(PunchStatus status)
-        {
-            switch (status)
-            {
-                case PunchStatus.Pending:
-                    return "Pending";
-                case PunchStatus.Approved:
-                    return "Approved";
-                case PunchStatus.Rejected:
-                    return "Rejected";
-                default:
-                    return "Pending";
-            }
-        }
-
-        public string GetPunchSeverity(PunchSeverity status)
-        {
-            switch (status)
-            {
-                case PunchSeverity.Minor:
-                    return "Minor";
-                case PunchSeverity.Major:
-                    return "Major";
-                case PunchSeverity.Critical:
-                    return "Critical";
-                default:
-                    return "Critical";
-            }
-        }
-
-        public Punch GetPunchById(string id)
-        {
-            return _context.Punch.Include(p => p.CreatedByUser).ThenInclude(u => u.UserRole)
-                                    .FirstOrDefault(p => p.Id == id);
-        }
-
-        public string CreatePunch(PunchCreateDto punchDto)
+        public async Task<string> CreatePunch(PunchCreateDto punchDto)
         {
 
             var punch = new Punch
@@ -70,16 +70,16 @@ namespace turbin.sikker.core.Services
             };
 
             _context.Punch.Add(punch);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             string newPunchId = punch.Id;
 
             return newPunchId;
         }
 
-        public void UpdatePunch(string punchId, PunchUpdateDto updatedPunch)
+        public async void UpdatePunch(string punchId, PunchUpdateDto updatedPunch)
         {
-            var punch = _context.Punch.FirstOrDefault(u => u.Id == punchId);
+            var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == punchId);
 
             if (punch != null)
             {
@@ -126,18 +126,18 @@ namespace turbin.sikker.core.Services
                 //punch.UserId = updatedPunch.UserId;
 
                 punch.UpdatedDate = DateTime.Now;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public void DeletePunch(string id)
+        public async void DeletePunch(string id)
         {
-            var punch = _context.Punch.FirstOrDefault(u => u.Id == id);
+            var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == id);
 
             if (punch != null)
             {
                 _context.Punch.Remove(punch);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 

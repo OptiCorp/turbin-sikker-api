@@ -17,6 +17,7 @@ using FluentValidation;
 using turbin.sikker.core.Validation.UserValidations;
 using turbin.sikker.core.Validation.UserRoleValidations;
 using turbin.sikker.core.Common;
+using turbin.sikker.core.Utilities;
 
 
 namespace turbin.sikker.core
@@ -65,6 +66,13 @@ namespace turbin.sikker.core
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IPunchService, PunchService>();
             services.AddScoped<IChecklistWorkflowService, ChecklistWorkflowService>();
+
+            services.AddScoped<IUserUtilities, UserUtilities>();
+            services.AddScoped<IUserRoleUtilities, UserRoleUtilities>();
+            services.AddScoped<IChecklistUtilities, ChecklistUtilities>();
+            services.AddScoped<ICategoryUtilities, CategoryUtilities>();
+            services.AddScoped<IChecklistTaskUtilities, ChecklistTaskUtilities>();
+            services.AddScoped<IPunchUtilities, PunchUtilities>();
 
             services.AddScoped<ValidationHelper>();
 

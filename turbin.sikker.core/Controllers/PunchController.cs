@@ -3,7 +3,7 @@ using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
-
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -14,12 +14,14 @@ namespace turbin.sikker.core.Controllers
         private readonly IPunchService _punchService;
         private readonly IUserService _userService;
         private readonly IChecklistService _checklistService;
+        private readonly IPunchUtilities _punchUtilities;
 
-        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService)
+        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities)
         {
             _punchService = punchService;
             _userService = userService;
             _checklistService = checklistService;
+            _punchUtilities = punchUtilities;
         }
 
         [HttpGet("GetPunch")]
@@ -28,7 +30,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Punch not found")]
         public IActionResult GetPunchById(string id)
         {
-            var punch = _punchService.GetPunchById(id);
+            var punch = _punchService.GetPunchById(id).Result;
             if (punch == null)
             {
                 return NotFound("Punch not found.");
@@ -41,7 +43,7 @@ namespace turbin.sikker.core.Controllers
                 CreatedDate = punch.CreatedDate,
                 UpdatedDate = punch.UpdatedDate,
                 Severity = punch.Severity.ToString(),
-                Status = _punchService.GetPunchStatus(punch.Status),
+                Status = _punchUtilities.GetPunchStatus(punch.Status),
                 User = punch.CreatedByUser,
                 Active = punch.Active,
                 CreatedBy = punch.CreatedBy,
@@ -80,7 +82,7 @@ namespace turbin.sikker.core.Controllers
 
 
 
-            var newPunchId = _punchService.CreatePunch(punch);
+            var newPunchId = _punchService.CreatePunch(punch).Result;
             var newPunch = _punchService.GetPunchById(newPunchId);
 
             return CreatedAtAction(nameof(GetPunchById), new { id = newPunchId }, newPunch);
@@ -116,7 +118,7 @@ namespace turbin.sikker.core.Controllers
             {
                 string statusMessage = updatedPunch.Status.ToLower();
 
-                if (!_punchService.IsValidStatus(statusMessage))
+                if (!_punchUtilities.IsValidStatus(statusMessage))
                 {
                     return Conflict("Status must be either 'Pending', 'Approved', or 'Rejected'.");
                 }

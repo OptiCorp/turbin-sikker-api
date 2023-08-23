@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -16,12 +17,13 @@ namespace turbin.sikker.core.Controllers
     public class UserRoleController : ControllerBase
     {
         private readonly IUserRoleService _userRoleService;
+        private readonly IUserRoleUtilities _userRoleUtilities;
 
 
-
-        public UserRoleController(IUserRoleService userRoleService)
+        public UserRoleController(IUserRoleService userRoleService, IUserRoleUtilities userRoleUtilities)
         {
             _userRoleService = userRoleService;
+            _userRoleUtilities = userRoleUtilities;
         }
 
 
@@ -30,7 +32,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserRole>))]
         public IEnumerable<UserRole> GetUserRoles()
         {
-            return _userRoleService.GetUserRoles();
+            return _userRoleService.GetUserRoles().Result;
         }
 
         // Get specific user role based on given Id
@@ -72,9 +74,9 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
-            var userRoles = _userRoleService.GetUserRoles();
+            var userRoles = _userRoleService.GetUserRoles().Result;
 
-            if (_userRoleService.IsUserRoleNameTaken(userRoles, userRole.Name))
+            if (_userRoleUtilities.IsUserRoleNameTaken(userRoles, userRole.Name))
             {
                 return Conflict($"The user role '{userRole.Name}' already exists.");
             }
@@ -111,9 +113,9 @@ namespace turbin.sikker.core.Controllers
             }
 
 
-            var userRoles = _userRoleService.GetUserRoles();
+            var userRoles = _userRoleService.GetUserRoles().Result;
 
-            if (_userRoleService.IsUserRoleNameTaken(userRoles, updatedUserRole.Name))
+            if (_userRoleUtilities.IsUserRoleNameTaken(userRoles, updatedUserRole.Name))
             {
                 return Conflict($"The user role '{updatedUserRole.Name}' already exists.");
             }
@@ -140,14 +142,14 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User role not found")]
         public IActionResult DeleteUserRole(string id)
         {
-            UserRole userRoleToDelete = _userRoleService.GetUserRoleById(id);
+            UserRole userRoleToDelete = _userRoleService.GetUserRoleById(id).Result;
 
             if (userRoleToDelete == null)
             {
                 return NotFound();
             }
 
-            if (_userRoleService.IsUserRoleInUse(userRoleToDelete))
+            if (_userRoleService.IsUserRoleInUse(userRoleToDelete).Result)
             {
                 return Conflict($"Conflict: Unable to delete the {userRoleToDelete.Name} role.\nReason: There are users currently assigned to this role.");
             }

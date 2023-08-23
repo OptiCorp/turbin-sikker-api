@@ -8,6 +8,7 @@ using turbin.sikker.core.Model.DTO.TaskDtos;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -18,11 +19,13 @@ namespace turbin.sikker.core.Controllers
         private readonly IChecklistService _checklistService;
         private readonly IChecklistTaskService _checklistTaskService;
         private readonly ICategoryService _categoryService;
-        public ChecklistTaskController(IChecklistService checklistService, IChecklistTaskService checklistTaskService, ICategoryService categoryService)
+        private readonly IChecklistTaskUtilities _checklistTaskUtilities;
+        public ChecklistTaskController(IChecklistService checklistService, IChecklistTaskService checklistTaskService, ICategoryService categoryService, IChecklistTaskUtilities checklistTaskUtilities)
         {
             _checklistService = checklistService;
             _categoryService = categoryService;
             _checklistTaskService = checklistTaskService;
+            _checklistTaskUtilities = checklistTaskUtilities;
 
         }
 
@@ -32,7 +35,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
         public IEnumerable<ChecklistTaskResponseDto> GetAllTasks()
         {
-            return _checklistTaskService.GetAllTasks();
+            return _checklistTaskService.GetAllTasks().Result;
         }
 
         // Get specific form task based on given Id
@@ -86,7 +89,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
         public IEnumerable<ChecklistTaskResponseDto> GetTasksByDescription(string searchString)
         {
-            return _checklistTaskService.GetTasksByDescription(searchString);
+            return _checklistTaskService.GetTasksByDescription(searchString).Result;
         }
 
         // Creates a new form task
@@ -113,20 +116,20 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var category = _categoryService.GetCategoryById(checklistTask.CategoryId);
-            var tasks = _checklistTaskService.GetAllTasks();
+            var category = _categoryService.GetCategoryById(checklistTask.CategoryId).Result;
+            var tasks = _checklistTaskService.GetAllTasks().Result;
 
             if (category == null)
             {
                 return NotFound("Category not found");
             }
 
-            if (_checklistTaskService.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
+            if (_checklistTaskUtilities.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
             {
                 return Conflict("Task already exists");
             }
 
-            var taskId = _checklistTaskService.CreateChecklistTask(checklistTask);
+            var taskId = _checklistTaskService.CreateChecklistTask(checklistTask).Result;
             var newTask = _checklistTaskService.GetChecklistTaskById(taskId);
             return CreatedAtAction(nameof(GetChecklistTaskById), new { id = taskId }, newTask);
         }
@@ -140,7 +143,7 @@ namespace turbin.sikker.core.Controllers
         public IActionResult UpdateChecklistTask(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask, [FromServices] IValidator<ChecklistTaskRequestDto> validator)
         {
 
-            var checklist = _checklistService.GetChecklistById(checklistId);
+            var checklist = _checklistService.GetChecklistById(checklistId).Result;
             var contains = false;
 
 
