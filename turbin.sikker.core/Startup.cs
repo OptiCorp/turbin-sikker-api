@@ -39,7 +39,14 @@ namespace turbin.sikker.core
             services.AddIdentityServer()
                 .AddSigningCredentials();
             // Add CORS services
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("https://turbinsikker-app.azurewebsites.net/").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
+                // builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+               
+
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -99,14 +106,14 @@ namespace turbin.sikker.core
 
 
             // TODO: Implement Authorization
-            services.AddAuthorization(options =>
-            {
-               var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-                   JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-                   );
-               defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-               options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+            //        );
+            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            //});
 
             services.AddAuthentication().AddIdentityServerJwt();
 
@@ -138,7 +145,7 @@ namespace turbin.sikker.core
             app.UseRouting();
 
             // Enable CORS
-            app.UseCors(x => x.SetIsOriginAllowed(origin => true).AllowAnyHeader().AllowCredentials());
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseAuthentication();
 
