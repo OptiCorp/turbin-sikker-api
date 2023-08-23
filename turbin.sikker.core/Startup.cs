@@ -39,14 +39,7 @@ namespace turbin.sikker.core
             services.AddIdentityServer()
                 .AddSigningCredentials();
             // Add CORS services
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAnyOrigin",
-                    // builder => builder.WithOrigins("http://localhost:5173").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
-                builder => builder.SetIsOriginAllowed(origin => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-               
-
-            });
+            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
@@ -145,7 +138,7 @@ namespace turbin.sikker.core
             app.UseRouting();
 
             // Enable CORS
-            app.UseCors("AllowAnyOrigin");
+            app.UseCors(x => x.SetIsOriginAllowed(origin => true).AllowAnyHeader().AllowCredentials());
 
             app.UseAuthentication();
 
