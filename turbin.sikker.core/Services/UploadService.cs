@@ -1,4 +1,5 @@
 ﻿using turbin.sikker.core.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace turbin.sikker.core.Services
 {
@@ -11,38 +12,38 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
-        public Upload GetUploadById(string id)
+        public async Task<Upload> GetUploadById(string id)
         {
-            return _context.Upload.FirstOrDefault(u => u.Id == id);
+            return await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public void CreateUpload(Upload upload)
+        public async void CreateUpload(Upload upload)
         {
             _context.Upload.Add(upload);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateUpload(Upload updatedUpload)
+        public async void UpdateUpload(Upload updatedUpload)
         {
-            var upload = _context.Upload.FirstOrDefault(u => u.Id == updatedUpload.Id);
+            var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == updatedUpload.Id);
 
             if (upload != null)
             {
                 upload.PunchId = updatedUpload.PunchId;
                 upload.BlobRef = updatedUpload.BlobRef;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public void DeleteUpload(string id)
+        public async void DeleteUpload(string id)
         {
-            var upload = _context.Upload.FirstOrDefault(u => u.Id == id);
+            var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
 
             if (upload != null)
             {
                 _context.Upload.Remove(upload);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 

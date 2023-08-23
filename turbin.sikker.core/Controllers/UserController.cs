@@ -8,6 +8,7 @@ using turbin.sikker.core.Model.DTO;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -18,12 +19,13 @@ namespace turbin.sikker.core.Controllers
     {
         private readonly IUserService _userService;
         private readonly IUserRoleService _userRoleService;
+        private readonly IUserUtilities _userUtilities;
 
-        public UserController(IUserService userService, IUserRoleService userRoleService)
+        public UserController(IUserService userService, IUserRoleService userRoleService, IUserUtilities userUtilities)
         {
             _userService = userService;
-
             _userRoleService = userRoleService;
+            _userUtilities = userUtilities;
         }
 
         [HttpGet("GetAllUsers")]
@@ -31,7 +33,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
         public IEnumerable<UserDto> GetUsers()
         {
-            return _userService.GetUsers();
+            return _userService.GetUsers().Result;
         }
 
         [HttpGet("GetAllUsersAdmin")]
@@ -39,7 +41,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserDto>))]
         public IEnumerable<UserDto> GetAllUsers()
         {
-            return _userService.GetAllUsers();
+            return _userService.GetAllUsers().Result;
         }
 
         [HttpGet("GetUser")]
@@ -97,7 +99,7 @@ namespace turbin.sikker.core.Controllers
         public IActionResult CreateUser(UserCreateDto user, [FromServices] IValidator<UserCreateDto> validator)
         {
 
-            string inspectorRoleId = _userService.GetInspectorRoleId();
+            string inspectorRoleId = _userService.GetInspectorRoleId().Result;
 
             if (string.IsNullOrEmpty(user.UserRoleId))
             {
@@ -127,15 +129,15 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            var users = _userService.GetAllUsers();
+            var users = _userService.GetAllUsers().Result;
 
 
-            if (_userService.IsUsernameTaken(users, user.Username))
+            if (_userUtilities.IsUsernameTaken(users, user.Username))
             {
                 return Conflict($"The username '{user.Username}' is taken.");
             }
 
-            if (_userService.IsEmailTaken(users, user.Email))
+            if (_userUtilities.IsEmailTaken(users, user.Email))
             {
                 return Conflict("Invalid email");
             }
@@ -155,7 +157,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User not found")]
         public IActionResult UpdateUser(string id, UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
         {
-            var users = _userService.GetAllUsers();
+            var users = _userService.GetAllUsers().Result;
             users = users.Where(u => u.Id != id);
 
             ValidationResult validationResult = validator.Validate(updatedUser);
@@ -174,12 +176,12 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            if (_userService.IsUsernameTaken(users, updatedUser.Username))
+            if (_userUtilities.IsUsernameTaken(users, updatedUser.Username))
             {
                 return Conflict($"The username '{updatedUser.Username}' is taken.");
             }
 
-            if (_userService.IsEmailTaken(users, updatedUser.Email))
+            if (_userUtilities.IsEmailTaken(users, updatedUser.Email))
             {
                 return Conflict("Invalid email.");
             }
@@ -195,7 +197,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User not found")]
         public IActionResult DeleteUser(string id)
         {
-            var user = _userService.GetUserById(id);
+            var user = _userService.GetUserById(id).Result;
             if (user.Status == UserStatus.Deleted)
             {
                 return Conflict("User already deleted");
@@ -216,7 +218,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User not found")]
         public IActionResult HardDeleteUser(string id)
         {
-            var user = _userService.GetUserById(id);
+            var user = _userService.GetUserById(id).Result;
 
             if (user == null)
             {

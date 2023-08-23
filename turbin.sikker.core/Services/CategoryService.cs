@@ -14,19 +14,19 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategories()
         {
-            return _context.Category.ToList();
+            return await _context.Category.ToListAsync();
         }
 
-        public  Category GetCategoryById(string id)
+        public async Task<Category> GetCategoryById(string id)
         {
-            return _context.Category.FirstOrDefault(category => category.Id == id);
+            return await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
         }
 
-        public IEnumerable<Category> SearchCategoryByName(string searchString)
+        public async Task<IEnumerable<Category>> SearchCategoryByName(string searchString)
         {
-            return _context.Category.Where(c => c.Name.Contains(searchString)).ToList();
+            return await _context.Category.Where(c => c.Name.Contains(searchString)).ToListAsync();
         }
       
         public async Task<string> CreateCategory(CategoryRequestDto categoryDto)
@@ -43,9 +43,9 @@ namespace turbin.sikker.core.Services
             return categoryId;
         }
 
-        public void UpdateCategory(string id, CategoryRequestDto updatedCategory)
+        public async void UpdateCategory(string id, CategoryRequestDto updatedCategory)
         {
-            var category = _context.Category.FirstOrDefault(category => category.Id == id);
+            var category = await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
 
             if (category != null)
             {
@@ -53,27 +53,27 @@ namespace turbin.sikker.core.Services
                 {
                     category.Name = updatedCategory.Name;
                 }
-                _context.SaveChanges();
+                _context.SaveChangesAsync();
             }
         }
         
 
-        public void DeleteCategory(string id)
+        public async void DeleteCategory(string id)
         {
 
-            var category =  _context.Category.FirstOrDefault(category => category.Id == id);
+            var category =  await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
             if (category != null)
             {
                 _context.Category.Remove(category);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
 
-        public bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName)
-        {
-            return categories.Any(c => c.Name == categoryName);
-        }
+        // public bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName)
+        // {
+        //     return categories.Any(c => c.Name == categoryName);
+        // }
     }
 }
 

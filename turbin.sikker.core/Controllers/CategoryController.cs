@@ -10,6 +10,7 @@ using turbin.sikker.core.Model.DTO.CategoryDtos;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -19,9 +20,11 @@ namespace turbin.sikker.core.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public CategoryController(ICategoryService categoryService)
+        private readonly ICategoryUtilities _categoryUtilities;
+        public CategoryController(ICategoryService categoryService, ICategoryUtilities categoryUtilities)
         {
             _categoryService = categoryService;
+            _categoryUtilities = categoryUtilities;
         }
 
         [HttpGet("GetAllCategories")]
@@ -29,7 +32,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
         public IEnumerable<Category> GetAllCategories()
         {
-            return _categoryService.GetAllCategories();
+            return _categoryService.GetAllCategories().Result;
         }
 
         // Get specific Category based on given Id
@@ -39,7 +42,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Category not found")]
         public IActionResult GetCategoryById(string id)
         {
-            var Category = _categoryService.GetCategoryById(id);
+            var Category = _categoryService.GetCategoryById(id).Result;
             if (Category == null)
             {
                 return NotFound("Category not found");
@@ -54,7 +57,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
         public IEnumerable<Category> SearchCategoryByName(string searchString)
         {
-            return _categoryService.SearchCategoryByName(searchString);
+            return _categoryService.SearchCategoryByName(searchString).Result;
         }
 
 
@@ -82,8 +85,8 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var categories = _categoryService.GetAllCategories();
-            if (_categoryService.isCategoryNametaken(categories, category.Name))
+            var categories = _categoryService.GetAllCategories().Result;
+            if (_categoryUtilities.isCategoryNametaken(categories, category.Name))
             {
                 return Conflict($"Category '{category.Name}' already exists.");
             }
@@ -115,15 +118,15 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
-            var category = _categoryService.GetCategoryById(id);
+            var category = _categoryService.GetCategoryById(id).Result;
 
             if (category == null)
             {
                 return NotFound("Category not found");
             }
-            var categories = _categoryService.GetAllCategories();
+            var categories = _categoryService.GetAllCategories().Result;
 
-            if (_categoryService.isCategoryNametaken(categories, category.Name))
+            if (_categoryUtilities.isCategoryNametaken(categories, category.Name))
             {
                 return Conflict($"Category already exists.");
             }
