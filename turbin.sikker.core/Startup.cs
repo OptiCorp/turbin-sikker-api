@@ -41,14 +41,10 @@ namespace turbin.sikker.core
             // Add CORS services
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("https://turbinsikker-app.azurewebsites.net").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
-                //builder.AllowAnyOrigin().AllowAnyHeader().WithExposedHeaders("Authorization").SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
-                //WithOrigins("https://localhost:5173", "https://localhost:7190")
-                //    .AllowAnyHeader()
-                //    .AllowAnyMethod()
-                //    .AllowCredentials()
-                //    );
+                options.AddPolicy("AllowAnyOrigin",
+                    // builder => builder.WithOrigins("http://localhost:5173").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
+                builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+               
 
             });
 
@@ -149,7 +145,7 @@ namespace turbin.sikker.core
             app.UseRouting();
 
             // Enable CORS
-            app.UseCors("AllowSpecificOrigin");
+            app.UseCors("AllowAnyOrigin");
 
             app.UseAuthentication();
 
