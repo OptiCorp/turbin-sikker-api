@@ -43,7 +43,7 @@ namespace turbin.sikker.core
             {
                 options.AddPolicy("AllowAnyOrigin",
                     // builder => builder.WithOrigins("http://localhost:5173").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
-                builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                builder => builder.SetIsOriginAllowed(origin => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
                
 
             });
