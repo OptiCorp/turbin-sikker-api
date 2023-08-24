@@ -26,6 +26,7 @@ namespace turbin.sikker.core.Controllers
             _userRoleService = userRoleService;
         }
 
+        [Authorize]
         [HttpGet("GetAllUsers")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
@@ -34,6 +35,7 @@ namespace turbin.sikker.core.Controllers
             return _userService.GetUsers();
         }
 
+        [Authorize]
         [HttpGet("GetAllUsersAdmin")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserDto>))]
