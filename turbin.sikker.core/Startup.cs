@@ -42,7 +42,7 @@ namespace turbin.sikker.core
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("https://turbinsikker-app.azurewebsites.net").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
+                    builder => builder.WithOrigins("https://turbinsikker-app.azurewebsites.net").WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Origin").AllowAnyMethod());
                 // builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                
 
