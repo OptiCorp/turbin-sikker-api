@@ -106,14 +106,14 @@ namespace turbin.sikker.core
 
 
             // TODO: Implement Authorization
-            //services.AddAuthorization(options =>
-            //{
-            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-            //        );
-            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            //});
+            services.AddAuthorization(options =>
+            {
+               var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                   JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+                   );
+               defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+               options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            });
 
             services.AddAuthentication().AddIdentityServerJwt();
 

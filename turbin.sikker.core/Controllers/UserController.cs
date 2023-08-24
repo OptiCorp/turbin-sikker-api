@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api")]
     public class UserController : ControllerBase
@@ -26,16 +26,14 @@ namespace turbin.sikker.core.Controllers
             _userRoleService = userRoleService;
         }
 
-        [Authorize]
         [HttpGet("GetAllUsers")]
-        [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a lisgit t of all users.")]
+        [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
         public IEnumerable<UserDto> GetUsers()
         {
             return _userService.GetUsers();
         }
 
-        [Authorize]
         [HttpGet("GetAllUsersAdmin")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserDto>))]
