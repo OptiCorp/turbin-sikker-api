@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api")]
     public class UserController : ControllerBase
