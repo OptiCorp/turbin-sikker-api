@@ -1,0 +1,15 @@
+using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Model;
+
+
+namespace turbin.sikker.core.Utilities
+{
+public interface IUserUtilities
+    {
+        bool IsUsernameTaken(IEnumerable<UserDto> users, string username);
+
+        bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail);
+
+        bool IsValidStatus(string value);
+    }
+}

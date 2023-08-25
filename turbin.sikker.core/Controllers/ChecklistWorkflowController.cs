@@ -27,7 +27,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflow>))]
         public IEnumerable<ChecklistWorkflow> GetAllChecklistWorkflows()
         {
-            return _workflowService.GetAllChecklistWorflows();
+            return _workflowService.GetAllChecklistWorflows().Result;
         }
 
         [HttpGet("GetChecklistWorkflow")]
@@ -49,7 +49,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflow>))]
         public IEnumerable<ChecklistWorkflow> GetAllChecklistWorkflowsByUserId(string userId)
         {
-            return _workflowService.GetAllChecklistWorkflowsByUserId(userId);
+            return _workflowService.GetAllChecklistWorkflowsByUserId(userId).Result;
         }
 
         [HttpPost("CreateChecklistWorkflow")]
@@ -58,14 +58,14 @@ namespace turbin.sikker.core.Controllers
         public IActionResult CreateChecklistWorkflow(ChecklistWorkflow workflow)
         {
 
-            bool userHasChecklist = _workflowService.DoesUserHaveChecklist(workflow.UserId, workflow.ChecklistId);
+            bool userHasChecklist = _workflowService.DoesUserHaveChecklist(workflow.UserId, workflow.ChecklistId).Result;
 
             if (userHasChecklist)
             {
                 return Conflict($"User already has that checklist");
             }
 
-            string newWorkflowId = _workflowService.CreateChecklistWorkflow(workflow);
+            string newWorkflowId = _workflowService.CreateChecklistWorkflow(workflow).Result;
 
 
 

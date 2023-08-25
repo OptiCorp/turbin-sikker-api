@@ -12,9 +12,9 @@ namespace turbin.sikker.core.Services
         {
             _context = context;
         }
-        public IEnumerable<ChecklistTaskResponseDto> GetAllTasks()
+        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasks()
         {
-            return _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
+            return await _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
             {
                 Id = ct.Id,
                 Description = ct.Description,
@@ -23,12 +23,12 @@ namespace turbin.sikker.core.Services
                     Id = ct.Category.Id,
                     Name = ct.Category.Name
                 }
-            }).ToList();
+            }).ToListAsync();
         }
 
-        public ChecklistTaskResponseDto GetChecklistTaskById(string id)
+        public async Task<ChecklistTaskResponseDto> GetChecklistTaskById(string id)
         {
-            return _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
+            return await _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
             {
                 Id = ct.Id,
                 Description = ct.Description,
@@ -37,22 +37,22 @@ namespace turbin.sikker.core.Services
                     Id = ct.Category.Id,
                     Name = ct.Category.Name
                 }
-            }).FirstOrDefault(ct => ct.Id == id);
+            }).FirstOrDefaultAsync(ct => ct.Id == id);
 
         }
 
-        public IEnumerable<ChecklistTaskByCategoryResponseDto> GetAllTasksByCategoryId(string categoryId)
+        public async Task<IEnumerable<ChecklistTaskByCategoryResponseDto>> GetAllTasksByCategoryId(string categoryId)
         {
-            return _context.Checklist_Task.Where(ct => ct.CategoryId == categoryId).Select(ct => new ChecklistTaskByCategoryResponseDto
+            return await _context.Checklist_Task.Where(ct => ct.CategoryId == categoryId).Select(ct => new ChecklistTaskByCategoryResponseDto
             {
                 Id = ct.Id,
                 Description = ct.Description
-            }).ToList();
+            }).ToListAsync();
         }
 
-        public IEnumerable<ChecklistTaskResponseDto> GetAllTasksByChecklistId(string checklistId)
+        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksByChecklistId(string checklistId)
         {
-            var tasks = _context.Checklist
+            var tasks = await _context.Checklist
                 .Where(c => c.Id == checklistId)
                 .SelectMany(c => c.ChecklistTasks)
                 .Select(ct => new ChecklistTaskResponseDto
@@ -65,14 +65,14 @@ namespace turbin.sikker.core.Services
                         Name = ct.Category.Name
                     }
                 })
-                .ToList();
+                .ToListAsync();
 
             return tasks;
         }
 
-        public IEnumerable<ChecklistTaskResponseDto> GetTasksByDescription(string searchString)
+        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetTasksByDescription(string searchString)
         {
-            return _context.Checklist_Task.Where(ct => ct.Description.Contains(searchString)).Select(ct => new ChecklistTaskResponseDto
+            return await _context.Checklist_Task.Where(ct => ct.Description.Contains(searchString)).Select(ct => new ChecklistTaskResponseDto
             {
                 Id = ct.Id,
                 Description = ct.Description,
@@ -81,11 +81,11 @@ namespace turbin.sikker.core.Services
                     Id = ct.Category.Id,
                     Name = ct.Category.Name
                 }
-            }).ToList();
+            }).ToListAsync();
         }
 
 
-        public string CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
+        public async Task<string> CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
         {
             var task = new ChecklistTask
             {
@@ -94,16 +94,16 @@ namespace turbin.sikker.core.Services
             };
 
             _context.Checklist_Task.Add(task);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             string taskId = task.Id;
 
             return taskId;
         }
 
-        public void UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask)
+        public async void UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask)
         {
-            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == id);
+            var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == id);
 
             if (checklistTask != null)
             {
@@ -118,19 +118,19 @@ namespace turbin.sikker.core.Services
                     checklistTask.Description = updatedChecklistTask.Description;
                 }
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public void UpdateChecklistTaskInChecklist(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask)
+        public async void UpdateChecklistTaskInChecklist(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask)
         {
-            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == taskId);
+            var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == taskId);
             var newChecklistTask = new ChecklistTask
             {
                 CategoryId = "",
                 Description = ""
             };
-            var checklist = _context.Checklist.FirstOrDefault(c => c.Id == checklistId);
+            var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == checklistId);
 
             if (checklistTask != null)
             {
@@ -149,39 +149,39 @@ namespace turbin.sikker.core.Services
                 checklist.ChecklistTasks.Add(newChecklistTask);
                 checklist.ChecklistTasks.Remove(checklistTask);
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public void AddTaskToChecklist(string checklistId, string taskId)
+        public async void AddTaskToChecklist(string checklistId, string taskId)
         {
-            var checklist = _context.Checklist.FirstOrDefault(c => c.Id == checklistId);
-            var task = _context.Checklist_Task.FirstOrDefault(t => t.Id == taskId);
+            var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == checklistId);
+            var task = await _context.Checklist_Task.FirstOrDefaultAsync(t => t.Id == taskId);
 
             if (checklist != null && task != null)
             {
                 checklist.ChecklistTasks.Add(task);
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public void DeleteChecklistTask(string id)
+        public async void DeleteChecklistTask(string id)
         {
 
-            var checklistTask = _context.Checklist_Task.FirstOrDefault(checklistTask => checklistTask.Id == id);
+            var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == id);
             if (checklistTask != null)
             {
                 _context.Checklist_Task.Remove(checklistTask);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
         //TEST THIS
-        public bool TaskExists(IEnumerable<ChecklistTaskResponseDto> tasks, string categoryId, string description)
-        {
-            return tasks.Any(t => t.Category.Id == categoryId && t.Description == description);
-        }
+        // public bool TaskExists(IEnumerable<ChecklistTaskResponseDto> tasks, string categoryId, string description)
+        // {
+        //     return tasks.Any(t => t.Category.Id == categoryId && t.Description == description);
+        // }
     }
 }
 

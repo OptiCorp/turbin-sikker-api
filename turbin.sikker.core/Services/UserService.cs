@@ -1,6 +1,8 @@
 ﻿using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Utilities;
+
 namespace turbin.sikker.core.Services
 {
     public class UserService : IUserService
@@ -10,41 +12,41 @@ namespace turbin.sikker.core.Services
         {
             _context = context;
         }
-        public bool IsUsernameTaken(IEnumerable<UserDto> users, string username)
+        // public bool IsUsernameTaken(IEnumerable<UserDto> users, string username)
+        // {
+        //     return users.Any(u => u.Username == username);
+        // }
+        // public bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail)
+        // {
+        //     return users.Any(u => u.Email == userEmail);
+        // }
+        // public bool IsValidStatus(string value)
+        // {
+        //     string lowerCaseValue = value.ToLower();
+        //     return lowerCaseValue == "active" || lowerCaseValue == "disabled" || lowerCaseValue == "deleted";
+        // }
+        // private static string GetUserStatus(UserStatus status)
+        // {
+        //     switch (status)
+        //     {
+        //         case UserStatus.Active:
+        //             return "Active";
+        //         case UserStatus.Disabled:
+        //             return "Disabled";
+        //         case UserStatus.Deleted:
+        //             return "Deleted";
+        //         default:
+        //             return "Active";
+        //     }
+        // }
+        public async Task<string> GetInspectorRoleId()
         {
-            return users.Any(u => u.Username == username);
-        }
-        public bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail)
-        {
-            return users.Any(u => u.Email == userEmail);
-        }
-        public bool IsValidStatus(string value)
-        {
-            string lowerCaseValue = value.ToLower();
-            return lowerCaseValue == "active" || lowerCaseValue == "disabled" || lowerCaseValue == "deleted";
-        }
-        private static string GetUserStatus(UserStatus status)
-        {
-            switch (status)
-            {
-                case UserStatus.Active:
-                    return "Active";
-                case UserStatus.Disabled:
-                    return "Disabled";
-                case UserStatus.Deleted:
-                    return "Deleted";
-                default:
-                    return "Active";
-            }
-        }
-        public string GetInspectorRoleId()
-        {
-            var inspectorRole = _context.UserRole.FirstOrDefault(role => role.Name == "Inspector");
+            var inspectorRole = await _context.UserRole.FirstOrDefaultAsync(role => role.Name == "Inspector");
             return inspectorRole?.Id;
         }
-        public IEnumerable<UserDto> GetUsers()
+        public async Task<IEnumerable<UserDto>> GetUsers()
         {
-            return _context.User.Include(u => u.UserRole).Where(s => s.Status == UserStatus.Active).Select(u => new UserDto
+            return await _context.User.Include(u => u.UserRole).Where(s => s.Status == UserStatus.Active).Select(u => new UserDto
             {
                 Id = u.Id,
                 FirstName = u.FirstName,
@@ -52,16 +54,16 @@ namespace turbin.sikker.core.Services
                 Email = u.Email,
                 Username = u.Username,
                 UserRole = u.UserRole,
-                Status = GetUserStatus(u.Status),
+                Status = UserUtilities.GetUserStatus(u.Status),
                 CreatedDate = u.CreatedDate,
                 UpdatedDate = u.UpdatedDate,
                 AzureAdUserId = u.AzureAdUserId,
                 ChecklistWorkflows = _context.ChecklistWorkflow.Where(c => c.UserId == u.Id).ToList()
-            }).ToList();
+            }).ToListAsync();
         }
-        public IEnumerable<UserDto> GetAllUsers()
+        public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
-            return _context.User.Include(u => u.UserRole).Select(u => new UserDto
+            return await _context.User.Include(u => u.UserRole).Select(u => new UserDto
             {
                 Id = u.Id,
                 FirstName = u.FirstName,
@@ -69,25 +71,25 @@ namespace turbin.sikker.core.Services
                 Email = u.Email,
                 Username = u.Username,
                 UserRole = u.UserRole,
-                Status = GetUserStatus(u.Status),
+                Status = UserUtilities.GetUserStatus(u.Status),
                 CreatedDate = u.CreatedDate,
                 UpdatedDate = u.UpdatedDate,
                 ChecklistWorkflows = _context.ChecklistWorkflow.Where(c => c.UserId == u.Id).ToList()
-            }).ToList();
+            }).ToListAsync();
         }
-        public User GetUserById(string id)
+        public async Task<User> GetUserById(string id)
         {
-            return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.Id == id);
+            return await _context.User.Include(u => u.UserRole).FirstOrDefaultAsync(u => u.Id == id);
         }
-        public User GetUserByAzureAdUserId(string azureAdUserId)
+        public async Task<User> GetUserByAzureAdUserId(string azureAdUserId)
         {
-            return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.AzureAdUserId == azureAdUserId);
+            return await _context.User.Include(u => u.UserRole).FirstOrDefaultAsync(u => u.AzureAdUserId == azureAdUserId);
         }
-        public User GetUserByUsername(string username)
+        public async Task<User> GetUserByUsername(string username)
         {
-            return _context.User.Include(u => u.UserRole).FirstOrDefault(u => u.Username == username);
+            return await _context.User.Include(u => u.UserRole).FirstOrDefaultAsync(u => u.Username == username);
         }
-        public void CreateUser(UserCreateDto userDto)
+        public async void CreateUser(UserCreateDto userDto)
         {
             var user = new User
             {
@@ -100,11 +102,11 @@ namespace turbin.sikker.core.Services
                 CreatedDate = DateTime.Now,
             };
             _context.User.Add(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public void UpdateUser(string userId, UserUpdateDto updatedUserDto)
+        public async void UpdateUser(string userId, UserUpdateDto updatedUserDto)
         {
-            var user = _context.User.FirstOrDefault(u => u.Id == userId);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
             if (user != null)
             {
                 if (updatedUserDto.Username != null)
@@ -134,25 +136,25 @@ namespace turbin.sikker.core.Services
                     }
                 }
                 user.UpdatedDate = DateTime.Now;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
-        public void DeleteUser(string id)
+        public async void DeleteUser(string id)
         {
-            var user = _context.User.FirstOrDefault(u => u.Id == id);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
             {
                 user.Status = UserStatus.Deleted;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
-        public void HardDeleteUser(string id)
+        public async void HardDeleteUser(string id)
         {
-            var user = _context.User.FirstOrDefault(u => u.Id == id);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
             {
                 _context.User.Remove(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

@@ -7,15 +7,16 @@ namespace turbin.sikker.core.Services
 {
     public interface IUserRoleService
     {
-        IEnumerable<UserRole> GetUserRoles();
-        UserRole GetUserRoleById(string id);
-        UserRole GetUserRoleByUserRoleName(string userRoleName);
+        Task<IEnumerable<UserRole>> GetUserRoles();
+        Task<UserRole> GetUserRoleById(string id);
+        Task<UserRole> GetUserRoleByUserRoleName(string userRoleName);
         void UpdateUserRole(string id, UserRoleUpdateDto userRole);
         void CreateUserRole(UserRoleCreateDto userRole);
         void DeleteUserRole(string id);
-        bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId);
-        bool IsUserRoleInUse(UserRole userRole);
-        bool IsUserRoleNameTaken(IEnumerable<UserRole> userRoles, string userRoleName);
+        
+        // bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId);
+        Task<bool> IsUserRoleInUse(UserRole userRole);
+        // bool IsUserRoleNameTaken(IEnumerable<UserRole> userRoles, string userRoleName);
     }
 }
 

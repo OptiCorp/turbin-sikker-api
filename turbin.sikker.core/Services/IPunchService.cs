@@ -6,12 +6,13 @@ namespace turbin.sikker.core.Services
 {
     public interface IPunchService
     {
-        Punch GetPunchById(string id);
+        Task<Punch> GetPunchById(string id);
         void UpdatePunch(string punchId, PunchUpdateDto punch);
-        string CreatePunch(PunchCreateDto punch);
+        Task<string> CreatePunch(PunchCreateDto punch);
         void DeletePunch(string id);
-        string GetPunchStatus(PunchStatus status);
-        bool IsValidStatus(string value);
+        // string GetPunchStatus(PunchStatus status);
+        // bool IsValidStatus(string value);
+        // public string GetPunchSeverity(PunchSeverity status);
     }
 }
 

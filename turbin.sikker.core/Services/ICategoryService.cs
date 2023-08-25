@@ -6,13 +6,13 @@ namespace turbin.sikker.core.Services
 {
     public interface ICategoryService
     {
-        IEnumerable<Category> GetAllCategories();
-        Category GetCategoryById(string id);
-        IEnumerable<Category> SearchCategoryByName(string searchString);
+        Task<IEnumerable<Category>> GetAllCategories();
+        Task<Category> GetCategoryById(string id);
+        Task<IEnumerable<Category>> SearchCategoryByName(string searchString);
         void UpdateCategory(string id, CategoryRequestDto category);
         Task<string> CreateCategory(CategoryRequestDto category);
         void DeleteCategory(string id);
-        bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName);
+        // bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName);
     }
 }
 
