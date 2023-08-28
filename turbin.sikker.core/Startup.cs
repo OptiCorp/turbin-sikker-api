@@ -43,13 +43,9 @@ namespace turbin.sikker.core
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:5173").WithHeaders("Content-Type", "Authorization").AllowAnyMethod());
-                //builder.AllowAnyOrigin().AllowAnyHeader().WithExposedHeaders("Authorization").SetPreflightMaxAge(TimeSpan.FromMinutes(10)));
-                //WithOrigins("https://localhost:5173", "https://localhost:7190")
-                //    .AllowAnyHeader()
-                //    .AllowAnyMethod()
-                //    .AllowCredentials()
-                //    );
+                    builder => builder.WithOrigins("https://turbinsikker-app.azurewebsites.net").WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Origin").AllowAnyMethod());
+                // builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+               
 
             });
 
@@ -99,12 +95,12 @@ namespace turbin.sikker.core
 
         private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
         {
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            //});
+            });
 
 
 
@@ -118,14 +114,14 @@ namespace turbin.sikker.core
 
 
             // TODO: Implement Authorization
-            //services.AddAuthorization(options =>
-            //{
-            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-            //        );
-            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            //});
+            services.AddAuthorization(options =>
+            {
+               var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                   JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+                   );
+               defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+               options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            });
 
             services.AddAuthentication().AddIdentityServerJwt();
 
