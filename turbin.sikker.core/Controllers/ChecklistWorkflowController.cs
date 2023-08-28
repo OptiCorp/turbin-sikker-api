@@ -13,12 +13,16 @@ namespace turbin.sikker.core.Controllers
     public class ChecklistWorkflowController : ControllerBase
     {
         private readonly IChecklistWorkflowService _workflowService;
+        private readonly IUserService _userService;
+        private readonly IUserRoleService _userRoleService;
 
         private readonly TurbinSikkerDbContext _context;
 
-        public ChecklistWorkflowController(IChecklistWorkflowService workflowService, TurbinSikkerDbContext context)
+        public ChecklistWorkflowController(IChecklistWorkflowService workflowService, IUserService userService, IUserRoleService userRoleService, TurbinSikkerDbContext context)
         {
             _workflowService = workflowService;
+            _userService = userService;
+            _userRoleService = userRoleService;
             _context = context;
         }
 
@@ -57,6 +61,23 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "Checklist workflow created", typeof(ChecklistWorkflow))]
         public IActionResult CreateChecklistWorkflow(ChecklistWorkflow workflow)
         {
+
+            if (workflow.CreatedById == null) 
+            {
+                return BadRequest("You have to specify who created this workflow");
+            }
+
+            var creator = _userService.GetUserById(workflow.CreatedById).Result;
+            var userRole = _userRoleService.GetUserRoleById(creator.UserRoleId).Result;
+            
+            if (creator == null)
+            {
+                return Conflict("The creator of this wokflow does not exist");
+            }
+            if (userRole.Name == "Inspector")
+            {
+                return Conflict("Inspectors can not create workflows");
+            }
 
             bool userHasChecklist = _workflowService.DoesUserHaveChecklist(workflow.UserId, workflow.ChecklistId).Result;
 
