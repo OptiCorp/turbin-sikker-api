@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using turbin.sikker.core.Model;
-using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
 {

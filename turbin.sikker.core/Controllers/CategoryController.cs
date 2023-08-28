@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
-using System;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Model.DTO.CategoryDtos;

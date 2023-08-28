@@ -2,8 +2,6 @@
 using turbin.sikker.core.Model;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using turbin.sikker.core.Model.DTO;
 using FluentValidation;
 using FluentValidation.Results;
