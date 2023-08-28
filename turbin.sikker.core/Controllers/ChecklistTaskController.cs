@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
-using System;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
 using turbin.sikker.core.Model.DTO.TaskDtos;

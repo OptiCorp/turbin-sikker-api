@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model

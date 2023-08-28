@@ -1,8 +1,6 @@
-﻿using System;
-using turbin.sikker.core.Model;
+﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
-using System.Threading.Tasks;
 
 namespace turbin.sikker.core.Services
 {

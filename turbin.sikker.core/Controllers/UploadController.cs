@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Services;
-using System;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace turbin.sikker.core.Controllers
