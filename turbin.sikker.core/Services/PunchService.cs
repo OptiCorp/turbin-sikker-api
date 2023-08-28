@@ -58,7 +58,7 @@ namespace turbin.sikker.core.Services
 
         public async Task<IEnumerable<Punch>> GetPunchesByWorkflowId(string id)
         {
-            return await _context.Punch.Include(p => p.CreatedByUser).Where(c => c.ChecklistId == id).ToListAsync();
+            return await _context.Punch.Include(p => p.CreatedByUser).Where(c => c.ChecklistWorkflowId == id).ToListAsync();
         }
 
         public async Task<string> CreatePunch(PunchCreateDto punchDto)
@@ -68,7 +68,7 @@ namespace turbin.sikker.core.Services
             {
                 PunchDescription = punchDto.PunchDescription,
                 CreatedBy = punchDto.CreatedBy,
-                ChecklistId = punchDto.ChecklistId,
+                ChecklistWorkflowId = punchDto.ChecklistWorkflowId,
                 //UserId = punchDto.UserId,
                 CreatedDate = DateTime.Now,
                 Severity = Enum.Parse<PunchSeverity>(punchDto.Severity)
@@ -89,7 +89,7 @@ namespace turbin.sikker.core.Services
             if (punch != null)
             {
                 //punch.Active = updatedPunch.Active;
-                punch.ChecklistId = updatedPunch.ChecklistId;
+                punch.ChecklistWorkflowId = updatedPunch.ChecklistWorkflowId;
                 punch.PunchDescription = updatedPunch.PunchDescription;
                 if (updatedPunch.Status != null)
                 {

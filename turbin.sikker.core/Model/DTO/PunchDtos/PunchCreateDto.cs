@@ -6,7 +6,7 @@
 
         public string PunchDescription { get; set; }
 
-        public string ChecklistId { get; set; }
+        public string ChecklistWorkflowId { get; set; }
 
         public string Severity { get; set; }
 

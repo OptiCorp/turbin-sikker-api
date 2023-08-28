@@ -12,14 +12,14 @@ namespace turbin.sikker.core.Controllers
     {
         private readonly IPunchService _punchService;
         private readonly IUserService _userService;
-        private readonly IChecklistService _checklistService;
+        private readonly IChecklistWorkflowService _checklistWorkflowService;
         private readonly IPunchUtilities _punchUtilities;
 
-        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities)
+        public PunchController(IPunchService punchService, IUserService userService, IChecklistWorkflowService checklistWorkflowService, IPunchUtilities punchUtilities)
         {
             _punchService = punchService;
             _userService = userService;
-            _checklistService = checklistService;
+            _checklistWorkflowService = checklistWorkflowService;
             _punchUtilities = punchUtilities;
         }
 
@@ -46,7 +46,7 @@ namespace turbin.sikker.core.Controllers
                 User = punch.CreatedByUser,
                 Active = punch.Active,
                 CreatedBy = punch.CreatedBy,
-                ChecklistId = punch.ChecklistId
+                ChecklistWorkflowId = punch.ChecklistWorkflowId
             };
 
             return Ok(punchDto);
@@ -81,7 +81,7 @@ namespace turbin.sikker.core.Controllers
             //}
 
             var user = _userService.GetUserById(punch.CreatedBy);
-            var checklist = _checklistService.GetChecklistById(punch.ChecklistId);
+            var checklistWorkflow = _checklistWorkflowService.GetChecklistWorkflowById(punch.ChecklistWorkflowId);
 
 
             if (user == null)
@@ -89,9 +89,9 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("User not found.");
             }
 
-            if (checklist == null)
+            if (checklistWorkflow == null)
             {
-                return NotFound("Could not find specified checklist.");
+                return NotFound("Could not find specified checklist workflow.");
             }
 
 
@@ -115,7 +115,7 @@ namespace turbin.sikker.core.Controllers
             //}
 
             var punch = _punchService.GetPunchById(id);
-            var checklist = _checklistService.GetChecklistById(updatedPunch.ChecklistId);
+            var checklistWorkflow = _checklistWorkflowService.GetChecklistWorkflowById(updatedPunch.ChecklistWorkflowId);
 
 
             if (punch == null)
@@ -123,9 +123,9 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Punch not found.");
             }
 
-            if (checklist == null)
+            if (checklistWorkflow == null)
             {
-                return NotFound("Could not find specified checklist.");
+                return NotFound("Could not find specified checklist workflow.");
             }
 
             if (updatedPunch.Status != null)

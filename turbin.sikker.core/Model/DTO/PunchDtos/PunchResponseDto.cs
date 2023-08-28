@@ -4,7 +4,7 @@
     {
         public string? Id { get; set; }
 
-        public string ChecklistId { get; set; }
+        public string ChecklistWorkflowId { get; set; }
 
         public string Status { get; set; }
 
