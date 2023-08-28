@@ -52,6 +52,10 @@ namespace turbin.sikker.core.Services
                 {
                     checklistWorkFlow.UserId = updatedChecklistWorkflow.UserId;
                 }
+                if (checklistWorkFlow.CreatedById != null)
+                {
+                    checklistWorkFlow.CreatedById = updatedChecklistWorkflow.CreatedById;
+                }
             }
             checklistWorkFlow.UpdatedDate = DateTime.Now;
             //_context.Entry(checklistWorkflow).State = EntityState.Modified;

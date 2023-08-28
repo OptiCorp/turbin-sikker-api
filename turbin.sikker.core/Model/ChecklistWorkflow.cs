@@ -21,6 +21,8 @@ namespace turbin.sikker.core.Model
 
         public string? UserId { get; set; }
 
+        public string? CreatedById { get; set; }
+
         [EnumDataType(typeof(CurrentChecklistStatus))]
         public CurrentChecklistStatus? Status { get; set; }
 
