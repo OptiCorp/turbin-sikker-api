@@ -53,6 +53,21 @@ namespace turbin.sikker.core.Controllers
             return Ok(punchDto);
         }
 
+        [HttpGet("GetPunchesByWorkflowId")]
+        [SwaggerOperation(Summary = "Get punches by workflow ID", Description = "Retrieves all punches by their workflow ID.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(404, "Punch not found")]
+        public IActionResult GetPunchesByWorkflowId(string workflowId)
+        {
+            var punches = _punchService.GetPunchesByWorkflowId(workflowId).Result;
+            if (punches == null)
+            {
+                return NotFound("Punches not found.");
+            }    
+
+            return Ok(punches);
+        }
+
 
         [HttpPost("AddPunch")]
         [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]

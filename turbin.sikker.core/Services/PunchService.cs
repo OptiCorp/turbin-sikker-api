@@ -56,6 +56,11 @@ namespace turbin.sikker.core.Services
                                     .FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        public async Task<IEnumerable<Punch>> GetPunchesByWorkflowId(string id)
+        {
+            return await _context.Punch.Include(p => p.CreatedByUser).Where(c => c.ChecklistId == id).ToListAsync();
+        }
+
         public async Task<string> CreatePunch(PunchCreateDto punchDto)
         {
 

@@ -17,6 +17,11 @@ namespace turbin.sikker.core.Services
             return await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<IEnumerable<Upload>> GetUploadsByPunchId(string id)
+        {
+            return await _context.Upload.Where(c => c.PunchId == id).ToListAsync();
+        }
+
         public async void CreateUpload(Upload upload)
         {
             _context.Upload.Add(upload);
