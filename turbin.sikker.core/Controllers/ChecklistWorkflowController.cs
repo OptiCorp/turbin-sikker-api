@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Model;

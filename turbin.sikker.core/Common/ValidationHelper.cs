@@ -1,5 +1,4 @@
-﻿using System;
-using turbin.sikker.core.Services;
+﻿using turbin.sikker.core.Services;
 using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Common

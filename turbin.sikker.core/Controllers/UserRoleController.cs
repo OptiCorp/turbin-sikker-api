@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Services;

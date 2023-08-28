@@ -1,6 +1,4 @@
-﻿using System;
-using turbin.sikker.core.Model;
-using turbin.sikker.core.Model.DTO.TaskDtos;
+﻿using turbin.sikker.core.Model.DTO.TaskDtos;
 
 namespace turbin.sikker.core.Services
 {

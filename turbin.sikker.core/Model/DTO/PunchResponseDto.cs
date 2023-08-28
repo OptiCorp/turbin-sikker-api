@@ -1,5 +1,4 @@
-﻿using System;
-namespace turbin.sikker.core.Model.DTO
+﻿namespace turbin.sikker.core.Model.DTO
 {
     public class PunchResponseDto
     {
