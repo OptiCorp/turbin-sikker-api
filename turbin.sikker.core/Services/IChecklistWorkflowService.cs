@@ -5,8 +5,8 @@ namespace turbin.sikker.core.Services
 {
     public interface IChecklistWorkflowService
     {
-        Task<ChecklistWorkflow> GetChecklistWorflowById(string id);
-        Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorflows();
+        Task<ChecklistWorkflow> GetChecklistWorkflowById(string id);
+        Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflows();
         Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflowsByUserId(string userId);
         //void UpdateChecklistWorkflow(ChecklistWorkflow checklistWorkflow);
         void UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow);

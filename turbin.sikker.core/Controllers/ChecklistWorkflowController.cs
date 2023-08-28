@@ -27,7 +27,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflow>))]
         public IEnumerable<ChecklistWorkflow> GetAllChecklistWorkflows()
         {
-            return _workflowService.GetAllChecklistWorflows().Result;
+            return _workflowService.GetAllChecklistWorkflows().Result;
         }
 
         [HttpGet("GetChecklistWorkflow")]
@@ -36,7 +36,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Checklist workflow not found")]
         public IActionResult GetChecklistWorkflowById(string id)
         {
-            var workflow = _workflowService.GetChecklistWorflowById(id);
+            var workflow = _workflowService.GetChecklistWorkflowById(id);
             if (workflow == null)
             {
                 return NotFound("Checklist workflow not found");
@@ -78,7 +78,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Checklist workflow not found")]
         public IActionResult UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedWorkflow)
         {
-            var existingWorkflow = _workflowService.GetChecklistWorflowById(id);
+            var existingWorkflow = _workflowService.GetChecklistWorkflowById(id);
             if (existingWorkflow == null)
             {
                 return NotFound("Checklist workflow not found");
@@ -96,7 +96,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Checklist workflow not found")]
         public IActionResult DeleteChecklistWorkflow(string id)
         {
-            var existingWorkflow = _workflowService.GetChecklistWorflowById(id);
+            var existingWorkflow = _workflowService.GetChecklistWorkflowById(id);
             if (existingWorkflow == null)
             {
                 return NotFound("Checklist workflow not found");

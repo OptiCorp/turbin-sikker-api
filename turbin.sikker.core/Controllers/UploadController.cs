@@ -33,6 +33,21 @@ namespace turbin.sikker.core.Controllers
 
             return Ok(upload);
         }
+
+        [HttpGet("GetUploadsByPunchId")]
+        [SwaggerOperation(Summary = "Get uploads by punch ID", Description = "Retrieves all uploads by their punch ID.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(404, "Uploads not found")]
+        public IActionResult GetUploadsByPunchId(string punchId)
+        {
+            var uploads = _uploadService.GetUploadsByPunchId(punchId).Result;
+            if (uploads == null)
+            {
+                return NotFound("Uploads not found.");
+            }    
+
+            return Ok(uploads);
+        }
         
         // Edit specific upload based on given Id
         [HttpPost("AddUpload")]
