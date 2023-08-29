@@ -33,7 +33,7 @@ namespace turbin.sikker.core.Services
             return await _context.ChecklistWorkflow.Where(cw => cw.UserId == userId).ToListAsync();
         }
 
-        public async void UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow)
+        public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow)
         {
 
             var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == id);
@@ -66,7 +66,7 @@ namespace turbin.sikker.core.Services
             return checklistWorkflow.Id;
         }
 
-        public async void DeleteChecklistWorkflow(string id)
+        public async Task DeleteChecklistWorkflow(string id)
         {
             var checklistWorkflow = await _context.ChecklistWorkflow.FindAsync(id);
             if (checklistWorkflow != null)
