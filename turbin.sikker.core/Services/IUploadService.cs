@@ -6,9 +6,9 @@ namespace turbin.sikker.core.Services
     {
         Task<Upload> GetUploadById(string id);
         Task<IEnumerable<Upload>> GetUploadsByPunchId(string checklistId);
-        void UpdateUpload(Upload upload);
-        void CreateUpload(Upload upload);
-        void DeleteUpload(string id);
+        Task UpdateUpload(Upload upload);
+        Task<string> CreateUpload(Upload upload);
+        Task DeleteUpload(string id);
     }
 }
 

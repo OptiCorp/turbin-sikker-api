@@ -29,9 +29,9 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllUserRoles")]
         [SwaggerOperation(Summary = "Get all user roles", Description = "Retrives a list of all user roles.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserRole>))]
-        public IEnumerable<UserRole> GetUserRoles()
+        public async Task<IActionResult> GetUserRoles()
         {
-            return _userRoleService.GetUserRoles().Result;
+            return Ok(await _userRoleService.GetUserRoles());
         }
 
         // Get specific user role based on given Id
@@ -40,9 +40,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get user role by ID", Description = "Retrives a user role by the ID.")]
         [SwaggerResponse(200, "Success", typeof(UserRole))]
         [SwaggerResponse(404, "User role not found")]
-        public IActionResult GetUserRoleById(string id)
+        public async Task<IActionResult> GetUserRoleById(string id)
         {
-            var userRole = _userRoleService.GetUserRoleById(id);
+            var userRole = await _userRoleService.GetUserRoleById(id);
 
             if (userRole == null)
             {
@@ -56,7 +56,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new user role", Description = "Create a new user role")]
         [SwaggerResponse(201, "User role created", typeof(UserRole))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateUserRole(UserRoleCreateDto userRole, [FromServices] IValidator<UserRoleCreateDto> validator)
+        public async Task<IActionResult> CreateUserRole(UserRoleCreateDto userRole, [FromServices] IValidator<UserRoleCreateDto> validator)
         {
             ValidationResult validationResult = validator.Validate(userRole);
 
@@ -73,16 +73,16 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
-            var userRoles = _userRoleService.GetUserRoles().Result;
+            var userRoles = await _userRoleService.GetUserRoles();
 
             if (_userRoleUtilities.IsUserRoleNameTaken(userRoles, userRole.Name))
             {
                 return Conflict($"The user role '{userRole.Name}' already exists.");
             }
 
-            _userRoleService.CreateUserRole(userRole);
-            var newUserRole = _userRoleService.GetUserRoleByUserRoleName(userRole.Name);
-            return CreatedAtAction(nameof(GetUserRoleById), newUserRole);
+            var newUserRoleId = await _userRoleService.CreateUserRole(userRole);
+            var newUserRole = await _userRoleService.GetUserRoleById(newUserRoleId);
+            return CreatedAtAction(nameof(GetUserRoleById), new {id = newUserRoleId}, newUserRole);
 
         }
 
@@ -92,7 +92,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "User role updated", typeof(UserRoleUpdateDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole, [FromServices] IValidator<UserRoleUpdateDto> validator)
+        public async Task<IActionResult> UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole, [FromServices] IValidator<UserRoleUpdateDto> validator)
         {
 
             ValidationResult validationResult = validator.Validate(updatedUserRole);
@@ -112,7 +112,7 @@ namespace turbin.sikker.core.Controllers
             }
 
 
-            var userRoles = _userRoleService.GetUserRoles().Result;
+            var userRoles = await _userRoleService.GetUserRoles();
 
             if (_userRoleUtilities.IsUserRoleNameTaken(userRoles, updatedUserRole.Name))
             {
@@ -120,7 +120,7 @@ namespace turbin.sikker.core.Controllers
             }
 
 
-            var userRole = _userRoleService.GetUserRoleById(id);
+            var userRole = await _userRoleService.GetUserRoleById(id);
 
 
 
@@ -129,7 +129,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound();
             }
 
-            _userRoleService.UpdateUserRole(id, updatedUserRole);
+            await _userRoleService.UpdateUserRole(id, updatedUserRole);
 
             return Ok($"User role updated, changed name to '{updatedUserRole.Name}'.");
         }
@@ -139,22 +139,22 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Delete user role by ID", Description = "Deletes a user role by their ID")]
         [SwaggerResponse(204, "User role deleted")]
         [SwaggerResponse(404, "User role not found")]
-        public IActionResult DeleteUserRole(string id)
+        public async Task<IActionResult> DeleteUserRole(string id)
         {
-            UserRole userRoleToDelete = _userRoleService.GetUserRoleById(id).Result;
+            UserRole userRoleToDelete = await _userRoleService.GetUserRoleById(id);
 
             if (userRoleToDelete == null)
             {
                 return NotFound();
             }
 
-            if (_userRoleService.IsUserRoleInUse(userRoleToDelete).Result)
+            if (await _userRoleService.IsUserRoleInUse(userRoleToDelete))
             {
                 return Conflict($"Conflict: Unable to delete the {userRoleToDelete.Name} role.\nReason: There are users currently assigned to this role.");
             }
 
 
-            _userRoleService.DeleteUserRole(userRoleToDelete.Id);
+            await _userRoleService.DeleteUserRole(userRoleToDelete.Id);
 
             return Ok($"User role: '{userRoleToDelete.Name}' deleted.");
         }

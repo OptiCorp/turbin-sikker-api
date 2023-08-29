@@ -22,13 +22,15 @@ namespace turbin.sikker.core.Services
             return await _context.Upload.Where(c => c.PunchId == id).ToListAsync();
         }
 
-        public async void CreateUpload(Upload upload)
+        public async Task<string> CreateUpload(Upload upload)
         {
-            _context.Upload.Add(upload);
+            await _context.Upload.AddAsync(upload);
             await _context.SaveChangesAsync();
+
+            return upload.Id;
         }
 
-        public async void UpdateUpload(Upload updatedUpload)
+        public async Task UpdateUpload(Upload updatedUpload)
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == updatedUpload.Id);
 
@@ -41,7 +43,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async void DeleteUpload(string id)
+        public async Task DeleteUpload(string id)
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
 

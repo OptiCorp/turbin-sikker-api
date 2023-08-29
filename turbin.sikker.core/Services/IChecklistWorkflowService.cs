@@ -8,9 +8,9 @@ namespace turbin.sikker.core.Services
         Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflows();
         Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflowsByUserId(string userId);
         //void UpdateChecklistWorkflow(ChecklistWorkflow checklistWorkflow);
-        void UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow);
+        Task UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow);
         Task<string> CreateChecklistWorkflow(ChecklistWorkflow checklistWorkflow);
-        void DeleteChecklistWorkflow(string id);
+        Task DeleteChecklistWorkflow(string id);
         Task<bool> DoesUserHaveChecklist(string userId, string checklistId);
     }
 }

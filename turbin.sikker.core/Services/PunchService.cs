@@ -82,7 +82,7 @@ namespace turbin.sikker.core.Services
             return newPunchId;
         }
 
-        public async void UpdatePunch(string punchId, PunchUpdateDto updatedPunch)
+        public async Task UpdatePunch(string punchId, PunchUpdateDto updatedPunch)
         {
             var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == punchId);
 
@@ -135,7 +135,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async void DeletePunch(string id)
+        public async Task DeletePunch(string id)
         {
             var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == id);
 

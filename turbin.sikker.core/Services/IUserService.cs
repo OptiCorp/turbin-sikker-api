@@ -10,11 +10,11 @@ namespace turbin.sikker.core.Services
         Task<User> GetUserByUsername(string name);
         Task<User> GetUserByAzureAdUserId(string azureAdUserId);
         Task<User> GetUserById(string id);
-        void UpdateUser(string id, UserUpdateDto user);
-        void CreateUser(UserCreateDto user);
+        Task UpdateUser(string id, UserUpdateDto user);
+        Task<string> CreateUser(UserCreateDto user);
         //Task CreateUser(UserCreateDto userDto);
-        void DeleteUser(string id);
-        void HardDeleteUser(string id);
+        Task DeleteUser(string id);
+        Task HardDeleteUser(string id);
         // bool IsUsernameTaken(IEnumerable<UserDto> users, string username);
         // bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail);
         // bool IsValidStatus(string value);

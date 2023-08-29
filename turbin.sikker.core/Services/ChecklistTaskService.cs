@@ -101,7 +101,7 @@ namespace turbin.sikker.core.Services
             return taskId;
         }
 
-        public async void UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask)
+        public async Task UpdateChecklistTask(string id, ChecklistTaskRequestDto updatedChecklistTask)
         {
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == id);
 
@@ -122,7 +122,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async void UpdateChecklistTaskInChecklist(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask)
+        public async Task UpdateChecklistTaskInChecklist(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask)
         {
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == taskId);
             var newChecklistTask = new ChecklistTask
@@ -145,7 +145,7 @@ namespace turbin.sikker.core.Services
                     newChecklistTask.Description = updatedChecklistTask.Description;
                 }
 
-                _context.Checklist_Task.Add(newChecklistTask);
+                await _context.Checklist_Task.AddAsync(newChecklistTask);
                 checklist.ChecklistTasks.Add(newChecklistTask);
                 checklist.ChecklistTasks.Remove(checklistTask);
 
@@ -153,7 +153,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async void AddTaskToChecklist(string checklistId, string taskId)
+        public async Task AddTaskToChecklist(string checklistId, string taskId)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == checklistId);
             var task = await _context.Checklist_Task.FirstOrDefaultAsync(t => t.Id == taskId);
@@ -166,7 +166,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async void DeleteChecklistTask(string id)
+        public async Task DeleteChecklistTask(string id)
         {
 
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == id);
