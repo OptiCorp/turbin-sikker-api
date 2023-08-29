@@ -28,7 +28,7 @@ namespace turbin.sikker.core.Utilities.Dto
                 Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                 CreatedDate = checklist.CreatedDate,
                 UpdatedDate = checklist.UpdatedDate,
-                Tasks = checklist.ChecklistTasks
+                // Tasks = checklist.ChecklistTasks
             };
     }
     }
