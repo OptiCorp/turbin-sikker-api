@@ -107,8 +107,8 @@ namespace turbin.sikker.core
             services.AddAuthentication()
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Audience = "c1b6fd67-db9e-4a25-a4ad-9aec1fe3ec64";
-                    options.Authority = "https://login.microsoftonline.com/2d89021a-6a8a-4063-a9fe-b4777c4088f1/";
+                    options.Audience = "cc0af56e-ee49-46ce-aad6-010dce5bcbb6";
+                    options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
                     options.RequireHttpsMetadata = false; //Bad? 
                 });
 
