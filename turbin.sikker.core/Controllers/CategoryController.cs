@@ -26,9 +26,9 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllCategories")]
         [SwaggerOperation(Summary = "Get all categories", Description = "Retrieves a list of all categories.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
-        public IEnumerable<Category> GetAllCategories()
+        public async Task<IActionResult> GetAllCategories()
         {
-            return _categoryService.GetAllCategories().Result;
+            return Ok(await _categoryService.GetAllCategories());
         }
 
         // Get specific Category based on given Id
@@ -36,9 +36,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get category by ID", Description = "Retrives a category by the ID.")]
         [SwaggerResponse(200, "Success", typeof(Category))]
         [SwaggerResponse(400, "Category not found")]
-        public IActionResult GetCategoryById(string id)
+        public async Task<IActionResult> GetCategoryById(string id)
         {
-            var Category = _categoryService.GetCategoryById(id).Result;
+            var Category = await _categoryService.GetCategoryById(id);
             if (Category == null)
             {
                 return NotFound("Category not found");
@@ -51,9 +51,9 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetCategoriesByName")]
         [SwaggerOperation(Summary = "Search for checklists", Description = "Retrieves a list of all categories which contains the search word.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
-        public IEnumerable<Category> SearchCategoryByName(string searchString)
+        public async Task<IActionResult> SearchCategoryByName(string searchString)
         {
-            return _categoryService.SearchCategoryByName(searchString).Result;
+            return Ok(await _categoryService.SearchCategoryByName(searchString));
         }
 
 
@@ -81,14 +81,14 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var categories = _categoryService.GetAllCategories().Result;
+            var categories = await _categoryService.GetAllCategories();
             if (_categoryUtilities.isCategoryNametaken(categories, category.Name))
             {
                 return Conflict($"Category '{category.Name}' already exists.");
             }
 
             var categoryId = await _categoryService.CreateCategory(category);
-            var newCategory = _categoryService.GetCategoryById(categoryId);
+            var newCategory = await _categoryService.GetCategoryById(categoryId);
             return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, newCategory);
         }
 
@@ -97,7 +97,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
-        public IActionResult UpdateCategory(string id, CategoryRequestDto updatedCategory, [FromServices] IValidator<CategoryRequestDto> validator)
+        public async Task<IActionResult> UpdateCategory(string id, CategoryRequestDto updatedCategory, [FromServices] IValidator<CategoryRequestDto> validator)
         {
             ValidationResult validationResult = validator.Validate(updatedCategory);
 
@@ -114,38 +114,38 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
-            var category = _categoryService.GetCategoryById(id).Result;
+            var category = await _categoryService.GetCategoryById(id);
 
             if (category == null)
             {
                 return NotFound("Category not found");
             }
-            var categories = _categoryService.GetAllCategories().Result;
+            var categories = await _categoryService.GetAllCategories();
 
-            if (_categoryUtilities.isCategoryNametaken(categories, category.Name))
+            if (_categoryUtilities.isCategoryNametaken(categories, updatedCategory.Name))
             {
                 return Conflict($"Category already exists.");
             }
 
-            _categoryService.UpdateCategory(id, updatedCategory);
+            await _categoryService.UpdateCategory(id, updatedCategory);
 
-            return Ok($"Category renamed to '{category.Name}'");
+            return Ok($"Category renamed to '{updatedCategory.Name}'");
         }
         // Deletes Category based on given Id
         [HttpDelete("DeleteCategory")]
         [SwaggerOperation(Summary = "Delete category by ID", Description = "Deletes a category by their ID")]
         [SwaggerResponse(204, "Category deleted")]
         [SwaggerResponse(404, "Category not found")]
-        public IActionResult DeleteCategory(string id)
+        public async Task<IActionResult> DeleteCategory(string id)
         {
-            var category = _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryById(id);
 
             if (category == null)
             {
                 return NotFound("Category not found");
             }
 
-            _categoryService.DeleteCategory(id);
+            await _categoryService.DeleteCategory(id);
 
             return NoContent();
         }
