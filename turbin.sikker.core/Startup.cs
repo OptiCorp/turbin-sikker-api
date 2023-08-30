@@ -168,7 +168,7 @@ namespace turbin.sikker.core
         private string GetSecretValueFromKeyVault(string secretName)
         {
             var keyVaultUrl = Configuration["AzureKeyVault:VaultUrl"];
-            var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions {ManagedIdentityClientId = "cc0af56e-ee49-46ce-aad6-010dce5bcbb6"});
+            var credential = new DefaultAzureCredential();
             var client = new SecretClient(new Uri(keyVaultUrl), credential);
             var secret = client.GetSecret(secretName);
             return secret.Value.Value;
