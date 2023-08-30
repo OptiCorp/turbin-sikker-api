@@ -31,9 +31,9 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllUsers")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
-        public IEnumerable<UserDto> GetUsers()
+        public async Task<IEnumerable<UserDto>> GetUsers()
         {
-            return _userService.GetUsers().Result;
+            return await _userService.GetUsers();
         }
 
         [HttpGet("GetAllUsersAdmin")]
