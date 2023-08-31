@@ -1,5 +1,4 @@
-﻿using System;
-using turbin.sikker.core.Model;
+﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO.CategoryDtos;
 
@@ -43,7 +42,7 @@ namespace turbin.sikker.core.Services
             return categoryId;
         }
 
-        public async void UpdateCategory(string id, CategoryRequestDto updatedCategory)
+        public async Task UpdateCategory(string id, CategoryRequestDto updatedCategory)
         {
             var category = await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
 
@@ -53,12 +52,12 @@ namespace turbin.sikker.core.Services
                 {
                     category.Name = updatedCategory.Name;
                 }
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
         
 
-        public async void DeleteCategory(string id)
+        public async Task DeleteCategory(string id)
         {
 
             var category =  await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
@@ -76,4 +75,3 @@ namespace turbin.sikker.core.Services
         // }
     }
 }
-

@@ -1,5 +1,4 @@
-﻿using System;
-namespace turbin.sikker.core.Model.DTO
+﻿namespace turbin.sikker.core.Model.DTO
 {
     public class PunchCreateDto
     {
@@ -7,7 +6,7 @@ namespace turbin.sikker.core.Model.DTO
 
         public string PunchDescription { get; set; }
 
-        public string ChecklistId { get; set; }
+        public string ChecklistWorkflowId { get; set; }
 
         public string Severity { get; set; }
 

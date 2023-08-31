@@ -1,8 +1,6 @@
-﻿using System;
-using turbin.sikker.core.Model;
+﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
-using System.Threading.Tasks;
 
 namespace turbin.sikker.core.Services
 {
@@ -83,7 +81,7 @@ namespace turbin.sikker.core.Services
             return newChecklistId;
         }
 
-        public async void UpdateChecklist(string checklistId, ChecklistEditDto updatedChecklist)
+        public async Task UpdateChecklist(string checklistId, ChecklistEditDto updatedChecklist)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == checklistId);
 
@@ -107,7 +105,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async void DeleteChecklist(string id)
+        public async Task DeleteChecklist(string id)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(checklist => checklist.Id == id);
             if (checklist != null)
@@ -118,7 +116,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async void HardDeleteChecklist(string id)
+        public async Task HardDeleteChecklist(string id)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(checklist => checklist.Id == id);
             if (checklist != null) 
@@ -134,4 +132,3 @@ namespace turbin.sikker.core.Services
         // }
     }
 }
-

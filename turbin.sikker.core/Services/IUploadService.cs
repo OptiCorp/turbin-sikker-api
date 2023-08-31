@@ -1,14 +1,13 @@
-﻿using System;
-using turbin.sikker.core.Model;
+﻿using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Services
 {
     public interface IUploadService
     {
         Task<Upload> GetUploadById(string id);
-        void UpdateUpload(Upload upload);
-        void CreateUpload(Upload upload);
-        void DeleteUpload(string id);
+        Task<IEnumerable<Upload>> GetUploadsByPunchId(string checklistId);
+        Task UpdateUpload(Upload upload);
+        Task<string> CreateUpload(Upload upload);
+        Task DeleteUpload(string id);
     }
 }
-

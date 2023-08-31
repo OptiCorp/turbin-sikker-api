@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using turbin.sikker.core.Model;
-using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
 {
@@ -22,12 +18,12 @@ namespace turbin.sikker.core.Services
             return await _context.ChecklistWorkflow.AnyAsync(workflow => workflow.UserId == userId && workflow.ChecklistId == checklistId);
         }
 
-        public async Task<ChecklistWorkflow> GetChecklistWorflowById(string id)
+        public async Task<ChecklistWorkflow> GetChecklistWorkflowById(string id)
         {
             return await _context.ChecklistWorkflow.FindAsync(id);
         }
 
-        public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorflows()
+        public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflows()
         {
             return await _context.ChecklistWorkflow.ToListAsync();
         }
@@ -37,7 +33,7 @@ namespace turbin.sikker.core.Services
             return await _context.ChecklistWorkflow.Where(cw => cw.UserId == userId).ToListAsync();
         }
 
-        public async void UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow)
+        public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow)
         {
 
             var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == id);
@@ -51,6 +47,10 @@ namespace turbin.sikker.core.Services
                 if (checklistWorkFlow.UserId != null)
                 {
                     checklistWorkFlow.UserId = updatedChecklistWorkflow.UserId;
+                }
+                if (checklistWorkFlow.CreatedById != null)
+                {
+                    checklistWorkFlow.CreatedById = updatedChecklistWorkflow.CreatedById;
                 }
             }
             checklistWorkFlow.UpdatedDate = DateTime.Now;
@@ -66,7 +66,7 @@ namespace turbin.sikker.core.Services
             return checklistWorkflow.Id;
         }
 
-        public async void DeleteChecklistWorkflow(string id)
+        public async Task DeleteChecklistWorkflow(string id)
         {
             var checklistWorkflow = await _context.ChecklistWorkflow.FindAsync(id);
             if (checklistWorkflow != null)

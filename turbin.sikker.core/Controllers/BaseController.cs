@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 namespace turbin.sikker.core.Controllers
 {
     public abstract class BaseController<TModel> : Controller where TModel : class

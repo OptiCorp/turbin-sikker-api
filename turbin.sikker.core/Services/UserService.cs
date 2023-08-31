@@ -89,7 +89,7 @@ namespace turbin.sikker.core.Services
         {
             return await _context.User.Include(u => u.UserRole).FirstOrDefaultAsync(u => u.Username == username);
         }
-        public async void CreateUser(UserCreateDto userDto)
+        public async Task<string> CreateUser(UserCreateDto userDto)
         {
             var user = new User
             {
@@ -103,8 +103,10 @@ namespace turbin.sikker.core.Services
             };
             _context.User.Add(user);
             await _context.SaveChangesAsync();
+
+            return user.Id;
         }
-        public async void UpdateUser(string userId, UserUpdateDto updatedUserDto)
+        public async Task UpdateUser(string userId, UserUpdateDto updatedUserDto)
         {
             var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
             if (user != null)
@@ -139,7 +141,7 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-        public async void DeleteUser(string id)
+        public async Task DeleteUser(string id)
         {
             var user = await _context.User.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
@@ -148,7 +150,7 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-        public async void HardDeleteUser(string id)
+        public async Task HardDeleteUser(string id)
         {
             var user = await _context.User.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)

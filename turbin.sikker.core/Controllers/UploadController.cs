@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Services;
-using System;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace turbin.sikker.core.Controllers
@@ -23,9 +21,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get upload by ID", Description = "Retrieves a upload by their ID.")]
         [SwaggerResponse(200, "Success", typeof(Upload))]
         [SwaggerResponse(404, "Upload not found")]
-        public IActionResult GetUploadById(string id)
+        public async Task<IActionResult> GetUploadById(string id)
         {
-            var upload =  _uploadService.GetUploadById(id);
+            var upload = await _uploadService.GetUploadById(id);
             if (upload == null)
             {
                 return NotFound();
@@ -33,18 +31,33 @@ namespace turbin.sikker.core.Controllers
 
             return Ok(upload);
         }
+
+        [HttpGet("GetUploadsByPunchId")]
+        [SwaggerOperation(Summary = "Get uploads by punch ID", Description = "Retrieves all uploads by their punch ID.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(404, "Uploads not found")]
+        public async Task<IActionResult> GetUploadsByPunchId(string punchId)
+        {
+            var uploads = await _uploadService.GetUploadsByPunchId(punchId);
+            if (uploads == null)
+            {
+                return NotFound("Uploads not found.");
+            }    
+
+            return Ok(uploads);
+        }
         
         // Edit specific upload based on given Id
         [HttpPost("AddUpload")]
         [SwaggerOperation(Summary = "Create a new upload", Description = "Creates a new upload.")]
         [SwaggerResponse(201, "Upload created", typeof(User))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateUpload(Upload upload)
+        public async Task<IActionResult> CreateUpload(Upload upload)
         {
             if (ModelState.IsValid)
             {
-                _uploadService.CreateUpload(upload);
-                return CreatedAtAction(nameof(GetUploadById), new { id = upload.Id }, upload);
+                var newUploadId = await _uploadService.CreateUpload(upload);
+                return CreatedAtAction(nameof(GetUploadById), new { id = newUploadId }, upload);
             }
             
             return BadRequest(ModelState);
@@ -56,21 +69,21 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "Upload updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Upload not found")]
-        public IActionResult UpdateUpload(string id, Upload updatedUpload)
+        public async Task<IActionResult> UpdateUpload(string id, Upload updatedUpload)
         {
             if (id != updatedUpload.Id)
             {
                 return BadRequest();
             }
 
-            var upload = _uploadService.GetUploadById(id);
+            var upload = await _uploadService.GetUploadById(id);
 
             if (upload == null)
             {
                 return NotFound();
             }
 
-            _uploadService.UpdateUpload(updatedUpload);
+            await _uploadService.UpdateUpload(updatedUpload);
 
             return NoContent();
         }
@@ -80,16 +93,16 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Delete upload by ID", Description = "Deletes a upload by their ID.")]
         [SwaggerResponse(204, "Upload deleted")]
         [SwaggerResponse(404, "Upload not found")]
-        public IActionResult DeleteUpload(string id)
+        public async Task<IActionResult> DeleteUpload(string id)
         {
-            var upload = _uploadService.GetUploadById(id);
+            var upload = await _uploadService.GetUploadById(id);
 
             if (upload == null)
             {
                 return NotFound();
             }
 
-            _uploadService.DeleteUpload(id);
+            await _uploadService.DeleteUpload(id);
 
             return NoContent();
         }

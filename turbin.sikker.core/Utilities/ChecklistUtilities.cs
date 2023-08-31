@@ -1,4 +1,3 @@
-
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
 
 namespace turbin.sikker.core.Utilities

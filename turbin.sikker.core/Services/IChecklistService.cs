@@ -1,5 +1,4 @@
-﻿using System;
-using turbin.sikker.core.Model;
+﻿using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
 
 namespace turbin.sikker.core.Services
@@ -10,11 +9,10 @@ namespace turbin.sikker.core.Services
         Task<IEnumerable<ChecklistMultipleResponseDto>> GetAllChecklists();
         Task<IEnumerable<ChecklistViewNoUserDto>> GetAllChecklistsByUserId(string userId);
         Task<IEnumerable<ChecklistMultipleResponseDto>> SearchChecklistByName(string searchString);
-        void UpdateChecklist(string id, ChecklistEditDto checklist);
+        Task UpdateChecklist(string id, ChecklistEditDto checklist);
         Task<string> CreateChecklist(ChecklistCreateDto checklist);
-        void DeleteChecklist(string id);
-        void HardDeleteChecklist(string id);
+        Task DeleteChecklist(string id);
+        Task HardDeleteChecklist(string id);
         // bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title);
     }
 }
-

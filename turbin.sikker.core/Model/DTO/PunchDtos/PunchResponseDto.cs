@@ -1,11 +1,10 @@
-﻿using System;
-namespace turbin.sikker.core.Model.DTO
+﻿namespace turbin.sikker.core.Model.DTO
 {
     public class PunchResponseDto
     {
         public string? Id { get; set; }
 
-        public string ChecklistId { get; set; }
+        public string ChecklistWorkflowId { get; set; }
 
         public string Status { get; set; }
 

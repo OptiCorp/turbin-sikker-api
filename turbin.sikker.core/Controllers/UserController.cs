@@ -2,8 +2,6 @@
 using turbin.sikker.core.Model;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using turbin.sikker.core.Model.DTO;
 using FluentValidation;
 using FluentValidation.Results;
@@ -31,26 +29,28 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllUsers")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
-        public async Task<IEnumerable<UserDto>> GetUsers()
+
+        public async Task<IActionResult> GetUsers()
         {
-            return await _userService.GetUsers();
+            return Ok(await _userService.GetUsers());
         }
 
         [HttpGet("GetAllUsersAdmin")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserDto>))]
-       public async Task<IEnumerable<UserDto>> GetAllUsers()
+
+        public async Task<IActionResult> GetAllUsers()
         {
-             return await _userService.GetUsers();
+            return Ok(await _userService.GetAllUsers());
         }
 
         [HttpGet("GetUser")]
         [SwaggerOperation(Summary = "Get user by ID", Description = "Retrieves a user by their ID.")]
         [SwaggerResponse(200, "Success", typeof(User))]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult GetUserById(string id)
+        public async Task<IActionResult> GetUserById(string id)
         {
-            var user = _userService.GetUserById(id);
+            var user = await _userService.GetUserById(id);
 
             if (user == null)
             {
@@ -64,9 +64,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get Azure AD user by ID", Description = "Retrieves a Azure AD user by their ID.")]
         [SwaggerResponse(200, "Success", typeof(User))]
         [SwaggerResponse(404, "Azure AD user not found")]
-        public IActionResult GetUserByAzureAdUserId(string azureAdUserId)
+        public async Task<IActionResult> GetUserByAzureAdUserId(string azureAdUserId)
         {
-            var user = _userService.GetUserByAzureAdUserId(azureAdUserId);
+            var user = await _userService.GetUserByAzureAdUserId(azureAdUserId);
 
             if (user == null)
             {
@@ -80,9 +80,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get user by username", Description = "Retrieves a user by their username.")]
         [SwaggerResponse(200, "Success", typeof(User))]
         [SwaggerResponse(404, "Username not found")]
-        public IActionResult GetUserByUsername(string username)
+        public async Task<IActionResult> GetUserByUsername(string username)
         {
-            var user = _userService.GetUserByUsername(username);
+            var user = await _userService.GetUserByUsername(username);
 
             if (user == null)
             {
@@ -96,10 +96,10 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new user", Description = "Creates a new user.")]
         [SwaggerResponse(201, "User created", typeof(UserCreateDto))]
         [SwaggerResponse(400, "Invalid request")]
-        public IActionResult CreateUser(UserCreateDto user, [FromServices] IValidator<UserCreateDto> validator)
+        public async Task<IActionResult> CreateUser(UserCreateDto user, [FromServices] IValidator<UserCreateDto> validator)
         {
 
-            string inspectorRoleId = _userService.GetInspectorRoleId().Result;
+            string inspectorRoleId = await _userService.GetInspectorRoleId();
 
             if (string.IsNullOrEmpty(user.UserRoleId))
             {
@@ -129,7 +129,7 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            var users = _userService.GetAllUsers().Result;
+            var users = await _userService.GetAllUsers();
 
 
             if (_userUtilities.IsUsernameTaken(users, user.Username))
@@ -142,12 +142,12 @@ namespace turbin.sikker.core.Controllers
                 return Conflict("Invalid email");
             }
 
-            var userRoles = _userRoleService.GetUserRoles();
+            var userRoles = await _userRoleService.GetUserRoles();
 
 
-            _userService.CreateUser(user);
-            var newUser = _userService.GetUserByUsername(user.Username);
-            return CreatedAtAction(nameof(GetUserById), newUser);
+            var newUserId = await _userService.CreateUser(user);
+            var newUser = await _userService.GetUserByUsername(user.Username);
+            return CreatedAtAction(nameof(GetUserById), new {id = newUserId}, newUser);
         }
 
         [HttpPost("UpdateUser")]
@@ -155,9 +155,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(204, "User updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult UpdateUser(string id, UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
+        public async Task<IActionResult> UpdateUser(string id, UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
         {
-            var users = _userService.GetAllUsers().Result;
+            var users = await _userService.GetAllUsers();
             users = users.Where(u => u.Id != id);
 
             ValidationResult validationResult = validator.Validate(updatedUser);
@@ -186,7 +186,7 @@ namespace turbin.sikker.core.Controllers
                 return Conflict("Invalid email.");
             }
 
-            _userService.UpdateUser(id, updatedUser);
+            await _userService.UpdateUser(id, updatedUser);
 
             return NoContent();
         }
@@ -195,9 +195,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Soft delete user by ID", Description = "Deletes a user by their ID, sets the status of the user as \"deleted\" in the system without actually removing them from the database.")]
         [SwaggerResponse(204, "User deleted")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = _userService.GetUserById(id).Result;
+            var user = await _userService.GetUserById(id);
             if (user.Status == UserStatus.Deleted)
             {
                 return Conflict("User already deleted");
@@ -207,7 +207,7 @@ namespace turbin.sikker.core.Controllers
                 return NotFound();
             }
 
-            _userService.DeleteUser(id);
+            await _userService.DeleteUser(id);
 
             return NoContent();
         }
@@ -216,16 +216,16 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Hard delete user by ID", Description = "Deletes a user by their ID, permanently deletes the user from the system, including removing their data from the database")]
         [SwaggerResponse(204, "User deleted")]
         [SwaggerResponse(404, "User not found")]
-        public IActionResult HardDeleteUser(string id)
+        public async Task<IActionResult> HardDeleteUser(string id)
         {
-            var user = _userService.GetUserById(id).Result;
+            var user = await _userService.GetUserById(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            _userService.HardDeleteUser(id);
+            await _userService.HardDeleteUser(id);
 
             return Ok($"User: '{user.Username}' deleted");
         }
