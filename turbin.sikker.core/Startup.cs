@@ -97,36 +97,36 @@ namespace turbin.sikker.core
         private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
         {
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            // services.AddAuthentication(options =>
+            // {
+            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            });
+            // });
 
 
 
             services.AddAuthentication()
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Audience = "api://cc0af56e-ee49-46ce-aad6-010dce5bcbb6";
+                    options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
                     options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
                     options.RequireHttpsMetadata = false; //Bad? 
                 });
 
 
-            // TODO: Implement Authorization
-            services.AddAuthorization(options =>
-            {
-               var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-                   JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-                   );
-               defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-               options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            });
+            // // TODO: Implement Authorization
+            // services.AddAuthorization(options =>
+            // {
+            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+            //        );
+            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            // });
 
-            services.AddAuthentication().AddIdentityServerJwt();
-
+            // services.AddAuthentication().AddIdentityServerJwt();
+        
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
