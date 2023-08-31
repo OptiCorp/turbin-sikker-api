@@ -18,6 +18,7 @@ using turbin.sikker.core.Validation.UserValidations;
 using turbin.sikker.core.Validation.UserRoleValidations;
 using turbin.sikker.core.Common;
 using turbin.sikker.core.Utilities;
+using Microsoft.AspNetCore.Authentication;
 
 
 namespace turbin.sikker.core
@@ -95,6 +96,7 @@ namespace turbin.sikker.core
 
         private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
         {
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -107,7 +109,7 @@ namespace turbin.sikker.core
             services.AddAuthentication()
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Audience = "cc0af56e-ee49-46ce-aad6-010dce5bcbb6";
+                    options.Audience = "api://cc0af56e-ee49-46ce-aad6-010dce5bcbb6";
                     options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
                     options.RequireHttpsMetadata = false; //Bad? 
                 });
