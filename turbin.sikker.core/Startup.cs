@@ -19,7 +19,7 @@ using turbin.sikker.core.Validation.UserRoleValidations;
 using turbin.sikker.core.Common;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Authentication;
-
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 
 namespace turbin.sikker.core
 
@@ -106,14 +106,23 @@ namespace turbin.sikker.core
 
 
 
-            services.AddAuthentication()
-                .AddJwtBearer("Bearer", options =>
+            // services.AddAuthentication()
+            //     .AddJwtBearer("Bearer", options =>
+            //     {
+            //         options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
+            //         options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
+            //         options.RequireHttpsMetadata = false; //Bad? 
+            //     });
+
+
+            services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
                     options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
                     options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
-                    options.RequireHttpsMetadata = false; //Bad? 
+                    options.SaveToken = true;
                 });
-
+            services.AddAuthorization();
 
             // // TODO: Implement Authorization
             // services.AddAuthorization(options =>
