@@ -10,9 +10,12 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using turbin.sikker.core.Model.DTO.TaskDtos;
 using turbin.sikker.core.Utilities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace turbin.sikker.core.Controllers
-{
+
+{   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api")]
     public class ChecklistController : ControllerBase
