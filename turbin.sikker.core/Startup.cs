@@ -18,7 +18,8 @@ using turbin.sikker.core.Validation.UserValidations;
 using turbin.sikker.core.Validation.UserRoleValidations;
 using turbin.sikker.core.Common;
 using turbin.sikker.core.Utilities;
-
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 
 namespace turbin.sikker.core
 
@@ -43,10 +44,10 @@ namespace turbin.sikker.core
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("https://turbinsikker-app-win-prod.azurewebsites.net").WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Origin").AllowAnyMethod());
-                // builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-               
 
+                    // builder => builder.WithOrigins("https://turbinsikker-app-win-prod.azurewebsites.net").WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Origin").AllowAnyMethod());
+                builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+               
             });
 
             services.AddSwaggerGen(c =>
@@ -95,36 +96,46 @@ namespace turbin.sikker.core
 
         private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-            });
+            // services.AddAuthentication(options =>
+            // {
+            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            // });
 
 
 
-            services.AddAuthentication()
-                .AddJwtBearer("Bearer", options =>
+            // services.AddAuthentication()
+            //     .AddJwtBearer("Bearer", options =>
+            //     {
+            //         options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
+            //         options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
+            //         options.RequireHttpsMetadata = false; //Bad? 
+            //     });
+
+
+            services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    options.Audience = "c1b6fd67-db9e-4a25-a4ad-9aec1fe3ec64";
-                    options.Authority = "https://login.microsoftonline.com/2d89021a-6a8a-4063-a9fe-b4777c4088f1/";
-                    options.RequireHttpsMetadata = false; //Bad? 
+                    options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
+                    options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
+                    options.SaveToken = true;
                 });
+            services.AddAuthorization();
 
+            // // TODO: Implement Authorization
+            // services.AddAuthorization(options =>
+            // {
+            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
+            //        );
+            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            // });
 
-            // TODO: Implement Authorization
-            services.AddAuthorization(options =>
-            {
-               var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-                   JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-                   );
-               defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-               options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            });
-
-            services.AddAuthentication().AddIdentityServerJwt();
-
+            // services.AddAuthentication().AddIdentityServerJwt();
+        
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -168,7 +179,7 @@ namespace turbin.sikker.core
         private string GetSecretValueFromKeyVault(string secretName)
         {
             var keyVaultUrl = Configuration["AzureKeyVault:VaultUrl"];
-            var credential = new DefaultAzureCredential();
+            var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions {ManagedIdentityClientId = "7ba87be7-bb2b-4f09-b4d0-b47c27191947"});
             var client = new SecretClient(new Uri(keyVaultUrl), credential);
             var secret = client.GetSecret(secretName);
             return secret.Value.Value;

@@ -10,7 +10,7 @@ using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Controllers
 {
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api")]
     public class UserController : ControllerBase
@@ -29,6 +29,7 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllUsers")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<User>))]
+
         public async Task<IActionResult> GetUsers()
         {
             return Ok(await _userService.GetUsers());
@@ -37,6 +38,7 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllUsersAdmin")]
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserDto>))]
+
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _userService.GetAllUsers());

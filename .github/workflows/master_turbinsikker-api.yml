@@ -20,7 +20,7 @@
 name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: turbinsikker-api   # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: turbinsikker-api-prod   # set this to the name of your Azure Web App
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '6.0.x'                 # set this to the .NET Core version to use
 
@@ -58,11 +58,11 @@ jobs:
       - name: dotnet publish
         run: dotnet publish turbin.sikker.core -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-      # - name: Upload artifact for deployment job
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: .net-app
-      #     path: ${{env.DOTNET_ROOT}}/myapp
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     permissions:
@@ -74,15 +74,15 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    #   - name: Download artifact from build job
-    #     uses: actions/download-artifact@v3
-    #     with:
-    #       name: .net-app 
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app 
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5370688701CA48E7BF36E18E86E75873 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9B32A0474A194C4DBD1ADC0A66B32D1B }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
