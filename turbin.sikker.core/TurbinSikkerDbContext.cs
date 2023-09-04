@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.ObjectModel;
+using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Configuration;
 using turbin.sikker.core.Model;
 
@@ -30,6 +31,7 @@ namespace turbin.sikker.core
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
 
             // Call the Configure method from ModelConfigurations class
             UserConfigurations.Configure(modelBuilder);

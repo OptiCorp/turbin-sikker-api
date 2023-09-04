@@ -7,10 +7,13 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using turbin.sikker.core.Utilities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace turbin.sikker.core.Controllers
 {
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = "AuthZPolicy")]
+    [EnableCors("AllowAllHeaders")]
     [ApiController]
     [Route("api")]
     public class UserController : ControllerBase
