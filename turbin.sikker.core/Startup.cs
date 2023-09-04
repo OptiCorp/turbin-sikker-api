@@ -18,8 +18,8 @@ using turbin.sikker.core.Validation.UserValidations;
 using turbin.sikker.core.Validation.UserRoleValidations;
 using turbin.sikker.core.Common;
 using turbin.sikker.core.Utilities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 
 namespace turbin.sikker.core
 
@@ -78,8 +78,9 @@ namespace turbin.sikker.core
 
 
             // Add DbContext
-            var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
+            // var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
             // var connectionString = "Data Source=localhost;Initial Catalog=TurbinsikkerDb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
+            var connectionString = "Server=tcp:dbserverv2-turbinsikker-prod.database.windows.net,1433;Initial Catalog=dbv2-turbinsikker-prod;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default';";
 
 
             services.AddDbContext<TurbinSikkerDbContext>(options =>
@@ -96,6 +97,20 @@ namespace turbin.sikker.core
 
         private void ConfigureAuthenticationAndAuthorization(IServiceCollection services)
         {
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                        .AddMicrosoftIdentityWebApi(options => 
+                        {
+                            Configuration.Bind("AzureAd", options);
+                            options.TokenValidationParameters.NameClaimType = "name";
+                        }, options => {Configuration.Bind("AzureAd", options);});
+
+            
+            services.AddAuthorization(config => 
+            {
+                config.AddPolicy("AuthZPolicy", policyBuilder => 
+                policyBuilder.Requirements.Add(new ScopeAuthorizationRequirement() { RequiredScopesConfigurationKey = $"AzureAd.Scopes"}));
+            });
 
             // services.AddAuthentication(options =>
             // {
@@ -115,14 +130,14 @@ namespace turbin.sikker.core
             //     });
 
 
-            services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
-                    options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
-                    options.SaveToken = true;
-                });
-            services.AddAuthorization();
+            // services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
+            //     .AddJwtBearer(options =>
+            //     {
+            //         options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
+            //         options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
+            //         options.SaveToken = true;
+            //     });
+            // services.AddAuthorization();
 
             // // TODO: Implement Authorization
             // services.AddAuthorization(options =>
@@ -156,7 +171,10 @@ namespace turbin.sikker.core
                 app.UseHsts();
             }
 
-            dbContext.Database.Migrate();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            // dbContext.Database.Migrate();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -179,7 +197,7 @@ namespace turbin.sikker.core
         private string GetSecretValueFromKeyVault(string secretName)
         {
             var keyVaultUrl = Configuration["AzureKeyVault:VaultUrl"];
-            var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions {ManagedIdentityClientId = "7ba87be7-bb2b-4f09-b4d0-b47c27191947"});
+            var credential = new DefaultAzureCredential();
             var client = new SecretClient(new Uri(keyVaultUrl), credential);
             var secret = client.GetSecret(secretName);
             return secret.Value.Value;
