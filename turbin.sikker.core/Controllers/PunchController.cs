@@ -3,9 +3,13 @@ using turbin.sikker.core.Model.DTO;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
 using turbin.sikker.core.Utilities;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace turbin.sikker.core.Controllers
 {
+    [Authorize(Policy = "AuthZPolicy")]
+    [EnableCors("AllowAllHeaders")]
     [ApiController]
     [Route("api")]
     public class PunchController : ControllerBase

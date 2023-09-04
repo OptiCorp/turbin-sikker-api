@@ -84,5 +84,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9B32A0474A194C4DBD1ADC0A66B32D1B }}
+          publish-profile: ${{ secrets.PUBLISH_PROFILE_LINUX }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

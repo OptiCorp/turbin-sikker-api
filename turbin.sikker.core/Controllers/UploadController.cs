@@ -2,9 +2,14 @@
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+
 
 namespace turbin.sikker.core.Controllers
 {
+    [Authorize(Policy = "AuthZPolicy")]
+    [EnableCors("AllowAllHeaders")]
     [ApiController]
     [Route("api")]
     public class UploadController : ControllerBase
