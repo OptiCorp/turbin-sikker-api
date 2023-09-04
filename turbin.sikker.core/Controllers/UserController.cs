@@ -8,10 +8,12 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace turbin.sikker.core.Controllers
 {
     [Authorize(Policy = "AuthZPolicy")]
+    [EnableCors("AllowAllHeaders")]
     [ApiController]
     [Route("api")]
     public class UserController : ControllerBase
@@ -40,9 +42,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get all users", Description = "Retrieves a list of all users.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<UserDto>))]
 
-        public string GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            return "Endpoint works";
+            return Ok(await _userService.GetAllUsers());
         }
 
         [HttpGet("GetUser")]
