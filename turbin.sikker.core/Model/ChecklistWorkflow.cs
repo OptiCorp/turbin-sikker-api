@@ -28,6 +28,7 @@ namespace turbin.sikker.core.Model
 
         public DateTime? UpdatedDate { get; set; }
 
+        public ICollection<Punch>? Punches { get; set; }
     }
 }
 
