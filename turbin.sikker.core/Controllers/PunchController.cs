@@ -73,6 +73,36 @@ namespace turbin.sikker.core.Controllers
             return Ok(punches);
         }
 
+        [HttpGet("GetPunchesByInspectorId")]
+        [SwaggerOperation(Summary = "Get punches by inspector ID", Description = "Retrieves all punches by an inspector ID.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(404, "Punches not found")]
+        public async Task<IActionResult> GetPunchesByInspectorId(string id)
+        {
+            var punches = await _punchService.GetPunchesByInspectorId(id);
+            if (punches == null)
+            {
+                return NotFound("Punches not found.");
+            }    
+
+            return Ok(punches);
+        }
+
+        [HttpGet("GetPunchesByLeaderId")]
+        [SwaggerOperation(Summary = "Get punches by leader ID", Description = "Retrieves all punches by a leader ID.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(404, "Punches not found")]
+        public async Task<IActionResult> GetPunchesByLeaderId(string id)
+        {   
+            var punches = await _punchService.GetPunchesByLeaderId(id);
+            if (punches == null)
+            {
+                return NotFound("Punches not found.");
+            }    
+
+            return Ok(punches);
+        }
+
 
         [HttpPost("AddPunch")]
         [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]
