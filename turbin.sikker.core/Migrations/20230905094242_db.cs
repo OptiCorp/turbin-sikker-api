@@ -5,7 +5,7 @@
 namespace turbin.sikker.core.Migrations
 {
     /// <inheritdoc />
-    public partial class updatechecklistworkflow2 : Migration
+    public partial class db : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

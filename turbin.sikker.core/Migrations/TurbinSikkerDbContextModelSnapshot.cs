@@ -140,6 +140,10 @@ namespace turbin.sikker.core.Migrations
                     b.Property<byte>("Active")
                         .HasColumnType("tinyint");
 
+                    b.Property<string>("ChecklistTaskId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ChecklistWorkflowId")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -169,6 +173,8 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ChecklistWorkflowId");
+
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("Punch");
@@ -186,9 +192,11 @@ namespace turbin.sikker.core.Migrations
 
                     b.Property<string>("PunchId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PunchId");
 
                     b.ToTable("Upload");
                 });
@@ -300,6 +308,12 @@ namespace turbin.sikker.core.Migrations
 
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
                 {
+                    b.HasOne("turbin.sikker.core.Model.ChecklistWorkflow", null)
+                        .WithMany("Punches")
+                        .HasForeignKey("ChecklistWorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("turbin.sikker.core.Model.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
@@ -307,6 +321,15 @@ namespace turbin.sikker.core.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
+                });
+
+            modelBuilder.Entity("turbin.sikker.core.Model.Upload", b =>
+                {
+                    b.HasOne("turbin.sikker.core.Model.Punch", null)
+                        .WithMany("Uploads")
+                        .HasForeignKey("PunchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.User", b =>
@@ -318,6 +341,16 @@ namespace turbin.sikker.core.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRole");
+                });
+
+            modelBuilder.Entity("turbin.sikker.core.Model.ChecklistWorkflow", b =>
+                {
+                    b.Navigation("Punches");
+                });
+
+            modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
+                {
+                    b.Navigation("Uploads");
                 });
 #pragma warning restore 612, 618
         }
