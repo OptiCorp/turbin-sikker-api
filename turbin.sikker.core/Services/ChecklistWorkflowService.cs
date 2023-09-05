@@ -55,23 +55,25 @@ namespace turbin.sikker.core.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<string> CreateChecklistWorkflow(ChecklistWorkflowCreateDto checklistWorkflow)
+        public async Task CreateChecklistWorkflow(ChecklistWorkflowCreateDto checklistWorkflow)
         {
-            ChecklistWorkflow newChecklistWorkflow = new ChecklistWorkflow
+
+            foreach (string userId in checklistWorkflow.UserIds)
             {
-                ChecklistId = checklistWorkflow.ChecklistId,
-                UserId = checklistWorkflow.UserId,
-                CreatedById = checklistWorkflow.CreatedById,
-                Status = Enum.Parse<CurrentChecklistStatus>(checklistWorkflow.Status),
-                CreatedDate = DateTime.Now
+                ChecklistWorkflow newChecklistWorkflow = new ChecklistWorkflow
+                {
+                    ChecklistId = checklistWorkflow.ChecklistId,
+                    UserId = userId,
+                    CreatedById = checklistWorkflow.CreatedById,
+                    Status = Enum.Parse<CurrentChecklistStatus>(checklistWorkflow.Status),
+                    CreatedDate = DateTime.Now
+                };
+
+                _context.ChecklistWorkflow.Add(newChecklistWorkflow);
+                newChecklistWorkflow.UpdatedDate = DateTime.Now;
             };
-                                                    
-
-
-            _context.ChecklistWorkflow.Add(newChecklistWorkflow);
-            newChecklistWorkflow.UpdatedDate = DateTime.Now;
+                                                                
             await _context.SaveChangesAsync();
-            return newChecklistWorkflow.Id;
         }
 
         public async Task DeleteChecklistWorkflow(string id)

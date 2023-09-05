@@ -4,7 +4,7 @@ namespace turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos
     {
         public string? ChecklistId { get; set; }
 
-        public string? UserId { get; set; }
+        public ICollection<string> UserIds { get; set; }
 
         public string? CreatedById { get; set; }
 
