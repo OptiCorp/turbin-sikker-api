@@ -31,6 +31,8 @@ namespace turbin.sikker.core.Model
         [StringLength(50)]
         public string ChecklistWorkflowId { get; set; }
 
+        public string ChecklistTaskId { get; set; }
+
         //[Required]
         //[StringLength(450)]
         //public string UserId { get; set; }
