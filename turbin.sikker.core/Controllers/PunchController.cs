@@ -18,13 +18,15 @@ namespace turbin.sikker.core.Controllers
         private readonly IUserService _userService;
         private readonly IChecklistService _checklistService;
         private readonly IPunchUtilities _punchUtilities;
+        private readonly IChecklistWorkflowService _checklistWorkflowService;
 
-        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities)
+        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities, IChecklistWorkflowService checklistWorkflowService)
         {
             _punchService = punchService;
             _userService = userService;
             _checklistService = checklistService;
             _punchUtilities = punchUtilities;
+            _checklistWorkflowService = checklistWorkflowService;
         }
 
         [HttpGet("GetPunch")]
@@ -85,7 +87,7 @@ namespace turbin.sikker.core.Controllers
             //}
 
             var user = await _userService.GetUserById(punch.CreatedBy);
-            var checklist = await _checklistService.GetChecklistById(punch.ChecklistWorkflowId);
+            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(punch.ChecklistWorkflowId);
 
 
             if (user == null)
@@ -93,9 +95,9 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("User not found.");
             }
 
-            if (checklist == null)
+            if (checklistWorkflow == null)
             {
-                return NotFound("Could not find specified checklist.");
+                return NotFound("Could not find specified checklist workflow.");
             }
 
 
@@ -119,7 +121,7 @@ namespace turbin.sikker.core.Controllers
             //}
 
             var punch = await _punchService.GetPunchById(id);
-            var checklist = await _checklistService.GetChecklistById(updatedPunch.ChecklistWorkflowId);
+            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(updatedPunch.ChecklistWorkflowId);
 
 
             if (punch == null)
@@ -127,9 +129,9 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Punch not found.");
             }
 
-            if (checklist == null)
+            if (checklistWorkflow == null)
             {
-                return NotFound("Could not find specified checklist.");
+                return NotFound("Could not find specified checklist workflow.");
             }
 
             if (updatedPunch.Status != null)
