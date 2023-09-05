@@ -25,6 +25,7 @@ namespace turbin.sikker.core.Model
 
         [EnumDataType(typeof(CurrentChecklistStatus))]
         public CurrentChecklistStatus? Status { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 

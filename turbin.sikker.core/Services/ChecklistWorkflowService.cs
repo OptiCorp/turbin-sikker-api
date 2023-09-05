@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos;
 
 namespace turbin.sikker.core.Services
 {
@@ -33,7 +34,7 @@ namespace turbin.sikker.core.Services
             return await _context.ChecklistWorkflow.Where(cw => cw.UserId == userId).ToListAsync();
         }
 
-        public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedChecklistWorkflow)
+        public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedChecklistWorkflow)
         {
 
             var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == id);
@@ -42,15 +43,11 @@ namespace turbin.sikker.core.Services
             {
                 if (checklistWorkFlow.Status != null)
                 {
-                    checklistWorkFlow.Status = updatedChecklistWorkflow.Status;
+                    checklistWorkFlow.Status = Enum.Parse<CurrentChecklistStatus>(updatedChecklistWorkflow.Status);
                 }
                 if (checklistWorkFlow.UserId != null)
                 {
                     checklistWorkFlow.UserId = updatedChecklistWorkflow.UserId;
-                }
-                if (checklistWorkFlow.CreatedById != null)
-                {
-                    checklistWorkFlow.CreatedById = updatedChecklistWorkflow.CreatedById;
                 }
             }
             checklistWorkFlow.UpdatedDate = DateTime.Now;
@@ -58,12 +55,23 @@ namespace turbin.sikker.core.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<string> CreateChecklistWorkflow(ChecklistWorkflow checklistWorkflow)
+        public async Task<string> CreateChecklistWorkflow(ChecklistWorkflowCreateDto checklistWorkflow)
         {
-            _context.ChecklistWorkflow.Add(checklistWorkflow);
-            checklistWorkflow.UpdatedDate = DateTime.Now;
+            ChecklistWorkflow newChecklistWorkflow = new ChecklistWorkflow
+            {
+                ChecklistId = checklistWorkflow.ChecklistId,
+                UserId = checklistWorkflow.UserId,
+                CreatedById = checklistWorkflow.CreatedById,
+                Status = Enum.Parse<CurrentChecklistStatus>(checklistWorkflow.Status),
+                CreatedDate = DateTime.Now
+            };
+                                                    
+
+
+            _context.ChecklistWorkflow.Add(newChecklistWorkflow);
+            newChecklistWorkflow.UpdatedDate = DateTime.Now;
             await _context.SaveChangesAsync();
-            return checklistWorkflow.Id;
+            return newChecklistWorkflow.Id;
         }
 
         public async Task DeleteChecklistWorkflow(string id)
