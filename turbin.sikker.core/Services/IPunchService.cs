@@ -10,6 +10,8 @@ namespace turbin.sikker.core.Services
         Task<string> CreatePunch(PunchCreateDto punch);
         Task DeletePunch(string id);
         Task<IEnumerable<Punch>> GetPunchesByWorkflowId(string checklistId);
+        Task<IEnumerable<Punch>> GetPunchesByInspectorId(string id);
+        Task<IEnumerable<Punch>> GetPunchesByLeaderId(string id);
         // string GetPunchStatus(PunchStatus status);
         // bool IsValidStatus(string value);
         // public string GetPunchSeverity(PunchSeverity status);

@@ -7,6 +7,8 @@ namespace turbin.sikker.core.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 
+		public string ChecklistWorkflowId { get; set; }
+
 		public string PunchId { get; set; }
 
 		public string BlobRef { get; set; }

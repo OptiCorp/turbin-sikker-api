@@ -52,7 +52,7 @@ namespace turbin.sikker.core.Controllers
 
 
         [HttpGet("GetCategoriesByName")]
-        [SwaggerOperation(Summary = "Search for checklists", Description = "Retrieves a list of all categories which contains the search word.")]
+        [SwaggerOperation(Summary = "Search for categories", Description = "Retrieves a list of all categories which contains the search word.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
         public async Task<IActionResult> SearchCategoryByName(string searchString)
         {
