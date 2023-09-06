@@ -86,7 +86,7 @@ namespace turbin.sikker.core.Services
                 PunchDescription = punchDto.PunchDescription,
                 CreatedBy = punchDto.CreatedBy,
                 ChecklistWorkflowId = punchDto.ChecklistWorkflowId,
-                //UserId = punchDto.UserId,
+                ChecklistTaskId = punchDto.ChecklistTaskId,
                 CreatedDate = DateTime.Now,
                 Severity = Enum.Parse<PunchSeverity>(punchDto.Severity)
             };
