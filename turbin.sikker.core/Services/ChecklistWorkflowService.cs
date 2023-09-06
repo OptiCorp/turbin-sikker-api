@@ -21,12 +21,12 @@ namespace turbin.sikker.core.Services
 
         public async Task<ChecklistWorkflow> GetChecklistWorkflowById(string id)
         {
-            return await _context.ChecklistWorkflow.FindAsync(id);
+            return await _context.ChecklistWorkflow.Include(c => c.Checklist).ThenInclude(c => c.ChecklistTasks).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflows()
         {
-            return await _context.ChecklistWorkflow.Include(p => p.Checklist).ToListAsync();
+            return await _context.ChecklistWorkflow.Include(p => p.Checklist).ThenInclude(c => c.ChecklistTasks).ToListAsync();
         }
 
         public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflowsByUserId(string userId)
