@@ -98,7 +98,6 @@ namespace turbin.sikker.core.Configuration
                 .HasOne(p => p.Checklist)
                 .WithMany()
                 .HasForeignKey(p => p.ChecklistId)
-                .HasForeignKey(p => p.Title)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<ChecklistWorkflow>()
@@ -111,6 +110,12 @@ namespace turbin.sikker.core.Configuration
                 .HasOne(p => p.Creator)
                 .WithMany()
                 .HasForeignKey(p => p.CreatedById)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+             modelBuilder.Entity<ChecklistWorkflow>()
+                .HasOne(p => p.Checklist)
+                .WithMany()
+                .HasForeignKey(p => p.Title)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }
