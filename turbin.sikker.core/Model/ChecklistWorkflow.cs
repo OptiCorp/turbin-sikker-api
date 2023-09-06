@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace turbin.sikker.core.Model
 {
@@ -20,6 +21,8 @@ namespace turbin.sikker.core.Model
         public string? ChecklistId { get; set; }
         
         public Checklist? Checklist { get; }
+
+        public string? Title { get; }
 
         public string? UserId { get; set; }
 
