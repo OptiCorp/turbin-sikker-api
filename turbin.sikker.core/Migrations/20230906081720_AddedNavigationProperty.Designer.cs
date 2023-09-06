@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230906081720_AddedNavigationProperty")]
+    partial class AddedNavigationProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("ChecklistTasksId");
 
-                    b.ToTable("ChecklistToTaskLink", (string)null);
+                    b.ToTable("ChecklistToTaskLink");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Category", b =>
@@ -50,7 +53,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Checklist", b =>
@@ -81,7 +84,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Checklist", (string)null);
+                    b.ToTable("Checklist");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.ChecklistTask", b =>
@@ -102,7 +105,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Checklist_Task", (string)null);
+                    b.ToTable("Checklist_Task");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.ChecklistWorkflow", b =>
@@ -112,10 +115,10 @@ namespace turbin.sikker.core.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -127,17 +130,11 @@ namespace turbin.sikker.core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ChecklistWorkflow", (string)null);
+                    b.ToTable("ChecklistWorkflow");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
@@ -151,11 +148,12 @@ namespace turbin.sikker.core.Migrations
 
                     b.Property<string>("ChecklistTaskId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ChecklistWorkflowId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -181,13 +179,9 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistTaskId");
-
-                    b.HasIndex("ChecklistWorkflowId");
-
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Punch", (string)null);
+                    b.ToTable("Punch");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Upload", b =>
@@ -202,13 +196,11 @@ namespace turbin.sikker.core.Migrations
 
                     b.Property<string>("PunchId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PunchId");
-
-                    b.ToTable("Upload", (string)null);
+                    b.ToTable("Upload");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.User", b =>
@@ -259,7 +251,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("UserRoleId");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.UserRole", b =>
@@ -276,7 +268,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRole", (string)null);
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("ChecklistToTaskLink", b =>
@@ -316,66 +308,15 @@ namespace turbin.sikker.core.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("turbin.sikker.core.Model.ChecklistWorkflow", b =>
-                {
-                    b.HasOne("turbin.sikker.core.Model.Checklist", "Checklist")
-                        .WithMany()
-                        .HasForeignKey("ChecklistId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("turbin.sikker.core.Model.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("turbin.sikker.core.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Checklist");
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
                 {
-                    b.HasOne("turbin.sikker.core.Model.ChecklistTask", "ChecklistTask")
-                        .WithMany()
-                        .HasForeignKey("ChecklistTaskId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("turbin.sikker.core.Model.ChecklistWorkflow", "checklistWorkflow")
-                        .WithMany()
-                        .HasForeignKey("ChecklistWorkflowId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("turbin.sikker.core.Model.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("ChecklistTask");
-
                     b.Navigation("CreatedByUser");
-
-                    b.Navigation("checklistWorkflow");
-                });
-
-            modelBuilder.Entity("turbin.sikker.core.Model.Upload", b =>
-                {
-                    b.HasOne("turbin.sikker.core.Model.Punch", "Punch")
-                        .WithMany()
-                        .HasForeignKey("PunchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Punch");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.User", b =>

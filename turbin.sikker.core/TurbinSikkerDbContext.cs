@@ -38,6 +38,8 @@ namespace turbin.sikker.core
             ChecklistConfigurations.Configure(modelBuilder);
             TaskConfigurations.Configure(modelBuilder);
             PunchConfigurations.Configure(modelBuilder);
+            WorkflowConfigurations.Configure(modelBuilder);
+            UploadConfigurations.Configure(modelBuilder);
         }
 
     }

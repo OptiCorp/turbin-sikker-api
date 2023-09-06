@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Migrations;
 using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Configuration
@@ -64,9 +65,66 @@ namespace turbin.sikker.core.Configuration
         public static void Configure(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Punch>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Punch>()
                 .HasOne(p => p.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(p => p.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Punch>()
+                .HasOne(c => c.ChecklistWorkflow)
+                .WithMany()
+                .HasForeignKey(c => c.ChecklistWorkflowId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Punch>()
+                .HasOne(c => c.ChecklistTask)
+                .WithMany()
+                .HasForeignKey(c => c.ChecklistTaskId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
+    }
+
+    public static class WorkflowConfigurations
+    {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChecklistWorkflow>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<ChecklistWorkflow>()
+                .HasOne(p => p.Checklist)
+                .WithMany()
+                .HasForeignKey(p => p.ChecklistId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ChecklistWorkflow>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ChecklistWorkflow>()
+                .HasOne(p => p.Creator)
+                .WithMany()
+                .HasForeignKey(p => p.CreatedById)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
+    }
+
+    public static class UploadConfigurations
+    {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Upload>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Upload>()
+                .HasOne(c => c.Punch)
+                .WithMany()
+                .HasForeignKey(c => c.PunchId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

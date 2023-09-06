@@ -18,13 +18,15 @@ namespace turbin.sikker.core.Controllers
         private readonly IUserService _userService;
         private readonly IChecklistService _checklistService;
         private readonly IPunchUtilities _punchUtilities;
+        private readonly IChecklistWorkflowService _checklistWorkflowService;
 
-        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities)
+        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities, IChecklistWorkflowService checklistWorkflowService)
         {
             _punchService = punchService;
             _userService = userService;
             _checklistService = checklistService;
             _punchUtilities = punchUtilities;
+            _checklistWorkflowService = checklistWorkflowService;
         }
 
         [HttpGet("GetPunch")]
@@ -71,6 +73,36 @@ namespace turbin.sikker.core.Controllers
             return Ok(punches);
         }
 
+        [HttpGet("GetPunchesByInspectorId")]
+        [SwaggerOperation(Summary = "Get punches by inspector ID", Description = "Retrieves all punches by an inspector ID.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(404, "Punches not found")]
+        public async Task<IActionResult> GetPunchesByInspectorId(string id)
+        {
+            var punches = await _punchService.GetPunchesByInspectorId(id);
+            if (punches == null)
+            {
+                return NotFound("Punches not found.");
+            }    
+
+            return Ok(punches);
+        }
+
+        [HttpGet("GetPunchesByLeaderId")]
+        [SwaggerOperation(Summary = "Get punches by leader ID", Description = "Retrieves all punches by a leader ID.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(404, "Punches not found")]
+        public async Task<IActionResult> GetPunchesByLeaderId(string id)
+        {   
+            var punches = await _punchService.GetPunchesByLeaderId(id);
+            if (punches == null)
+            {
+                return NotFound("Punches not found.");
+            }    
+
+            return Ok(punches);
+        }
+
 
         [HttpPost("AddPunch")]
         [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]
@@ -85,7 +117,7 @@ namespace turbin.sikker.core.Controllers
             //}
 
             var user = await _userService.GetUserById(punch.CreatedBy);
-            var checklist = await _checklistService.GetChecklistById(punch.ChecklistWorkflowId);
+            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(punch.ChecklistWorkflowId);
 
 
             if (user == null)
@@ -93,9 +125,9 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("User not found.");
             }
 
-            if (checklist == null)
+            if (checklistWorkflow == null)
             {
-                return NotFound("Could not find specified checklist.");
+                return NotFound("Could not find specified checklist workflow.");
             }
 
 
@@ -119,7 +151,7 @@ namespace turbin.sikker.core.Controllers
             //}
 
             var punch = await _punchService.GetPunchById(id);
-            var checklist = await _checklistService.GetChecklistById(updatedPunch.ChecklistWorkflowId);
+            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(updatedPunch.ChecklistWorkflowId);
 
 
             if (punch == null)
@@ -127,9 +159,9 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Punch not found.");
             }
 
-            if (checklist == null)
+            if (checklistWorkflow == null)
             {
-                return NotFound("Could not find specified checklist.");
+                return NotFound("Could not find specified checklist workflow.");
             }
 
             if (updatedPunch.Status != null)

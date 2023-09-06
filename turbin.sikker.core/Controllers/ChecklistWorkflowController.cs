@@ -4,6 +4,10 @@ using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Model;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -16,14 +20,16 @@ namespace turbin.sikker.core.Controllers
         private readonly IChecklistWorkflowService _workflowService;
         private readonly IUserService _userService;
         private readonly IUserRoleService _userRoleService;
+        private readonly IChecklistService _checklistService;
 
         private readonly TurbinSikkerDbContext _context;
 
-        public ChecklistWorkflowController(IChecklistWorkflowService workflowService, IUserService userService, IUserRoleService userRoleService, TurbinSikkerDbContext context)
+        public ChecklistWorkflowController(IChecklistWorkflowService workflowService, IUserService userService, IUserRoleService userRoleService, IChecklistService checklistService, TurbinSikkerDbContext context)
         {
             _workflowService = workflowService;
             _userService = userService;
             _userRoleService = userRoleService;
+            _checklistService = checklistService;
             _context = context;
         }
 
@@ -60,45 +66,56 @@ namespace turbin.sikker.core.Controllers
         [HttpPost("CreateChecklistWorkflow")]
         [SwaggerOperation(Summary = "Create a new checklist workflow", Description = "Creates a new checklist workflow.")]
         [SwaggerResponse(201, "Checklist workflow created", typeof(ChecklistWorkflow))]
-        public async Task<IActionResult> CreateChecklistWorkflow(ChecklistWorkflow workflow)
+        public async Task<IActionResult> CreateChecklistWorkflow(ChecklistWorkflowCreateDto workflow, [FromServices] IValidator<ChecklistWorkflowCreateDto> validator)
         {
+            ValidationResult validationResult = validator.Validate(workflow);
 
-            if (workflow.CreatedById == null) 
+            if (!validationResult.IsValid)
             {
-                return BadRequest("You have to specify who created this workflow");
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
             }
 
             var creator = await _userService.GetUserById(workflow.CreatedById);
             var userRole = await _userRoleService.GetUserRoleById(creator.UserRoleId);
-            
-            if (creator == null)
+            var checklist = await _checklistService.GetChecklistById(workflow.ChecklistId);
+
+            if (creator == null) return Conflict("The creator of this workflow does not exist");
+
+            if (userRole.Name == "Inspector") return Conflict("Inspectors can not create workflows");
+
+            if (checklist == null) return BadRequest("The given checklist does not exist");
+
+
+            foreach (string userId in workflow.UserIds)
             {
-                return Conflict("The creator of this wokflow does not exist");
-            }
-            if (userRole.Name == "Inspector")
-            {
-                return Conflict("Inspectors can not create workflows");
-            }
+                var user = await _userService.GetUserById(userId);
 
-            bool userHasChecklist = await _workflowService.DoesUserHaveChecklist(workflow.UserId, workflow.ChecklistId);
+                if (user == null) return BadRequest("The given user does not exist");
+                
+                bool userHasChecklist = await _workflowService.DoesUserHaveChecklist(userId, workflow.ChecklistId);
 
-            if (userHasChecklist)
-            {
-                return Conflict($"User already has that checklist");
+                if (userHasChecklist) return Conflict($"User already has that checklist");
             }
 
-            string newWorkflowId = await _workflowService.CreateChecklistWorkflow(workflow);
+            await _workflowService.CreateChecklistWorkflow(workflow);
 
-
-
-            return CreatedAtAction(nameof(GetChecklistWorkflowById), new { id = newWorkflowId }, workflow);
+            return Ok();
         }
 
         [HttpPut("UpdateChecklistWorkflow")]
         [SwaggerOperation(Summary = "Update checklist workflow by ID", Description = "Updates an existing checklist workflow by its ID.")]
         [SwaggerResponse(204, "Checklist workflow updated")]
         [SwaggerResponse(404, "Checklist workflow not found")]
-        public async Task<IActionResult> UpdateChecklistWorkflow(string id, ChecklistWorkflow updatedWorkflow)
+        public async Task<IActionResult> UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedWorkflow)
         {
             var existingWorkflow = await _workflowService.GetChecklistWorkflowById(id);
             if (existingWorkflow == null)
@@ -106,7 +123,6 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Checklist workflow not found");
             }
 
-            updatedWorkflow.Id = id;
             await _workflowService.UpdateChecklistWorkflow(id, updatedWorkflow);
 
             return NoContent();

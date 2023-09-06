@@ -9,6 +9,8 @@ namespace turbin.sikker.core.Model
 
 		public string PunchId { get; set; }
 
+		public Punch Punch { get; }
+
 		public string BlobRef { get; set; }
 	}
 }
