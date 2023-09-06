@@ -70,7 +70,7 @@ namespace turbin.sikker.core.Services
 
         public async Task<IEnumerable<Punch>> GetPunchesByInspectorId(string id)
         {
-            return await _context.Punch.Include(p => p.CreatedByUser).Where(c => c.CreatedBy == id).ToListAsync();
+            return await _context.Punch.Include(p => p.CreatedByUser).Include(c => c.ChecklistTask).ThenInclude(ct => ct.Category).Where(c => c.CreatedBy == id).ToListAsync();
         }
 
         public async Task<IEnumerable<Punch>> GetPunchesByWorkflowId(string id)
