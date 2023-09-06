@@ -8,11 +8,11 @@ namespace turbin.sikker.core.Validation.ChecklistValidations
     {
         public ChecklistWorkflowCreateValidator()
         {
-            RuleFor(checklistWorkflow => checklistWorkflow.ChecklistId).NotEmpty().NotNull().WithMessage("Checklist ID is required.");
+            RuleFor(checklistWorkflow => checklistWorkflow.ChecklistId).NotEmpty().WithMessage("You must specify a checklist for this workflow").NotNull().WithMessage("You must specify a checklist for this workflow");
 
-            RuleFor(checklistWorklflow => checklistWorklflow.UserIds).NotEmpty().NotNull().WithMessage("You have to sepcify inspectors for this workflow");
+            RuleFor(checklistWorklflow => checklistWorklflow.UserIds).NotEmpty().WithMessage("You must sepcify inspectors for this workflow").NotNull().WithMessage("You must sepcify inspectors for this workflow");
 
-            RuleFor(checklistWorklflow => checklistWorklflow.CreatedById).NotEmpty().NotNull().WithMessage("You have to specify a sender");
+            RuleFor(checklistWorklflow => checklistWorklflow.CreatedById).NotEmpty().WithMessage("You must specify a sender for this workflow").NotNull().WithMessage("You must specify a sender for this workflow");
         }
     }
 }
