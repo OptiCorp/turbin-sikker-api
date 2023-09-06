@@ -65,7 +65,7 @@ namespace turbin.sikker.core.Services
                     ChecklistId = checklistWorkflow.ChecklistId,
                     UserId = userId,
                     CreatedById = checklistWorkflow.CreatedById,
-                    Status = Enum.Parse<CurrentChecklistStatus>(checklistWorkflow.Status),
+                    Status = Enum.Parse<CurrentChecklistStatus>("Sent"),
                     CreatedDate = DateTime.Now
                 };
 
