@@ -26,7 +26,7 @@ namespace turbin.sikker.core.Services
 
         public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflows()
         {
-            return await _context.ChecklistWorkflow.ToListAsync();
+            return await _context.ChecklistWorkflow.Include(p => p.Checklist).ToListAsync();
         }
 
         public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflowsByUserId(string userId)
