@@ -43,7 +43,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> GetAllChecklists()
         {   
             var checklists = await _checklistService.GetAllChecklists();
-            if (checklists.Count() == 0) {
+            if (checklists.Count() == 0 || checklists == null) {
                 return NotFound("No checklists found");
             }
             return Ok(await _checklistService.GetAllChecklists());
@@ -83,7 +83,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> GetAllChecklistsByUserId(string id)
         {   
             var checklists = await _checklistService.GetAllChecklistsByUserId(id);
-            if (checklists.Count() == 0)
+            if (checklists.Count() == 0 || checklists == null)
             {
                 return NotFound("No checklists found");
             }
@@ -98,7 +98,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> SearchChecklistByName(string searchString)
         {   
             var checklists = await _checklistService.SearchChecklistByName(searchString);
-            if (checklists.Count() == 0)
+            if (checklists.Count() == 0 || checklists == null)
             {
                 return NotFound("No checklists found");
             }
