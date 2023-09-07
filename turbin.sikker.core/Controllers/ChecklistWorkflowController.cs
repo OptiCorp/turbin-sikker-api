@@ -35,7 +35,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetAllChecklistWorkflows")]
         [SwaggerOperation(Summary = "Get all checklist workflows", Description = "Retrieves a list of all checklist workflows.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflow>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflowResponseDto>))]
         public async Task<IActionResult> GetAllChecklistWorkflows()
         {
             return Ok(await _workflowService.GetAllChecklistWorkflows());
@@ -43,7 +43,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetChecklistWorkflow")]
         [SwaggerOperation(Summary = "Get checklist workflow by ID", Description = "Retrieves a checklist workflow by its ID.")]
-        [SwaggerResponse(200, "Success", typeof(ChecklistWorkflow))]
+        [SwaggerResponse(200, "Success", typeof(ChecklistWorkflowResponseDto))]
         [SwaggerResponse(404, "Checklist workflow not found")]
         public async Task<IActionResult> GetChecklistWorkflowById(string id)
         {
@@ -57,7 +57,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetAllChecklistWorkflowsByUserId")]
         [SwaggerOperation(Summary = "Get all checklist workflows by user ID", Description = "Retrieves a list of all checklist workflows created by a user.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflow>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflowResponseDto>))]
         public async Task<IActionResult> GetAllChecklistWorkflowsByUserId(string userId)
         {
             return Ok(await _workflowService.GetAllChecklistWorkflowsByUserId(userId));

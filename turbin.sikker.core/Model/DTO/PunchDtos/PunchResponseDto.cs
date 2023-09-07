@@ -22,6 +22,8 @@
 
         public User? User { get; set; }
 
+        public ChecklistTask ChecklistTask { get; set; }
+
     }
 }
 

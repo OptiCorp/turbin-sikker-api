@@ -52,7 +52,8 @@ namespace turbin.sikker.core.Controllers
                 User = punch.CreatedByUser,
                 Active = punch.Active,
                 CreatedBy = punch.CreatedBy,
-                ChecklistWorkflowId = punch.ChecklistWorkflowId
+                ChecklistWorkflowId = punch.ChecklistWorkflowId,
+                ChecklistTask = punch.ChecklistTask
             };
 
             return Ok(punchDto);
