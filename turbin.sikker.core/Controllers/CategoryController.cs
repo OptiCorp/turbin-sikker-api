@@ -29,40 +29,50 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllCategories")]
         [SwaggerOperation(Summary = "Get all categories", Description = "Retrieves a list of all categories.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
+        [SwaggerResponse(404, "Categories not found")]
         public async Task<IActionResult> GetAllCategories()
-        {
-            return Ok(await _categoryService.GetAllCategories());
+        {   
+            var categories = await _categoryService.GetAllCategories();
+            if (categories.Count() == 0)
+            {
+                return NotFound("No categories found");
+            }
+            return Ok(categories);
         }
 
         // Get specific Category based on given Id
         [HttpGet("GetCategory")]
         [SwaggerOperation(Summary = "Get category by ID", Description = "Retrives a category by the ID.")]
         [SwaggerResponse(200, "Success", typeof(Category))]
-        [SwaggerResponse(400, "Category not found")]
+        [SwaggerResponse(404, "Category not found")]
         public async Task<IActionResult> GetCategoryById(string id)
         {
-            var Category = await _categoryService.GetCategoryById(id);
-            if (Category == null)
+            var category = await _categoryService.GetCategoryById(id);
+            if (category == null)
             {
                 return NotFound("Category not found");
             }
-
-            return Ok(Category);
+            return Ok(category);
         }
-
 
         [HttpGet("GetCategoriesByName")]
         [SwaggerOperation(Summary = "Search for categories", Description = "Retrieves a list of all categories which contains the search word.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
+        [SwaggerResponse(404, "Categories not found")]
         public async Task<IActionResult> SearchCategoryByName(string searchString)
-        {
-            return Ok(await _categoryService.SearchCategoryByName(searchString));
+        {   
+            var categories = await _categoryService.SearchCategoryByName(searchString);
+            if (categories.Count() == 0)
+            {
+                return NotFound("No categories found");
+            }
+            return Ok(categories);
         }
 
 
         // Creates a new Category
         [HttpPost("AddCategory")]
-        [SwaggerOperation(Summary = "Create a new category", Description = "Create a new Category")]
+        [SwaggerOperation(Summary = "Create a new category", Description = "Create a new category.")]
         [SwaggerResponse(201, "Category created", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         public async Task<IActionResult> CreateCategory(CategoryRequestDto category, [FromServices] IValidator<CategoryRequestDto> validator)
@@ -97,7 +107,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpPost("UpdateCategory")]
         [SwaggerOperation(Summary = "Update category by ID", Description = "Updates an existing category by its ID.")]
-        [SwaggerResponse(201, "Category updated", typeof(Category))]
+        [SwaggerResponse(200, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
         public async Task<IActionResult> UpdateCategory(string id, CategoryRequestDto updatedCategory, [FromServices] IValidator<CategoryRequestDto> validator)
@@ -134,10 +144,11 @@ namespace turbin.sikker.core.Controllers
 
             return Ok($"Category renamed to '{updatedCategory.Name}'");
         }
+
         // Deletes Category based on given Id
         [HttpDelete("DeleteCategory")]
-        [SwaggerOperation(Summary = "Delete category by ID", Description = "Deletes a category by their ID")]
-        [SwaggerResponse(204, "Category deleted")]
+        [SwaggerOperation(Summary = "Delete category by ID", Description = "Deletes a category by their ID.")]
+        [SwaggerResponse(200, "Category deleted")]
         [SwaggerResponse(404, "Category not found")]
         public async Task<IActionResult> DeleteCategory(string id)
         {
@@ -150,7 +161,7 @@ namespace turbin.sikker.core.Controllers
 
             await _categoryService.DeleteCategory(id);
 
-            return NoContent();
+            return Ok($"Category '{category.Name}' deleted");
         }
     }
 }
