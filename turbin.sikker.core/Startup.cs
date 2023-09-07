@@ -70,6 +70,7 @@ namespace turbin.sikker.core
             services.AddScoped<ICategoryUtilities, CategoryUtilities>();
             services.AddScoped<IChecklistTaskUtilities, ChecklistTaskUtilities>();
             services.AddScoped<IPunchUtilities, PunchUtilities>();
+            services.AddScoped<IChecklistWorkflowUtilities, ChecklistWorkflowUtilities>();
 
             services.AddScoped<ValidationHelper>();
 

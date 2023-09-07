@@ -1,16 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
     public class ChecklistWorkflowService : IChecklistWorkflowService
     {
         private readonly TurbinSikkerDbContext _context;
+        private readonly IChecklistWorkflowUtilities _checklistWorkflowUtilities;
 
-        public ChecklistWorkflowService(TurbinSikkerDbContext context)
+        public ChecklistWorkflowService(TurbinSikkerDbContext context, IChecklistWorkflowUtilities checklistWorkflowUtilities)
         {
             _context = context;
+            _checklistWorkflowUtilities = checklistWorkflowUtilities;
         }
 
 
@@ -19,19 +22,44 @@ namespace turbin.sikker.core.Services
             return await _context.ChecklistWorkflow.AnyAsync(workflow => workflow.UserId == userId && workflow.ChecklistId == checklistId);
         }
 
-        public async Task<ChecklistWorkflow> GetChecklistWorkflowById(string id)
+        public async Task<ChecklistWorkflowResponseDto> GetChecklistWorkflowById(string id)
         {
-            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(c => c.Checklist).ThenInclude(c => c.ChecklistTasks).FirstOrDefaultAsync();
+            var checklistWorkflow = await _context.ChecklistWorkflow
+                .Include(c => c.User)
+                .Include(c => c.Creator)
+                .Include(c => c.Checklist)
+                .ThenInclude(c => c.ChecklistTasks)
+                .FirstOrDefaultAsync();
+            
+            ChecklistWorkflowResponseDto checklistWorkflowResponse = _checklistWorkflowUtilities.WorkflowToResponseDto(checklistWorkflow);
+
+            return checklistWorkflowResponse;
         }
 
-        public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflows()
+
+        public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflows()
         {
-            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(p => p.Checklist).ThenInclude(c => c.ChecklistTasks).ToListAsync();
+            var checklistWorkflows = await _context.ChecklistWorkflow
+                .Include(c => c.Creator)
+                .Include(p => p.Checklist)
+                .ThenInclude(c => c.ChecklistTasks)
+                .Select(c => _checklistWorkflowUtilities.WorkflowToResponseDto(c))
+                .ToListAsync();
+            
+            return checklistWorkflows;
         }
 
-        public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflowsByUserId(string userId)
+        public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflowsByUserId(string userId)
         {
-            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(p => p.Checklist).ThenInclude(c => c.ChecklistTasks).Where(cw => cw.UserId == userId).ToListAsync();
+            var checklistWorkflows = await _context.ChecklistWorkflow
+            .Include(c => c.Creator)
+            .Include(p => p.Checklist)
+            .ThenInclude(c => c.ChecklistTasks)
+            .Where(cw => cw.UserId == userId)
+            .Select(c => _checklistWorkflowUtilities.WorkflowToResponseDto(c))
+            .ToListAsync();
+            
+            return checklistWorkflows;
         }
 
         public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedChecklistWorkflow)
