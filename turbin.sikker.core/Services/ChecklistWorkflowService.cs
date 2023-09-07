@@ -21,17 +21,17 @@ namespace turbin.sikker.core.Services
 
         public async Task<ChecklistWorkflow> GetChecklistWorkflowById(string id)
         {
-            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(c => c.Checklist).ThenInclude(c => c.ChecklistTasks).FirstOrDefaultAsync();
+            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(u => u.User).Include(c => c.Checklist).ThenInclude(c => c.ChecklistTasks).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflows()
         {
-            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(p => p.Checklist).ThenInclude(c => c.ChecklistTasks).ToListAsync();
+            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(u => u.User).Include(p => p.Checklist).ThenInclude(c => c.ChecklistTasks).ToListAsync();
         }
 
         public async Task<IEnumerable<ChecklistWorkflow>> GetAllChecklistWorkflowsByUserId(string userId)
         {
-            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(p => p.Checklist).ThenInclude(c => c.ChecklistTasks).Where(cw => cw.UserId == userId).ToListAsync();
+            return await _context.ChecklistWorkflow.Include(c => c.Creator).Include(u => u.User).Include(p => p.Checklist).ThenInclude(c => c.ChecklistTasks).Where(cw => cw.UserId == userId).ToListAsync();
         }
 
         public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedChecklistWorkflow)

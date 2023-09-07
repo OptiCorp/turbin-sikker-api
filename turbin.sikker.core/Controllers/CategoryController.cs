@@ -33,7 +33,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> GetAllCategories()
         {   
             var categories = await _categoryService.GetAllCategories();
-            if (categories.Count() == 0)
+            if (categories.Count() == 0 || categories == null)
             {
                 return NotFound("No categories found");
             }
@@ -62,7 +62,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> SearchCategoryByName(string searchString)
         {   
             var categories = await _categoryService.SearchCategoryByName(searchString);
-            if (categories.Count() == 0)
+            if (categories.Count() == 0 || categories == null)
             {
                 return NotFound("No categories found");
             }
