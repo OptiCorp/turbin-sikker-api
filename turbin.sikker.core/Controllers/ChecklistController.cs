@@ -94,6 +94,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> SearchChecklistByName(string searchString)
         {   
             var checklists = await _checklistService.SearchChecklistByName(searchString);
+
             if (checklists.IsNullOrEmpty())
             {
                 return NotFound("No checklists found");

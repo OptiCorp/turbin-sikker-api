@@ -36,6 +36,7 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllTasks")]
         [SwaggerOperation(Summary = "Get all tasks", Description = "Retrieves a list of all tasks.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
+        [SwaggerResponse(404, "No checklist tasks found")]
         public async Task<IActionResult> GetAllTasks()
         {   
             return Ok(await _checklistTaskService.GetAllTasks());
@@ -62,6 +63,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get all tasks with CategoryId", Description = "Retrieves a list of all tasks with CategoryId.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskByCategoryResponseDto>))]
         [SwaggerResponse(404, "Category not found")]
+
         public async Task<IActionResult> GetAllTasksByCategoryId(string id)
         {
             var category = await _categoryService.GetCategoryById(id);
@@ -88,6 +90,10 @@ namespace turbin.sikker.core.Controllers
             }
 
             var tasks = await _checklistTaskService.GetAllTasksByChecklistId(id);
+            if (tasks.Count() == 0 || tasks == null)
+            {
+                return NotFound("Checklist tasks not found");
+            }
             return Ok(tasks);
         }
 
@@ -107,7 +113,7 @@ namespace turbin.sikker.core.Controllers
 
         // Creates a new form task
         [HttpPost("AddChecklistTask")]
-        [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task")]
+        [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task.")]
         [SwaggerResponse(201, "Checklist task created", typeof(ChecklistTaskResponseDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
@@ -130,13 +136,7 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var category = await _categoryService.GetCategoryById(checklistTask.CategoryId);
             var tasks = await _checklistTaskService.GetAllTasks();
-
-            if (category == null)
-            {
-                return NotFound("Category not found");
-            }
 
             if (_checklistTaskUtilities.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
             {
@@ -214,8 +214,7 @@ namespace turbin.sikker.core.Controllers
 
             await _checklistTaskService.UpdateChecklistTaskInChecklist(taskId, checklistId, updatedChecklistTask);
 
-
-            return Ok("Category updated");
+            return Ok("Checklist task updated");
         }
 
 
@@ -230,6 +229,7 @@ namespace turbin.sikker.core.Controllers
             if (checklist == null) {
                 return NotFound("Checklist not found");
             }
+            
             var task = await _checklistTaskService.GetChecklistTaskById(taskId);
 
             if (task == null)

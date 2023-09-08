@@ -40,6 +40,7 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflows()
         {
             var checklistWorkflows = await _context.ChecklistWorkflow
+                .Include(c => c.User)
                 .Include(c => c.Creator)
                 .Include(p => p.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
@@ -52,6 +53,7 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflowsByUserId(string userId)
         {
             var checklistWorkflows = await _context.ChecklistWorkflow
+            .Include(c => c.User)
             .Include(c => c.Creator)
             .Include(p => p.Checklist)
             .ThenInclude(c => c.ChecklistTasks)
