@@ -80,7 +80,7 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllTasksByChecklistId")]
         [SwaggerOperation(Summary = "Get all tasks with ChecklistId", Description = "Retrieves a list of all tasks with ChecklistId.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
-        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(404, "Checklist not found")]
         public async Task<IActionResult> GetAllTasksByChecklistId(string id)
         {
             var checklist = await _checklistService.GetChecklistById(id);
@@ -90,10 +90,6 @@ namespace turbin.sikker.core.Controllers
             }
 
             var tasks = await _checklistTaskService.GetAllTasksByChecklistId(id);
-            if (tasks.Count() == 0 || tasks == null)
-            {
-                return NotFound("Checklist tasks not found");
-            }
             return Ok(tasks);
         }
 
