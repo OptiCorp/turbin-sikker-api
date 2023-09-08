@@ -10,6 +10,7 @@ using turbin.sikker.core.Model.DTO.TaskDtos;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using Duende.IdentityServer.Extensions;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -39,13 +40,8 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllChecklists")]
         [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistMultipleResponseDto>))]
-        [SwaggerResponse(404, "No checklists found")]
         public async Task<IActionResult> GetAllChecklists()
         {   
-            var checklists = await _checklistService.GetAllChecklists();
-            if (checklists.Count() == 0 || checklists == null) {
-                return NotFound("No checklists found");
-            }
             return Ok(await _checklistService.GetAllChecklists());
         }
 
@@ -79,15 +75,15 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllChecklistsByUserId")]
         [SwaggerOperation(Summary = "Get all checklists by userId", Description = "Retrieves a list of all checklists created by user.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistViewNoUserDto>))]
-        [SwaggerResponse(404, "No checklists found")]
+        [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> GetAllChecklistsByUserId(string id)
         {   
-            var checklists = await _checklistService.GetAllChecklistsByUserId(id);
-            if (checklists.Count() == 0 || checklists == null)
+            var user = _userService.GetUserById(id);
+            if (user == null)
             {
-                return NotFound("No checklists found");
+                return NotFound("User not found");
             }
-            return Ok(checklists);
+            return Ok(await _checklistService.GetAllChecklistsByUserId(id));
         }
 
 
@@ -98,7 +94,8 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> SearchChecklistByName(string searchString)
         {   
             var checklists = await _checklistService.SearchChecklistByName(searchString);
-            if (checklists.Count() == 0 || checklists == null)
+
+            if (checklists.IsNullOrEmpty())
             {
                 return NotFound("No checklists found");
             }
@@ -111,7 +108,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new checklist", Description = "Creates a new checklist.")]
         [SwaggerResponse(201, "Checklist created", typeof(ChecklistViewNoUserDto))]
         [SwaggerResponse(400, "Invalid request")]
-        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> CreateChecklist(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> validator)
         {
 
