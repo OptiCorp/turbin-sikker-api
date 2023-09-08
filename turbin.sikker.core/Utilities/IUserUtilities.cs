@@ -1,3 +1,4 @@
+using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 
 
@@ -10,5 +11,7 @@ public interface IUserUtilities
         bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail);
 
         bool IsValidStatus(string value);
+
+        public UserDto UserToDto(User user, List<ChecklistWorkflow> checklistWorkflows);
     }
 }

@@ -35,5 +35,22 @@ public class UserUtilities : IUserUtilities
                     return "Active";
             }
         }
+
+        public UserDto UserToDto(User user, List<ChecklistWorkflow> checklistWorkflows)
+        {
+            return new UserDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Username = user.Username,
+                UserRole = user.UserRole,
+                Status = GetUserStatus(user.Status),
+                CreatedDate = user.CreatedDate,
+                UpdatedDate = user.UpdatedDate,
+                ChecklistWorkflows = checklistWorkflows
+            };
+        }
     }
 }
