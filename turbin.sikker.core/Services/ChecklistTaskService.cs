@@ -1,53 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.TaskDtos;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
     public class ChecklistTaskService : IChecklistTaskService
     {
         public readonly TurbinSikkerDbContext _context;
+        private readonly IChecklistTaskUtilities _checklistTaskUtilities;
 
-        public ChecklistTaskService(TurbinSikkerDbContext context)
+        public ChecklistTaskService(TurbinSikkerDbContext context, IChecklistTaskUtilities checklistTaskUtilities)
         {
             _context = context;
+            _checklistTaskUtilities = checklistTaskUtilities;
         }
         public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasks()
         {
-            return await _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
-            {
-                Id = ct.Id,
-                Description = ct.Description,
-                Category = new Category
-                {
-                    Id = ct.Category.Id,
-                    Name = ct.Category.Name
-                }
-            }).ToListAsync();
+            return await _context.Checklist_Task
+                            .Include(ct => ct.Category)
+                            .Select(ct => _checklistTaskUtilities.TaskToResponseDto(ct))
+                            .ToListAsync();
         }
 
         public async Task<ChecklistTaskResponseDto> GetChecklistTaskById(string id)
         {
-            return await _context.Checklist_Task.Include(ct => ct.Category).Select(ct => new ChecklistTaskResponseDto
-            {
-                Id = ct.Id,
-                Description = ct.Description,
-                Category = new Category
-                {
-                    Id = ct.Category.Id,
-                    Name = ct.Category.Name
-                }
-            }).FirstOrDefaultAsync(ct => ct.Id == id);
+            return await _context.Checklist_Task
+                            .Include(ct => ct.Category)
+                            .Select(ct => _checklistTaskUtilities.TaskToResponseDto(ct))
+                            .FirstOrDefaultAsync(ct => ct.Id == id);
 
         }
 
         public async Task<IEnumerable<ChecklistTaskByCategoryResponseDto>> GetAllTasksByCategoryId(string categoryId)
         {
-            return await _context.Checklist_Task.Where(ct => ct.CategoryId == categoryId).Select(ct => new ChecklistTaskByCategoryResponseDto
-            {
-                Id = ct.Id,
-                Description = ct.Description
-            }).ToListAsync();
+            return await _context.Checklist_Task
+                            .Where(ct => ct.CategoryId == categoryId)
+                            .Select(ct => new ChecklistTaskByCategoryResponseDto
+                                {
+                                    Id = ct.Id,
+                                    Description = ct.Description
+                                }).ToListAsync();
         }
 
         public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksByChecklistId(string checklistId)
@@ -55,16 +48,7 @@ namespace turbin.sikker.core.Services
             var tasks = await _context.Checklist
                 .Where(c => c.Id == checklistId)
                 .SelectMany(c => c.ChecklistTasks)
-                .Select(ct => new ChecklistTaskResponseDto
-                {
-                    Id = ct.Id,
-                    Description = ct.Description,
-                    Category = new Category
-                    {
-                        Id = ct.Category.Id,
-                        Name = ct.Category.Name
-                    }
-                })
+                .Select(ct => _checklistTaskUtilities.TaskToResponseDto(ct))
                 .ToListAsync();
 
             return tasks;
@@ -72,16 +56,10 @@ namespace turbin.sikker.core.Services
 
         public async Task<IEnumerable<ChecklistTaskResponseDto>> GetTasksByDescription(string searchString)
         {
-            return await _context.Checklist_Task.Where(ct => ct.Description.Contains(searchString)).Select(ct => new ChecklistTaskResponseDto
-            {
-                Id = ct.Id,
-                Description = ct.Description,
-                Category = new Category
-                {
-                    Id = ct.Category.Id,
-                    Name = ct.Category.Name
-                }
-            }).ToListAsync();
+            return await _context.Checklist_Task
+                            .Where(ct => ct.Description.Contains(searchString))
+                            .Select(ct => _checklistTaskUtilities.TaskToResponseDto(ct))
+                            .ToListAsync();
         }
 
 

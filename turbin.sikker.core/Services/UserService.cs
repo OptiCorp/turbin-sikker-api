@@ -8,9 +8,12 @@ namespace turbin.sikker.core.Services
     public class UserService : IUserService
     {
         private readonly TurbinSikkerDbContext _context;
-        public UserService(TurbinSikkerDbContext context)
+        private readonly IUserUtilities _userUtilities;
+
+        public UserService(TurbinSikkerDbContext context, IUserUtilities userUtilities)
         {
             _context = context;
+            _userUtilities = userUtilities;
         }
         // public bool IsUsernameTaken(IEnumerable<UserDto> users, string username)
         // {
@@ -41,53 +44,43 @@ namespace turbin.sikker.core.Services
         // }
         public async Task<string> GetInspectorRoleId()
         {
-            var inspectorRole = await _context.UserRole.FirstOrDefaultAsync(role => role.Name == "Inspector");
+            var inspectorRole = await _context.UserRole
+                                        .FirstOrDefaultAsync(role => role.Name == "Inspector");
             return inspectorRole?.Id;
         }
         public async Task<IEnumerable<UserDto>> GetUsers()
         {
-            return await _context.User.Include(u => u.UserRole).Where(s => s.Status == UserStatus.Active).Select(u => new UserDto
-            {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Email = u.Email,
-                Username = u.Username,
-                UserRole = u.UserRole,
-                Status = UserUtilities.GetUserStatus(u.Status),
-                CreatedDate = u.CreatedDate,
-                UpdatedDate = u.UpdatedDate,
-                AzureAdUserId = u.AzureAdUserId,
-                ChecklistWorkflows = _context.ChecklistWorkflow.Where(c => c.UserId == u.Id).ToList()
-            }).ToListAsync();
+            return await _context.User
+                            .Include(u => u.UserRole)
+                            .Where(s => s.Status == UserStatus.Active)
+                            .Select(u => _userUtilities.UserToDto(u))
+                            .ToListAsync();
         }
         public async Task<IEnumerable<UserDto>> GetAllUsers()
-        {
-            return await _context.User.Include(u => u.UserRole).Select(u => new UserDto
-            {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Email = u.Email,
-                Username = u.Username,
-                UserRole = u.UserRole,
-                Status = UserUtilities.GetUserStatus(u.Status),
-                CreatedDate = u.CreatedDate,
-                UpdatedDate = u.UpdatedDate,
-                ChecklistWorkflows = _context.ChecklistWorkflow.Where(c => c.UserId == u.Id).ToList()
-            }).ToListAsync();
+        {            
+            return await _context.User
+                            .Include(u => u.UserRole)
+                            .Select(u => _userUtilities.UserToDto(u))
+                            .ToListAsync();
         }
+
         public async Task<User> GetUserById(string id)
         {
-            return await _context.User.Include(u => u.UserRole).FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.User
+                            .Include(u => u.UserRole)
+                            .FirstOrDefaultAsync(u => u.Id == id);
         }
         public async Task<User> GetUserByAzureAdUserId(string azureAdUserId)
         {
-            return await _context.User.Include(u => u.UserRole).FirstOrDefaultAsync(u => u.AzureAdUserId == azureAdUserId);
+            return await _context.User
+                            .Include(u => u.UserRole)
+                            .FirstOrDefaultAsync(u => u.AzureAdUserId == azureAdUserId);
         }
         public async Task<User> GetUserByUsername(string username)
         {
-            return await _context.User.Include(u => u.UserRole).FirstOrDefaultAsync(u => u.Username == username);
+            return await _context.User
+                            .Include(u => u.UserRole)
+                            .FirstOrDefaultAsync(u => u.Username == username);
         }
         public async Task<string> CreateUser(UserCreateDto userDto)
         {
