@@ -36,7 +36,7 @@ public class UserUtilities : IUserUtilities
             }
         }
 
-        public UserDto UserToDto(User user, List<ChecklistWorkflow> checklistWorkflows)
+        public UserDto UserToDto(User user)
         {
             return new UserDto
             {
@@ -48,8 +48,7 @@ public class UserUtilities : IUserUtilities
                 UserRole = user.UserRole,
                 Status = GetUserStatus(user.Status),
                 CreatedDate = user.CreatedDate,
-                UpdatedDate = user.UpdatedDate,
-                ChecklistWorkflows = checklistWorkflows
+                UpdatedDate = user.UpdatedDate
             };
         }
     }

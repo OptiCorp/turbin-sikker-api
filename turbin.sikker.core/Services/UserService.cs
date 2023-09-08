@@ -53,14 +53,14 @@ namespace turbin.sikker.core.Services
             return await _context.User
                             .Include(u => u.UserRole)
                             .Where(s => s.Status == UserStatus.Active)
-                            .Select(u => _userUtilities.UserToDto(u, _context.ChecklistWorkflow.Where(c => c.UserId == u.Id).ToList()))
+                            .Select(u => _userUtilities.UserToDto(u))
                             .ToListAsync();
         }
         public async Task<IEnumerable<UserDto>> GetAllUsers()
         {            
             return await _context.User
                             .Include(u => u.UserRole)
-                            .Select(u => _userUtilities.UserToDto(u, _context.ChecklistWorkflow.Where(c => c.UserId == u.Id).ToList()))
+                            .Select(u => _userUtilities.UserToDto(u))
                             .ToListAsync();
         }
 

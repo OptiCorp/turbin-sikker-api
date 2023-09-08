@@ -12,6 +12,6 @@ public interface IUserUtilities
 
         bool IsValidStatus(string value);
 
-        public UserDto UserToDto(User user, List<ChecklistWorkflow> checklistWorkflows);
+        public UserDto UserToDto(User user);
     }
 }
