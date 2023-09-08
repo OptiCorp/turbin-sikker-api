@@ -15,9 +15,11 @@ namespace turbin.sikker.core.Controllers
     public class UploadController : ControllerBase
     {
         private readonly IUploadService _uploadService;
-        public UploadController(IUploadService uploadService)
+        private readonly IPunchService _punchService;
+        public UploadController(IUploadService uploadService, IPunchService punchService)
         {
             _uploadService = uploadService;
+            _punchService = punchService;
         }
         
 
@@ -31,7 +33,7 @@ namespace turbin.sikker.core.Controllers
             var upload = await _uploadService.GetUploadById(id);
             if (upload == null)
             {
-                return NotFound();
+                return NotFound("Upload not found");
             }
 
             return Ok(upload);
@@ -40,9 +42,14 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetUploadsByPunchId")]
         [SwaggerOperation(Summary = "Get uploads by punch ID", Description = "Retrieves all uploads by their punch ID.")]
         [SwaggerResponse(200, "Success")]
-        [SwaggerResponse(404, "Uploads not found")]
+        [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> GetUploadsByPunchId(string punchId)
-        {
+        {   
+            var punch = await _punchService.GetPunchById(punchId);
+            if (punch == null)
+            {
+                return NotFound("Punch not found");
+            }
             var uploads = await _uploadService.GetUploadsByPunchId(punchId);
             if (uploads == null)
             {
@@ -71,7 +78,7 @@ namespace turbin.sikker.core.Controllers
         // Creates a new upload
         [HttpPost("UpdateUpload")]
         [SwaggerOperation(Summary = "Update upload by ID", Description = "Updates an existing upload by their ID.")]
-        [SwaggerResponse(204, "Upload updated")]
+        [SwaggerResponse(200, "Upload updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Upload not found")]
         public async Task<IActionResult> UpdateUpload(string id, Upload updatedUpload)
@@ -85,18 +92,18 @@ namespace turbin.sikker.core.Controllers
 
             if (upload == null)
             {
-                return NotFound();
+                return NotFound("Upload not found");
             }
 
             await _uploadService.UpdateUpload(updatedUpload);
 
-            return NoContent();
+            return Ok("Upload updated");
         }
 
         // Deletes upload based on given Id
         [HttpDelete("DeleteUpload")]
         [SwaggerOperation(Summary = "Delete upload by ID", Description = "Deletes a upload by their ID.")]
-        [SwaggerResponse(204, "Upload deleted")]
+        [SwaggerResponse(200, "Upload deleted")]
         [SwaggerResponse(404, "Upload not found")]
         public async Task<IActionResult> DeleteUpload(string id)
         {
@@ -104,12 +111,12 @@ namespace turbin.sikker.core.Controllers
 
             if (upload == null)
             {
-                return NotFound();
+                return NotFound("Upload not found");
             }
 
             await _uploadService.DeleteUpload(id);
 
-            return NoContent();
+            return Ok("Upload deleted");
         }
     }
 }

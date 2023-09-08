@@ -1,30 +1,26 @@
 ﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
     public class ChecklistService : IChecklistService
     {
         public readonly TurbinSikkerDbContext _context;
+        private readonly IChecklistUtilities _checklistUtilities;
 
-        public ChecklistService(TurbinSikkerDbContext context)
+        public ChecklistService(TurbinSikkerDbContext context, IChecklistUtilities checklistUtilities)
         {
             _context = context;
+            _checklistUtilities = checklistUtilities;
         }
 
         public async Task<IEnumerable<ChecklistMultipleResponseDto>> GetAllChecklists()
         {
             return await _context.Checklist.Include(c => c.CreatedByUser)
-                                     .Select(c => new ChecklistMultipleResponseDto
-                                     {
-                                         Id = c.Id,
-                                         Title = c.Title,
-                                         User = c.CreatedByUser,
-                                         Status = c.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
-                                         CreatedDate = c.CreatedDate,
-                                         UpdatedDate = c.UpdatedDate
-                                     }).ToListAsync();
+                                            .Select(c => _checklistUtilities.ChecklistToMultipleDto(c))
+                                            .ToListAsync();
         }
 
         public async Task<Checklist> GetChecklistById(string id)
@@ -38,29 +34,14 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistViewNoUserDto>> GetAllChecklistsByUserId(string id)
         {
             return await _context.Checklist.Where(c => c.CreatedBy == id && c.Status == ChecklistStatus.Active)
-                                     .Select(c => new ChecklistViewNoUserDto
-                                     {
-                                         Id = c.Id,
-                                         Title = c.Title,
-                                         Status = c.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
-                                         CreatedDate = c.CreatedDate,
-                                         UpdatedDate = c.UpdatedDate
-                                     })
+                                     .Select(c => _checklistUtilities.ChecklistToNoUserDto(c))
                                      .ToListAsync();
         }
 
         public async Task<IEnumerable<ChecklistMultipleResponseDto>> SearchChecklistByName(string searchString)
         {
             return await _context.Checklist.Where(c => c.Title.Contains(searchString))
-                                     .Select(c => new ChecklistMultipleResponseDto
-                                     {
-                                        Id = c.Id,
-                                        Title = c.Title,
-                                        User = c.CreatedByUser,
-                                        Status = c.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
-                                        CreatedDate = c.CreatedDate,
-                                        UpdatedDate = c.UpdatedDate
-                                     })
+                                     .Select(c => _checklistUtilities.ChecklistToMultipleDto(c))
                                      .ToListAsync();
         }
 

@@ -49,7 +49,7 @@ namespace turbin.sikker.core.Controllers
 
             if (userRole == null)
             {
-                return NotFound();
+                return NotFound("User role not found");
             }
             return Ok(userRole);
         }
@@ -92,9 +92,9 @@ namespace turbin.sikker.core.Controllers
         // Updates user role
         [HttpPost("UpdateUserRole")]
         [SwaggerOperation(Summary = "Update user role by ID", Description = "Updates an existing user role by its ID.")]
-        [SwaggerResponse(201, "User role updated", typeof(UserRoleUpdateDto))]
+        [SwaggerResponse(200, "User role updated", typeof(UserRoleUpdateDto))]
         [SwaggerResponse(400, "Invalid request")]
-        [SwaggerResponse(404, "User not found")]
+        [SwaggerResponse(404, "User role not found")]
         public async Task<IActionResult> UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole, [FromServices] IValidator<UserRoleUpdateDto> validator)
         {
 
@@ -125,11 +125,9 @@ namespace turbin.sikker.core.Controllers
 
             var userRole = await _userRoleService.GetUserRoleById(id);
 
-
-
             if (userRole == null)
             {
-                return NotFound();
+                return NotFound("User role not found");
             }
 
             await _userRoleService.UpdateUserRole(id, updatedUserRole);
@@ -139,8 +137,8 @@ namespace turbin.sikker.core.Controllers
 
         // Deletes user role based on given Id
         [HttpDelete("DeleteUserRole")]
-        [SwaggerOperation(Summary = "Delete user role by ID", Description = "Deletes a user role by their ID")]
-        [SwaggerResponse(204, "User role deleted")]
+        [SwaggerOperation(Summary = "Delete user role by ID", Description = "Deletes a user role by their ID.")]
+        [SwaggerResponse(200, "User role deleted")]
         [SwaggerResponse(404, "User role not found")]
         public async Task<IActionResult> DeleteUserRole(string id)
         {
@@ -148,7 +146,7 @@ namespace turbin.sikker.core.Controllers
 
             if (userRoleToDelete == null)
             {
-                return NotFound();
+                return NotFound("User role not found");
             }
 
             if (await _userRoleService.IsUserRoleInUse(userRoleToDelete))

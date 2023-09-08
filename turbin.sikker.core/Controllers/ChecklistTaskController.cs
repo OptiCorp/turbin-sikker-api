@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Duende.IdentityServer.Extensions;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -37,13 +38,8 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
         [SwaggerResponse(404, "No checklist tasks found")]
         public async Task<IActionResult> GetAllTasks()
-        {
-            var tasks = await _checklistTaskService.GetAllTasks();
-            if (tasks.Count() == 0 || tasks == null)
-            {
-                return NotFound("No checklist tasks found");
-            }
-            return Ok(tasks);
+        {   
+            return Ok(await _checklistTaskService.GetAllTasks());
         }
 
         // Get specific form task based on given Id
@@ -53,19 +49,21 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Checklist task not found")]
         public async Task<IActionResult> GetChecklistTaskById(string id)
         {
-            var checklistTask = await _checklistTaskService.GetChecklistTaskById(id);
-            if (checklistTask == null)
+            var task = await _checklistTaskService.GetChecklistTaskById(id);
+            if (task == null)
             {
                 return NotFound("Checklist task not found");
             }
-            return Ok(checklistTask);
+
+            return Ok(task);
         }
 
         //Get all tasks by Category
         [HttpGet("GetAllTasksByCategoryId")]
         [SwaggerOperation(Summary = "Get all tasks with CategoryId", Description = "Retrieves a list of all tasks with CategoryId.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskByCategoryResponseDto>))]
-        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(404, "Category not found")]
+
         public async Task<IActionResult> GetAllTasksByCategoryId(string id)
         {
             var category = await _categoryService.GetCategoryById(id);
@@ -75,10 +73,6 @@ namespace turbin.sikker.core.Controllers
             }
 
             var tasks = await _checklistTaskService.GetAllTasksByCategoryId(id);
-            if (tasks.Count() == 0 || tasks == null)
-            {
-                return NotFound("Checklist tasks not found");
-            }
             return Ok(tasks);
         }
 
@@ -86,7 +80,7 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllTasksByChecklistId")]
         [SwaggerOperation(Summary = "Get all tasks with ChecklistId", Description = "Retrieves a list of all tasks with ChecklistId.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
-        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(404, "Checklist not found")]
         public async Task<IActionResult> GetAllTasksByChecklistId(string id)
         {
             var checklist = await _checklistService.GetChecklistById(id);
@@ -96,22 +90,19 @@ namespace turbin.sikker.core.Controllers
             }
 
             var tasks = await _checklistTaskService.GetAllTasksByChecklistId(id);
-            if (tasks.Count() == 0 || tasks == null)
-            {
-                return NotFound("Checklist tasks not found");
-            }
             return Ok(tasks);
         }
 
         [HttpGet("GetTasksByDescription")]
         [SwaggerOperation(Summary = "Get all tasks with description", Description = "Retrieves a list of all tasks which match the search.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
-        [SwaggerResponse(404, "Not found")]
+        [SwaggerResponse(404, "No checklist tasks found")]
         public async Task<IActionResult> GetTasksByDescription(string searchString)
-        {   
+        {
             var tasks = await _checklistTaskService.GetTasksByDescription(searchString);
-            if (tasks.Count() == 0 || tasks == null) {
-                return NotFound("Checklist tasks not found");
+            if (tasks.IsNullOrEmpty())
+            {
+                return NotFound("No checklist tasks found");
             }
             return Ok(tasks);
         }
@@ -121,6 +112,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task.")]
         [SwaggerResponse(201, "Checklist task created", typeof(ChecklistTaskResponseDto))]
         [SwaggerResponse(400, "Invalid request")]
+        [SwaggerResponse(404, "Category not found")]
         public async Task<IActionResult> CreateChecklistTask(ChecklistTaskRequestDto checklistTask, [FromServices] IValidator<ChecklistTaskRequestDto> validator)
         {
 
@@ -218,26 +210,24 @@ namespace turbin.sikker.core.Controllers
 
             await _checklistTaskService.UpdateChecklistTaskInChecklist(taskId, checklistId, updatedChecklistTask);
 
-
             return Ok("Checklist task updated");
         }
 
 
         //Add task to Checklist
         [HttpPost("AddTaskToChecklist")]
-        [SwaggerOperation(Summary = "Add task to checklist", Description = "Adds a task to a checklist")]
-        [SwaggerResponse(200, "Task added successfully")]
-        [SwaggerResponse(400, "Invalid request")]
+        [SwaggerOperation(Summary = "Add task to checklist", Description = "Adds a task to a checklist.")]
+        [SwaggerResponse(200, "Task added to checklist")]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> AddTaskToChecklist(string checklistId, string taskId)
         {
             var checklist = await _checklistService.GetChecklistById(checklistId);
-            if (checklist == null)
-            {
+            if (checklist == null) {
                 return NotFound("Checklist not found");
             }
-
+            
             var task = await _checklistTaskService.GetChecklistTaskById(taskId);
+
             if (task == null)
             {
                 return NotFound("Checklist task not found");

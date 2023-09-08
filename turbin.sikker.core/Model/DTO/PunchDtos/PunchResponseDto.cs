@@ -4,7 +4,9 @@
     {
         public string? Id { get; set; }
 
-        public string ChecklistWorkflowId { get; set; }
+        public ChecklistWorkflow ChecklistWorkflow { get; set; }
+
+        public ChecklistTask ChecklistTask { get; set; }
 
         public string Status { get; set; }
 
@@ -18,11 +20,7 @@
 
         public Byte Active { get; set; }
 
-        public string CreatedBy { get; set; }
-
         public User? User { get; set; }
-
-        public ChecklistTask ChecklistTask { get; set; }
 
     }
 }
