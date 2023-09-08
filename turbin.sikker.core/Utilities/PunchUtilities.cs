@@ -1,4 +1,5 @@
 using turbin.sikker.core.Model;
+using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Utilities
 {
@@ -38,6 +39,23 @@ public class PunchUtilities : IPunchUtilities
                 default:
                     return "Critical";
             }
+        }
+
+        public PunchResponseDto PunchToResponseDto(Punch? punch)
+        {
+            return new PunchResponseDto
+            {
+                Id = punch.Id,
+                ChecklistWorkflow = punch.ChecklistWorkflow,
+                ChecklistTask = punch.ChecklistTask,
+                Status = GetPunchStatus(punch.Status),
+                CreatedDate = punch.CreatedDate,
+                UpdatedDate = punch.UpdatedDate,
+                PunchDescription = punch.PunchDescription,
+                Severity = GetPunchSeverity(punch.Severity),
+                Active = punch.Active,
+                User = punch.CreatedByUser
+            };
         }
     }
 }

@@ -1,16 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
     public class PunchService : IPunchService
     {
         private readonly TurbinSikkerDbContext _context;
+        private readonly IPunchUtilities _punchUtilities;
 
-        public PunchService(TurbinSikkerDbContext context)
+        public PunchService(TurbinSikkerDbContext context, IPunchUtilities punchUtilities)
         {
             _context = context;
+            _punchUtilities = punchUtilities;
         }
 
         // public bool IsValidStatus(string value)
@@ -50,32 +54,73 @@ namespace turbin.sikker.core.Services
         //     }
         // }
 
-        public async Task<Punch> GetPunchById(string id)
+        public async Task<IEnumerable<PunchResponseDto>> GetAllPunches()
         {
-            return await _context.Punch.Include(p => p.CreatedByUser).Include(c => c.ChecklistTask).ThenInclude(ct => ct.Category)
-                                    .FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Punch
+                            .Include(p => p.ChecklistTask)
+                            .Include(p => p.ChecklistWorkflow)
+                            .Include(p => p.CreatedByUser)
+                            .ThenInclude(u => u.UserRole)
+                            .Select(p => _punchUtilities.PunchToResponseDto(p))
+                            .ToListAsync();
         }
 
-        public async Task<IEnumerable<Punch>> GetPunchesByLeaderId(string id)
+        public async Task<PunchResponseDto> GetPunchById(string id)
+        {
+            var punch = await _context.Punch
+                                .Include(p => p.ChecklistTask)
+                                .Include(p => p.ChecklistWorkflow)
+                                .Include(p => p.CreatedByUser)
+                                .ThenInclude(u => u.UserRole)
+                                .FirstOrDefaultAsync(p => p.Id == id);
+            
+            PunchResponseDto punchResponse = _punchUtilities.PunchToResponseDto(punch);
+
+            return punchResponse;
+        }
+
+
+        public async Task<IEnumerable<PunchResponseDto>> GetPunchesByLeaderId(string id)
         {   
-            var allPunches = new List<Punch>();
+            var allPunches = new List<PunchResponseDto>();
             var workflows = await _context.ChecklistWorkflow.Where(c => c.CreatedById == id).ToListAsync();
             foreach (ChecklistWorkflow workflow in workflows) {
-                var punch = await _context.Punch.Where(c => c.ChecklistWorkflowId == workflow.Id).ToListAsync();
-                allPunches.Concat(punch);
+                var punches = await _context.Punch
+                                    .Where(c => c.ChecklistWorkflowId == workflow.Id)
+                                    .Include(p => p.ChecklistTask)
+                                    .Include(p => p.ChecklistWorkflow)
+                                    .Include(p => p.CreatedByUser)
+                                    .ThenInclude(u => u.UserRole)
+                                    .Select(c => _punchUtilities.PunchToResponseDto(c))
+                                    .ToListAsync();
+                allPunches.AddRange(punches);
             }
             return allPunches;
         }
 
 
-        public async Task<IEnumerable<Punch>> GetPunchesByInspectorId(string id)
+        public async Task<IEnumerable<PunchResponseDto>> GetPunchesByInspectorId(string id)
         {
-            return await _context.Punch.Include(p => p.CreatedByUser).Include(c => c.ChecklistTask).ThenInclude(ct => ct.Category).Where(c => c.CreatedBy == id).ToListAsync();
+            return await _context.Punch
+                            .Include(p => p.ChecklistTask)
+                            .Include(p => p.ChecklistWorkflow)
+                            .Include(p => p.CreatedByUser)
+                            .ThenInclude(u => u.UserRole)
+                            .Where(c => c.CreatedBy == id)
+                            .Select(c => _punchUtilities.PunchToResponseDto(c))
+                            .ToListAsync();
         }
 
-        public async Task<IEnumerable<Punch>> GetPunchesByWorkflowId(string id)
+        public async Task<IEnumerable<PunchResponseDto>> GetPunchesByWorkflowId(string id)
         {
-            return await _context.Punch.Include(p => p.CreatedByUser).Where(c => c.ChecklistWorkflowId == id).ToListAsync();
+            return await _context.Punch
+                            .Include(p => p.ChecklistTask)
+                            .Include(p => p.ChecklistWorkflow)
+                            .Include(p => p.CreatedByUser)
+                            .ThenInclude(u => u.UserRole)
+                            .Where(c => c.ChecklistWorkflowId == id)
+                            .Select(c => _punchUtilities.PunchToResponseDto(c))
+                            .ToListAsync();
         }
 
         public async Task<string> CreatePunch(PunchCreateDto punchDto)
