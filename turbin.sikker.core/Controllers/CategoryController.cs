@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using Duende.IdentityServer.Extensions;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -29,15 +30,9 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllCategories")]
         [SwaggerOperation(Summary = "Get all categories", Description = "Retrieves a list of all categories.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
-        [SwaggerResponse(404, "Categories not found")]
         public async Task<IActionResult> GetAllCategories()
         {   
-            var categories = await _categoryService.GetAllCategories();
-            if (categories.Count() == 0)
-            {
-                return NotFound("No categories found");
-            }
-            return Ok(categories);
+            return Ok(await _categoryService.GetAllCategories());
         }
 
         // Get specific Category based on given Id
@@ -62,7 +57,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> SearchCategoryByName(string searchString)
         {   
             var categories = await _categoryService.SearchCategoryByName(searchString);
-            if (categories.Count() == 0)
+            if (categories.IsNullOrEmpty())
             {
                 return NotFound("No categories found");
             }
