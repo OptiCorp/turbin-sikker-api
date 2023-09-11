@@ -48,6 +48,7 @@ namespace turbin.sikker.core.Services
 
             if (category != null)
             {
+                category.Name = updatedCategory.Name;
                 await _context.SaveChangesAsync();
             }
         }

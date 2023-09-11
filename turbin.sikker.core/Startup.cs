@@ -20,6 +20,8 @@ using turbin.sikker.core.Common;
 using turbin.sikker.core.Utilities;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
+using Serilog.AspNetCore;
+using Serilog;
 
 namespace turbin.sikker.core
 
@@ -171,9 +173,17 @@ namespace turbin.sikker.core
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+            
+            app.UseSerilogRequestLogging();
 
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", Serilog.Events.LogEventLevel.Warning)
+                .WriteTo.Console()
+                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
 
             dbContext.Database.Migrate();
 
