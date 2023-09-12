@@ -78,7 +78,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> GetAllChecklistsByUserId(string id)
         {   
-            var user = _userService.GetUserById(id);
+            var user = await _userService.GetUserById(id);
             if (user == null)
             {
                 return NotFound("User not found");
