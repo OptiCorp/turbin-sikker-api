@@ -57,6 +57,7 @@ jobs:
       
       - name: Test
         run: dotnet test --no-restore --verbosity normal
+        working-directory: ./turbin.sikker.core
 
       - name: dotnet publish
         run: dotnet publish turbin.sikker.core -c Release -o ${{env.DOTNET_ROOT}}/myapp
