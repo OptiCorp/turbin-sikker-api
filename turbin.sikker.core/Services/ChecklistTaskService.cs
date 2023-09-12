@@ -24,12 +24,12 @@ namespace turbin.sikker.core.Services
         }
 
         public async Task<ChecklistTaskResponseDto> GetChecklistTaskById(string id)
-        {
-            return await _context.Checklist_Task
+        {   
+            var checklist = await _context.Checklist_Task
                             .Include(ct => ct.Category)
-                            .Select(ct => _checklistTaskUtilities.TaskToResponseDto(ct))
                             .FirstOrDefaultAsync(ct => ct.Id == id);
 
+            return _checklistTaskUtilities.TaskToResponseDto(checklist);
         }
 
         public async Task<IEnumerable<ChecklistTaskByCategoryResponseDto>> GetAllTasksByCategoryId(string categoryId)
