@@ -19,6 +19,8 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistMultipleResponseDto>> GetAllChecklists()
         {
             return await _context.Checklist.Include(c => c.CreatedByUser)
+                                            .Include(c => c.ChecklistTasks)
+                                            .ThenInclude(task => task.Category)
                                             .Select(c => _checklistUtilities.ChecklistToMultipleDto(c))
                                             .ToListAsync();
         }
@@ -26,23 +28,28 @@ namespace turbin.sikker.core.Services
         public async Task<Checklist> GetChecklistById(string id)
         {
             return await _context.Checklist.Include(c => c.CreatedByUser)
-                                      .Include(c => c.ChecklistTasks)
-                                        .ThenInclude(task => task.Category)
-                                      .FirstOrDefaultAsync(checklist => checklist.Id == id);
+                                            .Include(c => c.ChecklistTasks)
+                                            .ThenInclude(task => task.Category)
+                                            .FirstOrDefaultAsync(checklist => checklist.Id == id);
         }
 
         public async Task<IEnumerable<ChecklistViewNoUserDto>> GetAllChecklistsByUserId(string id)
         {
             return await _context.Checklist.Where(c => c.CreatedBy == id && c.Status == ChecklistStatus.Active)
-                                     .Select(c => _checklistUtilities.ChecklistToNoUserDto(c))
-                                     .ToListAsync();
+                                            .Include(c => c.ChecklistTasks)
+                                            .ThenInclude(task => task.Category)
+                                            .Select(c => _checklistUtilities.ChecklistToNoUserDto(c))
+                                            .ToListAsync();
         }
 
         public async Task<IEnumerable<ChecklistMultipleResponseDto>> SearchChecklistByName(string searchString)
         {
-            return await _context.Checklist.Where(c => c.Title.Contains(searchString))
-                                     .Select(c => _checklistUtilities.ChecklistToMultipleDto(c))
-                                     .ToListAsync();
+            return await _context.Checklist.Include(c => c.CreatedByUser)
+                                            .Include(c => c.ChecklistTasks)
+                                            .ThenInclude(task => task.Category)
+                                            .Where(c => c.Title.Contains(searchString))
+                                            .Select(c => _checklistUtilities.ChecklistToMultipleDto(c))
+                                            .ToListAsync();
         }
 
         public async Task<string> CreateChecklist(ChecklistCreateDto checklistDto)
