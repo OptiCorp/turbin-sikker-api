@@ -93,6 +93,7 @@ namespace turbin.sikker.core.Services
                 Email = userDto.Email,
                 UserRoleId = userDto.UserRoleId,
                 CreatedDate = DateTime.Now,
+                Status = UserStatus.Active
             };
             _context.User.Add(user);
             await _context.SaveChangesAsync();
