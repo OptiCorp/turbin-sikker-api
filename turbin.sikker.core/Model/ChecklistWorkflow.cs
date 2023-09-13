@@ -8,7 +8,7 @@ namespace turbin.sikker.core.Model
         [Display(Name = "Sent")]
         Sent,
         [Display(Name = "Committed")]
-        Commited,
+        Committed,
         [Display(Name = "Done")]
         Done
     }
