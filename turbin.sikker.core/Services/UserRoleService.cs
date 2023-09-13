@@ -63,7 +63,10 @@ namespace turbin.sikker.core.Services
 
             if (userRole != null)
             {
-                if (updatedUserRole.Name != null) userRole.Name = updatedUserRole.Name;
+                if (updatedUserRole.Name != null) 
+                {
+                    userRole.Name = updatedUserRole.Name;
+                }
 
                 await _context.SaveChangesAsync();
             }
