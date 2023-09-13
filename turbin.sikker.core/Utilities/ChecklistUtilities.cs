@@ -19,7 +19,8 @@ public class ChecklistUtilities : IChecklistUtilities
                 User = checklist.CreatedByUser,
                 Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                 CreatedDate = checklist.CreatedDate,
-                UpdatedDate = checklist.UpdatedDate
+                UpdatedDate = checklist.UpdatedDate,
+                ChecklistTasks = checklist.ChecklistTasks
             };
         }
 
@@ -31,7 +32,8 @@ public class ChecklistUtilities : IChecklistUtilities
                 Title = checklist.Title,
                 Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                 CreatedDate = checklist.CreatedDate,
-                UpdatedDate = checklist.UpdatedDate
+                UpdatedDate = checklist.UpdatedDate,
+                ChecklistTasks = checklist.ChecklistTasks
             };
         }
     }
