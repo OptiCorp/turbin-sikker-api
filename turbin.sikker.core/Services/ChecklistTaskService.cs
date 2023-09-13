@@ -156,11 +156,5 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-
-        //TEST THIS
-        // public bool TaskExists(IEnumerable<ChecklistTaskResponseDto> tasks, string categoryId, string description)
-        // {
-        //     return tasks.Any(t => t.Category.Id == categoryId && t.Description == description);
-        // }
     }
 }

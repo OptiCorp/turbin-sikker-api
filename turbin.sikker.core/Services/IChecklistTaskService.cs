@@ -14,8 +14,5 @@ namespace turbin.sikker.core.Services
         Task<string> CreateChecklistTask(ChecklistTaskRequestDto checklistTask);
         public Task AddTaskToChecklist(string checklistId, string taskId);
         Task DeleteChecklistTask(string id);
-
-
-        // bool TaskExists(IEnumerable<ChecklistTaskResponseDto> tasks, string categoryId, string description);
     }
 }

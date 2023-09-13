@@ -12,12 +12,8 @@ namespace turbin.sikker.core.Services
         Task<User> GetUserById(string id);
         Task UpdateUser(string id, UserUpdateDto user);
         Task<string> CreateUser(UserCreateDto user);
-        //Task CreateUser(UserCreateDto userDto);
         Task DeleteUser(string id);
         Task HardDeleteUser(string id);
-        // bool IsUsernameTaken(IEnumerable<UserDto> users, string username);
-        // bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail);
-        // bool IsValidStatus(string value);
         Task<string> GetInspectorRoleId();
     }
 }

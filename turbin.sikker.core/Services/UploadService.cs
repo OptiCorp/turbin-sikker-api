@@ -23,11 +23,6 @@ namespace turbin.sikker.core.Services
             return await _context.Upload.Where(c => c.PunchId == id).ToListAsync();
         }
 
-        // public async Task<IEnumerable<Upload>> GetUploadsByWorkflowId(string id)
-        // {
-        //     return await _context.Upload.Where(c => c.ChecklistWorkflowId == id).ToListAsync();
-        // }
-
         public async Task<string> CreateUpload(UploadCreateDto uploadDto)
         {   
             var upload = new Upload{

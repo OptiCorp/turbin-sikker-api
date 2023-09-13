@@ -12,9 +12,6 @@ namespace turbin.sikker.core.Services
         Task UpdateUserRole(string id, UserRoleUpdateDto userRole);
         Task<string> CreateUserRole(UserRoleCreateDto userRole);
         Task DeleteUserRole(string id);
-        
-        // bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId);
         Task<bool> IsUserRoleInUse(UserRole userRole);
-        // bool IsUserRoleNameTaken(IEnumerable<UserRole> userRoles, string userRoleName);
     }
 }

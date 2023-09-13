@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using turbin.sikker.core.Migrations;
 using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Configuration

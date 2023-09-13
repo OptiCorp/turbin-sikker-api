@@ -32,8 +32,6 @@ namespace turbin.sikker.core.Model
         public User? CreatedByUser { get; }
         public ICollection<ChecklistTask>? ChecklistTasks { get; }
 
-        //public ICollection<ChecklistWorkflow>? ChecklistWorkflows { get; set; }
-
     }
 }
 

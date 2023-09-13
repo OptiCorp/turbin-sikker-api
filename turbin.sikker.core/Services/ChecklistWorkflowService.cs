@@ -81,7 +81,6 @@ namespace turbin.sikker.core.Services
                 }
             }
             checklistWorkFlow.UpdatedDate = DateTime.Now;
-            //_context.Entry(checklistWorkflow).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
