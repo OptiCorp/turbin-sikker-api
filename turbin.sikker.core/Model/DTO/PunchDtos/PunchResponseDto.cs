@@ -4,8 +4,6 @@
     {
         public string? Id { get; set; }
 
-        public ChecklistWorkflow ChecklistWorkflow { get; set; }
-
         public ChecklistTask ChecklistTask { get; set; }
 
         public string Status { get; set; }

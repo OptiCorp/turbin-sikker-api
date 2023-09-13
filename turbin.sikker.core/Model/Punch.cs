@@ -67,6 +67,8 @@ namespace turbin.sikker.core.Model
 
         // Boolean? 
         public Byte Active { get; set; }
+
+        public ICollection<Upload>? Uploads { get; }
     }
 }
 

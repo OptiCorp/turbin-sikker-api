@@ -1,5 +1,6 @@
 ﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
 {
@@ -27,15 +28,19 @@ namespace turbin.sikker.core.Services
         //     return await _context.Upload.Where(c => c.ChecklistWorkflowId == id).ToListAsync();
         // }
 
-        public async Task<string> CreateUpload(Upload upload)
-        {
+        public async Task<string> CreateUpload(UploadCreateDto uploadDto)
+        {   
+            var upload = new Upload{
+                PunchId = uploadDto.PunchId,
+                BlobRef = uploadDto.BlobRef
+            };
             await _context.Upload.AddAsync(upload);
             await _context.SaveChangesAsync();
 
             return upload.Id;
         }
 
-        public async Task UpdateUpload(Upload updatedUpload)
+        public async Task UpdateUpload(UploadUpdateDto updatedUpload)
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == updatedUpload.Id);
 
