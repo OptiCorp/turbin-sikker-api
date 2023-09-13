@@ -58,6 +58,7 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Punch
                             .Include(p => p.ChecklistTask)
+                            .Include(u => u.Uploads)
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Select(p => _punchUtilities.PunchToResponseDto(p))
@@ -68,6 +69,7 @@ namespace turbin.sikker.core.Services
         {
             var punch = await _context.Punch
                                 .Include(p => p.ChecklistTask)
+                                .Include(u => u.Uploads)
                                 .Include(p => p.CreatedByUser)
                                 .ThenInclude(u => u.UserRole)
                                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -86,6 +88,7 @@ namespace turbin.sikker.core.Services
                 var punches = await _context.Punch
                                     .Where(c => c.ChecklistWorkflowId == workflow.Id)
                                     .Include(p => p.ChecklistTask)
+                                    .Include(u => u.Uploads)
                                     .Include(p => p.CreatedByUser)
                                     .ThenInclude(u => u.UserRole)
                                     .Select(c => _punchUtilities.PunchToResponseDto(c))
@@ -100,6 +103,7 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Punch
                             .Include(p => p.ChecklistTask)
+                            .Include(u => u.Uploads)
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.CreatedBy == id)
@@ -111,6 +115,7 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Punch
                             .Include(p => p.ChecklistTask)
+                            .Include(u => u.Uploads)
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.ChecklistWorkflowId == id)
