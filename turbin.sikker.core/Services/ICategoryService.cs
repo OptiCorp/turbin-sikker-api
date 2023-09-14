@@ -11,6 +11,5 @@ namespace turbin.sikker.core.Services
         Task UpdateCategory(string id, CategoryRequestDto category);
         Task<string> CreateCategory(CategoryRequestDto category);
         Task DeleteCategory(string id);
-        // bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName);
     }
 }

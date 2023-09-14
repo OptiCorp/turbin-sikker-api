@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Extensions;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Utilities;
@@ -16,43 +15,6 @@ namespace turbin.sikker.core.Services
             _context = context;
             _punchUtilities = punchUtilities;
         }
-
-        // public bool IsValidStatus(string value)
-        // {
-        //     string lowerCaseValue = value.ToLower();
-        //     return lowerCaseValue == "pending" || lowerCaseValue == "approved" || lowerCaseValue == "rejected";
-        // }
-
-
-        // public string GetPunchStatus(PunchStatus status)
-        // {
-        //     switch (status)
-        //     {
-        //         case PunchStatus.Pending:
-        //             return "Pending";
-        //         case PunchStatus.Approved:
-        //             return "Approved";
-        //         case PunchStatus.Rejected:
-        //             return "Rejected";
-        //         default:
-        //             return "Pending";
-        //     }
-        // }
-
-        // public string GetPunchSeverity(PunchSeverity status)
-        // {
-        //     switch (status)
-        //     {
-        //         case PunchSeverity.Minor:
-        //             return "Minor";
-        //         case PunchSeverity.Major:
-        //             return "Major";
-        //         case PunchSeverity.Critical:
-        //             return "Critical";
-        //         default:
-        //             return "Critical";
-        //     }
-        // }
 
         public async Task<IEnumerable<PunchResponseDto>> GetAllPunches()
         {
@@ -190,8 +152,6 @@ namespace turbin.sikker.core.Services
                         punch.Severity = PunchSeverity.Critical;
                     }
                 }
-
-                //punch.UserId = updatedPunch.UserId;
 
                 punch.UpdatedDate = DateTime.Now;
                 await _context.SaveChangesAsync();

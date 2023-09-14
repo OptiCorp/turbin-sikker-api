@@ -64,11 +64,5 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-
-
-        // public bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName)
-        // {
-        //     return categories.Any(c => c.Name == categoryName);
-        // }
     }
 }

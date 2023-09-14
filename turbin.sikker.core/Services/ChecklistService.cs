@@ -98,7 +98,6 @@ namespace turbin.sikker.core.Services
             var checklist = await _context.Checklist.FirstOrDefaultAsync(checklist => checklist.Id == id);
             if (checklist != null)
             {
-                //_context.Checklist.Remove(checklist);
                 checklist.Status = ChecklistStatus.Inactive;
                 await _context.SaveChangesAsync();
             }
@@ -113,10 +112,5 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-
-        // public bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title)
-        // {
-        //     return checklists.Any(c => c.User.Id == userId && c.Title == title);
-        // }
     }
 }

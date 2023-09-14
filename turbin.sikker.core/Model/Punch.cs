@@ -36,10 +36,6 @@ namespace turbin.sikker.core.Model
 
         public ChecklistTask ChecklistTask { get; }
 
-        //[Required]
-        //[StringLength(450)]
-        //public string UserId { get; set; }
-
         [Required]
         public DateTime CreatedDate { get; set; }
 
@@ -53,11 +49,6 @@ namespace turbin.sikker.core.Model
         [Required]
         [StringLength(1500)]
         public string PunchDescription { get; set; }
-
-
-        // Enum? ('Minor', 'Major', 'Critical')
-        //public int Severity { get; set; }
-
 
         [EnumDataType(typeof(PunchSeverity))]
         public PunchSeverity Severity { get; set; }

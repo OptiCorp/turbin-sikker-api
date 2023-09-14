@@ -5,8 +5,6 @@ using turbin.sikker.core.Services;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -141,12 +139,6 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> PostPunch(PunchCreateDto punch)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    _punchService.CreatePunch(punch);
-            //    return CreatedAtAction(nameof(GetPunchById), punch);
-            //}
-
             var user = await _userService.GetUserById(punch.CreatedBy);
             var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(punch.ChecklistWorkflowId);
 
@@ -161,8 +153,6 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Could not find specified checklist workflow.");
             }
 
-
-
             var newPunchId = await _punchService.CreatePunch(punch);
             var newPunch = await _punchService.GetPunchById(newPunchId);
 
@@ -176,11 +166,6 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> UpdatePunch(string id, PunchUpdateDto updatedPunch)
         {
-            //if (id != updatedPunch.Id)
-            //{
-            //    return BadRequest();
-            //}
-
             var punch = await _punchService.GetPunchById(id);
             if (punch == null)
             {

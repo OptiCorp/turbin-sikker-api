@@ -1,4 +1,4 @@
-﻿using turbin.sikker.core.Model;
+﻿
 using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
@@ -13,8 +13,5 @@ namespace turbin.sikker.core.Services
         Task<IEnumerable<PunchResponseDto>> GetPunchesByWorkflowId(string checklistId);
         Task<IEnumerable<PunchResponseDto>> GetPunchesByInspectorId(string id);
         Task<IEnumerable<PunchResponseDto>> GetPunchesByLeaderId(string id);
-        // string GetPunchStatus(PunchStatus status);
-        // bool IsValidStatus(string value);
-        // public string GetPunchSeverity(PunchSeverity status);
     }
 }
