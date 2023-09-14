@@ -9,5 +9,7 @@ public interface IChecklistTaskUtilities
         bool TaskExists(IEnumerable<ChecklistTaskResponseDto> tasks, string categoryId, string description);
 
         public ChecklistTaskResponseDto TaskToResponseDto(ChecklistTask checklistTask);
+
+        public ChecklistTaskByCategoryResponseDto TaskToByCategoryResponseDto(ChecklistTask checklistTask);
     }
 }
