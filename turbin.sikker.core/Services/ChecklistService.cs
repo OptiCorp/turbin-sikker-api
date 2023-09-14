@@ -16,21 +16,23 @@ namespace turbin.sikker.core.Services
             _checklistUtilities = checklistUtilities;
         }
 
-        public async Task<IEnumerable<ChecklistMultipleResponseDto>> GetAllChecklists()
+        public async Task<IEnumerable<ChecklistResponseDto>> GetAllChecklists()
         {
             return await _context.Checklist.Include(c => c.CreatedByUser)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
-                                            .Select(c => _checklistUtilities.ChecklistToMultipleDto(c))
+                                            .Select(c => _checklistUtilities.ChecklistToResponseDto(c))
                                             .ToListAsync();
         }
 
-        public async Task<Checklist> GetChecklistById(string id)
+        public async Task<ChecklistResponseDto> GetChecklistById(string id)
         {
-            return await _context.Checklist.Include(c => c.CreatedByUser)
+            var checklist = await _context.Checklist.Include(c => c.CreatedByUser)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .FirstOrDefaultAsync(checklist => checklist.Id == id);
+
+            return _checklistUtilities.ChecklistToResponseDto(checklist);
         }
 
         public async Task<IEnumerable<ChecklistViewNoUserDto>> GetAllChecklistsByUserId(string id)
@@ -42,13 +44,13 @@ namespace turbin.sikker.core.Services
                                             .ToListAsync();
         }
 
-        public async Task<IEnumerable<ChecklistMultipleResponseDto>> SearchChecklistByName(string searchString)
+        public async Task<IEnumerable<ChecklistResponseDto>> SearchChecklistByName(string searchString)
         {
             return await _context.Checklist.Include(c => c.CreatedByUser)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .Where(c => c.Title.Contains(searchString))
-                                            .Select(c => _checklistUtilities.ChecklistToMultipleDto(c))
+                                            .Select(c => _checklistUtilities.ChecklistToResponseDto(c))
                                             .ToListAsync();
         }
 
@@ -69,9 +71,9 @@ namespace turbin.sikker.core.Services
             return newChecklistId;
         }
 
-        public async Task UpdateChecklist(string checklistId, ChecklistEditDto updatedChecklist)
+        public async Task UpdateChecklist(ChecklistEditDto updatedChecklist)
         {
-            var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == checklistId);
+            var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == updatedChecklist.Id);
 
             if (checklist != null)
             {
