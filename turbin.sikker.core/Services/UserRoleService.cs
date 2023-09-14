@@ -48,9 +48,9 @@ namespace turbin.sikker.core.Services
             return userRole.Id;
         }
 
-        public async Task UpdateUserRole(string userRoleId, UserRoleUpdateDto updatedUserRole)
+        public async Task UpdateUserRole(UserRoleUpdateDto updatedUserRole)
         {
-            var userRole = await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == userRoleId);
+            var userRole = await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == updatedUserRole.Id);
 
             if (userRole != null)
             {

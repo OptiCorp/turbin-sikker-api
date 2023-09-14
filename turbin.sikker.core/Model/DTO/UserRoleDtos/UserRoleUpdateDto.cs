@@ -6,5 +6,6 @@ namespace turbin.sikker.core.Model.DTO
     {
         [StringLength(50)]
         public string Name { get; set; }
+        public string Id { get; set; }
     }
 }
