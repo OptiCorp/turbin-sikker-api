@@ -32,6 +32,8 @@ namespace turbin.sikker.core.Services
                                             .ThenInclude(task => task.Category)
                                             .FirstOrDefaultAsync(checklist => checklist.Id == id);
 
+            if (checklist == null) return null;
+
             return _checklistUtilities.ChecklistToResponseDto(checklist);
         }
 

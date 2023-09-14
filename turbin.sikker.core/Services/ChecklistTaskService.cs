@@ -89,13 +89,13 @@ namespace turbin.sikker.core.Services
 
             if (checklistTask != null)
             {
-                if (checklistTask.CategoryId != null)
+                if (updatedChecklistTask.CategoryId != null)
                 {
                     checklistTask.CategoryId = updatedChecklistTask.CategoryId;
                 }
 
 
-                if (checklistTask.Description != null)
+                if (updatedChecklistTask.Description != null)
                 {
                     checklistTask.Description = updatedChecklistTask.Description;
                 }
@@ -109,20 +109,20 @@ namespace turbin.sikker.core.Services
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == updatedChecklistTask.Id);
             var newChecklistTask = new ChecklistTask
             {
-                CategoryId = "",
-                Description = ""
+                CategoryId = checklistTask.CategoryId,
+                Description = checklistTask.Description
             };
             var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == updatedChecklistTask.ChecklistId);
 
             if (checklistTask != null)
             {
-                if (checklistTask.CategoryId != null)
+                if (updatedChecklistTask.CategoryId != null)
                 {
                     newChecklistTask.CategoryId = updatedChecklistTask.CategoryId;
                 }
 
 
-                if (checklistTask.Description != null)
+                if (updatedChecklistTask.Description != null)
                 {
                     newChecklistTask.Description = updatedChecklistTask.Description;
                 }
@@ -138,8 +138,8 @@ namespace turbin.sikker.core.Services
         public async Task AddTaskToChecklist(ChecklistTaskAddTaskToChecklistDto checklistAddTask)
         {
 
-            var checklist = await _context.Checklist.Include(c => c.ChecklistTasks).FirstOrDefaultAsync(c => c.Id == checklistId);
-            var task = await _context.Checklist_Task.FirstOrDefaultAsync(t => t.Id == taskId);
+            var checklist = await _context.Checklist.Include(c => c.ChecklistTasks).FirstOrDefaultAsync(c => c.Id == checklistAddTask.ChecklistId);
+            var task = await _context.Checklist_Task.FirstOrDefaultAsync(t => t.Id == checklistAddTask.Id);
 
             if (checklist != null && task != null)
             {

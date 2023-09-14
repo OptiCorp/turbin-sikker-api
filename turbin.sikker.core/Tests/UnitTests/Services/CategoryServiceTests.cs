@@ -5,7 +5,7 @@ using turbin.sikker.core.Services;
 using turbin.sikker.core.Utilities;
 using Xunit;
 
-namespace turbin.sikker.core.Tests.ServiceTests
+namespace turbin.sikker.core.Tests.Services
 {
     public class CategoryServiceTests
     {
@@ -120,16 +120,16 @@ namespace turbin.sikker.core.Tests.ServiceTests
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
 
-            var id = "0";
-            var updatedCategory = new CategoryRequestDto
+            var updatedCategory = new CategoryUpdateDto
             {
-                Name = "Category 10"
+                Name = "Category 10",
+                Id = "0"
             };
 
             //Act
-            var oldCategoryName = (await categoryService.GetCategoryById(id)).Name;
-            await categoryService.UpdateCategory(id, updatedCategory);
-            var newCategory = await categoryService.GetCategoryById(id);
+            var oldCategoryName = (await categoryService.GetCategoryById(updatedCategory.Id)).Name;
+            await categoryService.UpdateCategory(updatedCategory);
+            var newCategory = await categoryService.GetCategoryById(updatedCategory.Id);
 
             //Assert
             Assert.NotEqual(oldCategoryName, newCategory.Name);
