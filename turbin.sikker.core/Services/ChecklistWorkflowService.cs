@@ -29,7 +29,9 @@ namespace turbin.sikker.core.Services
                 .Include(c => c.Creator)
                 .Include(c => c.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (checklistWorkflow == null) return null;
             
             ChecklistWorkflowResponseDto checklistWorkflowResponse = _checklistWorkflowUtilities.WorkflowToResponseDto(checklistWorkflow);
 
@@ -71,11 +73,11 @@ namespace turbin.sikker.core.Services
 
             if (checklistWorkFlow != null)
             {
-                if (checklistWorkFlow.Status != null)
+                if (updatedChecklistWorkflow.Status != null)
                 {
                     checklistWorkFlow.Status = Enum.Parse<CurrentChecklistStatus>(updatedChecklistWorkflow.Status);
                 }
-                if (checklistWorkFlow.UserId != null)
+                if (updatedChecklistWorkflow.UserId != null)
                 {
                     checklistWorkFlow.UserId = updatedChecklistWorkflow.UserId;
                 }
