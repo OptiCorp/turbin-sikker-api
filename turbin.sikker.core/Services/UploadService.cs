@@ -1,21 +1,25 @@
 ﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
     public class UploadService : IUploadService
     {
         private readonly TurbinSikkerDbContext _context;
+        private readonly IUploadUtilities _uploadUtilities;
 
-        public UploadService(TurbinSikkerDbContext context)
+        public UploadService(TurbinSikkerDbContext context, IUploadUtilities uploadUtilities)
         {
             _context = context;
+            _uploadUtilities = uploadUtilities;
         }
 
-        public async Task<Upload> GetUploadById(string id)
-        {
-            return await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
+        public async Task<UploadResponseDto> GetUploadById(string id)
+        {   
+            var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
+            return _uploadUtilities.ToResponseDto(upload);
         }
 
         public async Task<IEnumerable<Upload>> GetUploadsByPunchId(string id)
