@@ -138,8 +138,8 @@ namespace turbin.sikker.core.Services
         public async Task AddTaskToChecklist(ChecklistTaskAddTaskToChecklistDto checklistAddTask)
         {
 
-            var checklist = await _context.Checklist.Include(c => c.ChecklistTasks).FirstOrDefaultAsync(c => c.Id == checklistId);
-            var task = await _context.Checklist_Task.FirstOrDefaultAsync(t => t.Id == taskId);
+            var checklist = await _context.Checklist.Include(c => c.ChecklistTasks).FirstOrDefaultAsync(c => c.Id == checklistAddTask.ChecklistId);
+            var task = await _context.Checklist_Task.FirstOrDefaultAsync(t => t.Id == checklistAddTask.Id);
 
             if (checklist != null && task != null)
             {

@@ -92,7 +92,7 @@ namespace turbin.sikker.core.Controllers
             }
 
             var creator = await _userService.GetUserById(workflow.CreatedById);
-            var userRole = await _userRoleService.GetUserRoleById(creator.UserRoleId);
+            var userRole = await _userRoleService.GetUserRoleById(creator.UserRole.Id);
             var checklist = await _checklistService.GetChecklistById(workflow.ChecklistId);
 
             if (creator == null) return NotFound("The creator of this workflow does not exist");
