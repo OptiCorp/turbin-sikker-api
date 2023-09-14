@@ -1,16 +1,19 @@
 ﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO.CategoryDtos;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
 	public class CategoryService : ICategoryService
 	{
         public readonly TurbinSikkerDbContext _context;
+        private readonly ICategoryUtilities _categoryUtilities;
 
-        public CategoryService(TurbinSikkerDbContext context)
+        public CategoryService(TurbinSikkerDbContext context, ICategoryUtilities categoryUtilities)
         {
             _context = context;
+            _categoryUtilities = categoryUtilities;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategories()
