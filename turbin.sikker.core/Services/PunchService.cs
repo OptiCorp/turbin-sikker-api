@@ -107,9 +107,9 @@ namespace turbin.sikker.core.Services
             return newPunchId;
         }
 
-        public async Task UpdatePunch(string punchId, PunchUpdateDto updatedPunch)
+        public async Task UpdatePunch(PunchUpdateDto updatedPunch)
         {
-            var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == punchId);
+            var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == updatedPunch.Id);
 
             if (punch != null)
             {
