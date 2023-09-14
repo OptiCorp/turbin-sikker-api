@@ -45,9 +45,9 @@ namespace turbin.sikker.core.Services
             return categoryId;
         }
 
-        public async Task UpdateCategory(string id, CategoryRequestDto updatedCategory)
+        public async Task UpdateCategory(CategoryUpdateDto updatedCategory)
         {
-            var category = await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
+            var category = await _context.Category.FirstOrDefaultAsync(category => category.Id == updatedCategory.Id);
 
             if (category != null)
             {
@@ -59,7 +59,6 @@ namespace turbin.sikker.core.Services
 
         public async Task DeleteCategory(string id)
         {
-
             var category =  await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
             if (category != null)
             {

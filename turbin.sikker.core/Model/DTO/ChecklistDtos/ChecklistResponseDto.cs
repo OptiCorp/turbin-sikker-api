@@ -16,6 +16,6 @@ namespace turbin.sikker.core.Model.DTO.ChecklistDtos
         public DateTime? UpdatedDate { get; set; }
 
         public User? User { get; set; }
-        public ICollection<ChecklistTask>? Tasks { get; set; }
+        public ICollection<ChecklistTask>? ChecklistTasks { get; set; }
     }
 }

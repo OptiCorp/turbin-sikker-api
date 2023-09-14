@@ -5,14 +5,14 @@ namespace turbin.sikker.core.Utilities
 {
 public class ChecklistUtilities : IChecklistUtilities
 	{
-        public bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title)
+        public bool checklistExists(IEnumerable<ChecklistResponseDto> checklists, string userId, string title)
         {
             return checklists.Any(c => c.User.Id == userId && c.Title == title);
         }
 
-        public ChecklistMultipleResponseDto ChecklistToMultipleDto(Checklist checklist)
+        public ChecklistResponseDto ChecklistToResponseDto(Checklist checklist)
         {
-            return new ChecklistMultipleResponseDto
+            return new ChecklistResponseDto
             {
                 Id = checklist.Id,
                 Title = checklist.Title,

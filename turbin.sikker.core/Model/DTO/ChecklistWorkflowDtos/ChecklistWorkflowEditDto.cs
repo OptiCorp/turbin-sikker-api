@@ -4,6 +4,6 @@ namespace turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos
     {
         public string? UserId { get; set; }
         public string? Status { get; set; }
-
+        public string? Id { get; set; }
     }
 }

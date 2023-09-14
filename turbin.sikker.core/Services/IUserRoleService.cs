@@ -9,7 +9,7 @@ namespace turbin.sikker.core.Services
         Task<IEnumerable<UserRole>> GetUserRoles();
         Task<UserRole> GetUserRoleById(string id);
         Task<UserRole> GetUserRoleByUserRoleName(string userRoleName);
-        Task UpdateUserRole(string id, UserRoleUpdateDto userRole);
+        Task UpdateUserRole(UserRoleUpdateDto userRole);
         Task<string> CreateUserRole(UserRoleCreateDto userRole);
         Task DeleteUserRole(string id);
         Task<bool> IsUserRoleInUse(UserRole userRole);

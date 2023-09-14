@@ -105,7 +105,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
-        public async Task<IActionResult> UpdateCategory(string id, CategoryRequestDto updatedCategory, [FromServices] IValidator<CategoryRequestDto> validator)
+        public async Task<IActionResult> UpdateCategory(string id, CategoryUpdateDto updatedCategory, [FromServices] IValidator<CategoryUpdateDto> validator)
         {
             ValidationResult validationResult = validator.Validate(updatedCategory);
 
@@ -135,7 +135,7 @@ namespace turbin.sikker.core.Controllers
                 return Conflict($"Category already exists.");
             }
 
-            await _categoryService.UpdateCategory(id, updatedCategory);
+            await _categoryService.UpdateCategory(updatedCategory);
 
             return Ok($"Category renamed to '{updatedCategory.Name}'");
         }

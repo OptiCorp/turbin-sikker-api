@@ -17,7 +17,7 @@ namespace turbin.sikker.core.Tests
         [Fact]
         public void checklistExists_exists_True()
         {
-            List<ChecklistMultipleResponseDto> checklists = new List<ChecklistMultipleResponseDto>();
+            List<ChecklistResponseDto> checklists = new List<ChecklistResponseDto>();
 
             var user = new User{
                 Id = "userID",
@@ -25,19 +25,19 @@ namespace turbin.sikker.core.Tests
                 Status = UserStatus.Active
             };
 
-            var list1 = new ChecklistMultipleResponseDto{
+            var list1 = new ChecklistResponseDto{
                 Title = "Checklist 1",
                 Status = "Active",
                 CreatedDate = DateTime.Now,
                 User = user
             };
-            var list2 = new ChecklistMultipleResponseDto{
+            var list2 = new ChecklistResponseDto{
                 Title = "Checklist 2",
                 Status = "Active",
                 CreatedDate = DateTime.Now,
                 User = user
             };
-            var list3 = new ChecklistMultipleResponseDto{
+            var list3 = new ChecklistResponseDto{
                 Title = "Checklist 3",
                 Status = "Active",
                 CreatedDate = DateTime.Now,
@@ -48,7 +48,7 @@ namespace turbin.sikker.core.Tests
             checklists.Add(list2);
             checklists.Add(list3);
 
-            var list4 = new ChecklistMultipleResponseDto{
+            var list4 = new ChecklistResponseDto{
                 Title = "Checklist 3",
                 Status = "Active",
                 CreatedDate = DateTime.Now,
@@ -61,7 +61,7 @@ namespace turbin.sikker.core.Tests
         [Fact]
         public void checklistExists_notExists_False()
         {
-            List<ChecklistMultipleResponseDto> checklists = new List<ChecklistMultipleResponseDto>();
+            List<ChecklistResponseDto> checklists = new List<ChecklistResponseDto>();
 
             var user = new User{
                 Id = "userID",
@@ -69,19 +69,19 @@ namespace turbin.sikker.core.Tests
                 Status = UserStatus.Active
             };
 
-            var list1 = new ChecklistMultipleResponseDto{
+            var list1 = new ChecklistResponseDto{
                 Title = "Checklist 1",
                 Status = "Active",
                 CreatedDate = DateTime.Now,
                 User = user
             };
-            var list2 = new ChecklistMultipleResponseDto{
+            var list2 = new ChecklistResponseDto{
                 Title = "Checklist 2",
                 Status = "Active",
                 CreatedDate = DateTime.Now,
                 User = user
             };
-            var list3 = new ChecklistMultipleResponseDto{
+            var list3 = new ChecklistResponseDto{
                 Title = "Checklist 3",
                 Status = "Active",
                 CreatedDate = DateTime.Now,

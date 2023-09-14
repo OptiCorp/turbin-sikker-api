@@ -64,10 +64,10 @@ namespace turbin.sikker.core.Services
             return checklistWorkflows;
         }
 
-        public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedChecklistWorkflow)
+        public async Task UpdateChecklistWorkflow(ChecklistWorkflowEditDto updatedChecklistWorkflow)
         {
 
-            var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == id);
+            var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == updatedChecklistWorkflow.Id);
 
             if (checklistWorkFlow != null)
             {

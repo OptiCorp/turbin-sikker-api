@@ -4,7 +4,7 @@ namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
     public class ChecklistEditDto
     {
-
+        public string? Id { get; set; }
         [StringLength(50)]
         public string? Title { get; set; }
 

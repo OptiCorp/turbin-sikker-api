@@ -70,7 +70,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpPost("CreateChecklistWorkflow")]
         [SwaggerOperation(Summary = "Create a new checklist workflow", Description = "Creates a new checklist workflow.")]
-        [SwaggerResponse(201, "Checklist workflow created", typeof(ChecklistWorkflow))]
+        [SwaggerResponse(200, "Checklist workflow(s) created")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> CreateChecklistWorkflow(ChecklistWorkflowCreateDto workflow, [FromServices] IValidator<ChecklistWorkflowCreateDto> validator)
@@ -115,22 +115,22 @@ namespace turbin.sikker.core.Controllers
 
             await _workflowService.CreateChecklistWorkflow(workflow);
 
-            return Ok();
+            return Ok("Workflow(s) created");
         }
 
         [HttpPut("UpdateChecklistWorkflow")]
         [SwaggerOperation(Summary = "Update checklist workflow by ID", Description = "Updates an existing checklist workflow by its ID.")]
         [SwaggerResponse(200, "Checklist workflow updated")]
         [SwaggerResponse(404, "Checklist workflow not found")]
-        public async Task<IActionResult> UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedWorkflow)
+        public async Task<IActionResult> UpdateChecklistWorkflow(ChecklistWorkflowEditDto updatedWorkflow)
         {
-            var existingWorkflow = await _workflowService.GetChecklistWorkflowById(id);
+            var existingWorkflow = await _workflowService.GetChecklistWorkflowById(updatedWorkflow.Id);
             if (existingWorkflow == null)
             {
                 return NotFound("Checklist workflow not found");
             }
 
-            await _workflowService.UpdateChecklistWorkflow(id, updatedWorkflow);
+            await _workflowService.UpdateChecklistWorkflow(updatedWorkflow);
 
             return Ok("Checklist workflow updated");
         }
