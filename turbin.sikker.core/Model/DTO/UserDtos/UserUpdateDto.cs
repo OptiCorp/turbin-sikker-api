@@ -21,5 +21,6 @@ namespace turbin.sikker.core.Model.DTO
 
         public string? Status { get; set; }
 
+        public string? Id { get; set; }
     }
 }
