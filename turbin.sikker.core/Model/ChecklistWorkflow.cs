@@ -17,20 +17,26 @@ namespace turbin.sikker.core.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 
+        [Required]
         public string? ChecklistId { get; set; }
         
         public Checklist? Checklist { get; }
 
+        [Required]
         public string? UserId { get; set; }
 
         public User? User { get; }
 
+        [Required]
         public string? CreatedById { get; set; }
 
         public User? Creator { get; }
 
+        [Required]
         [EnumDataType(typeof(CurrentChecklistStatus))]
         public CurrentChecklistStatus? Status { get; set; }
+
+        [Required]
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }

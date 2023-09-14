@@ -18,16 +18,19 @@ namespace turbin.sikker.core.Model
 
         [Required]
         [StringLength(50)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
+        [Required]
         [EnumDataType(typeof(ChecklistStatus))]
         public ChecklistStatus Status { get; set; }
-
-        public DateTime CreatedDate { get; set; }
+        
+        [Required]
+        public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 
-        public string CreatedBy { get; set; }
+        [Required]
+        public string? CreatedBy { get; set; }
 
         public User? CreatedByUser { get; }
         public ICollection<ChecklistTask>? ChecklistTasks { get; }

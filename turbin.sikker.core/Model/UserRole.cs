@@ -7,11 +7,11 @@ namespace turbin.sikker.core.Model
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [StringLength(50)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
         [StringLength(150)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
     }
 }

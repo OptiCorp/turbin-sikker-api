@@ -1,12 +1,23 @@
-﻿namespace turbin.sikker.core.Model.DTO.ChecklistDtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
     public class ChecklistViewNoUserDto
-    {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Status { get; set; }
-        public DateTime CreatedDate { get; set; }
+    {   
+        [Required]
+        public string? Id { get; set; }
+
+        [Required]
+        public string? Title { get; set; }
+
+        [Required]
+        public string? Status { get; set; }
+
+        [Required]
+        public DateTime? CreatedDate { get; set; }
+
         public DateTime? UpdatedDate { get; set; }
+
         public ICollection<ChecklistTask>? ChecklistTasks { get; set; }
     }
 }
