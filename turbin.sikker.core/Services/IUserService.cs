@@ -7,10 +7,10 @@ namespace turbin.sikker.core.Services
     {
         Task<IEnumerable<UserDto>> GetUsers();
         Task<IEnumerable<UserDto>> GetAllUsers();
-        Task<User> GetUserByUsername(string name);
+        Task<UserDto> GetUserByUsername(string name);
         Task<User> GetUserByAzureAdUserId(string azureAdUserId);
-        Task<User> GetUserById(string id);
-        Task UpdateUser(string id, UserUpdateDto user);
+        Task<UserDto> GetUserById(string id);
+        Task UpdateUser(UserUpdateDto user);
         Task<string> CreateUser(UserCreateDto user);
         Task DeleteUser(string id);
         Task HardDeleteUser(string id);

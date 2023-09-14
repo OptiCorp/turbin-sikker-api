@@ -9,6 +9,7 @@
         public string Severity { get; set; }
 
         public string Status { get; set; }
+        public string Id { get; set; }
     }
 }
 

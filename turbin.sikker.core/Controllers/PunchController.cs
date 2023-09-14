@@ -164,9 +164,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Punch updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> UpdatePunch(string id, PunchUpdateDto updatedPunch)
+        public async Task<IActionResult> UpdatePunch(PunchUpdateDto updatedPunch)
         {
-            var punch = await _punchService.GetPunchById(id);
+            var punch = await _punchService.GetPunchById(updatedPunch.Id);
             if (punch == null)
             {
                 return NotFound("Punch not found.");
@@ -188,7 +188,7 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            await _punchService.UpdatePunch(id, updatedPunch);
+            await _punchService.UpdatePunch(updatedPunch);
 
             return Ok("Punch updated.");
         }

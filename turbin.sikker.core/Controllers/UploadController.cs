@@ -27,7 +27,7 @@ namespace turbin.sikker.core.Controllers
         // Get specific upload based on given Id
         [HttpGet("GetUpload")]
         [SwaggerOperation(Summary = "Get upload by ID", Description = "Retrieves a upload by their ID.")]
-        [SwaggerResponse(200, "Success", typeof(Upload))]
+        [SwaggerResponse(200, "Success", typeof(UploadResponseDto))]
         [SwaggerResponse(404, "Upload not found")]
         public async Task<IActionResult> GetUploadById(string id)
         {

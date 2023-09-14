@@ -7,7 +7,7 @@ namespace turbin.sikker.core.Services
     {
         Task<IEnumerable<PunchResponseDto>> GetAllPunches();
         Task<PunchResponseDto> GetPunchById(string id);
-        Task UpdatePunch(string punchId, PunchUpdateDto punch);
+        Task UpdatePunch(PunchUpdateDto punch);
         Task<string> CreatePunch(PunchCreateDto punch);
         Task DeletePunch(string id);
         Task<IEnumerable<PunchResponseDto>> GetPunchesByWorkflowId(string checklistId);

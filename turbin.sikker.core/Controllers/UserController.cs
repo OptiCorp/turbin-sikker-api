@@ -49,7 +49,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetUser")]
         [SwaggerOperation(Summary = "Get user by ID", Description = "Retrieves a user by their ID.")]
-        [SwaggerResponse(200, "Success", typeof(User))]
+        [SwaggerResponse(200, "Success", typeof(UserDto))]
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -81,7 +81,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetUserByUserName")]
         [SwaggerOperation(Summary = "Get user by username", Description = "Retrieves a user by their username.")]
-        [SwaggerResponse(200, "Success", typeof(User))]
+        [SwaggerResponse(200, "Success", typeof(UserDto))]
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> GetUserByUsername(string username)
         {
@@ -156,10 +156,10 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "User updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public async Task<IActionResult> UpdateUser(string id, UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
+        public async Task<IActionResult> UpdateUser(UserUpdateDto updatedUser, [FromServices] IValidator<UserUpdateDto> validator)
         {
             var users = await _userService.GetAllUsers();
-            users = users.Where(u => u.Id != id);
+            users = users.Where(u => u.Id != updatedUser.Id);
 
             ValidationResult validationResult = validator.Validate(updatedUser);
 
@@ -187,7 +187,7 @@ namespace turbin.sikker.core.Controllers
                 return BadRequest("Invalid email.");
             }
 
-            await _userService.UpdateUser(id, updatedUser);
+            await _userService.UpdateUser(updatedUser);
 
             return Ok("User updated");
         }
@@ -199,7 +199,7 @@ namespace turbin.sikker.core.Controllers
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userService.GetUserById(id);
-            if (user.Status == UserStatus.Deleted)
+            if (user.Status == "Deleted")
             {
                 return BadRequest("User already deleted");
             }
