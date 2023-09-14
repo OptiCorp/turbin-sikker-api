@@ -86,7 +86,7 @@ namespace turbin.sikker.core.Configuration
 
                 modelBuilder.Entity<Punch>()
                 .HasMany(e => e.Uploads)
-                .WithOne();
+                .WithOne(e => e.Punch);
         }
     }
 
@@ -126,7 +126,7 @@ namespace turbin.sikker.core.Configuration
 
             modelBuilder.Entity<Upload>()
                 .HasOne(c => c.Punch)
-                .WithMany()
+                .WithMany(c => c.Uploads)
                 .HasForeignKey(c => c.PunchId)
                 .OnDelete(DeleteBehavior.NoAction);
             
