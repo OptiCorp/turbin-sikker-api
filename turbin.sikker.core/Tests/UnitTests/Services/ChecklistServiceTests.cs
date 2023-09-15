@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
 using turbin.sikker.core.Services;
 using turbin.sikker.core.Utilities;
@@ -9,84 +7,12 @@ namespace turbin.sikker.core.Tests.Services
 {
     public class ChecklistServiceTests
     {
-        private async Task<TurbinSikkerDbContext> GetDbContext()
-        {
-
-            var options = new DbContextOptionsBuilder<TurbinSikkerDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            var databaseContext = new TurbinSikkerDbContext(options);
-            databaseContext.Database.EnsureCreated();
-
-            await databaseContext.UserRole.AddAsync(
-                new UserRole
-                {
-                    Id = "1",
-                    Name = "Leader"
-                }
-            );
-
-            await databaseContext.User.AddAsync(
-                new User
-                {
-                    Id = "User 1",
-                    AzureAdUserId = "Some email",
-                    UserRoleId = "1",
-                    FirstName = "name",
-                    LastName = "nameson",
-                    Email = "some email",
-                    Username = "username",
-                    Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
-                }
-            );
-
-            await databaseContext.User.AddAsync(
-                new User
-                {
-                    Id = "User 2",
-                    AzureAdUserId = "Some email",
-                    UserRoleId = "1",
-                    FirstName = "name",
-                    LastName = "nameson",
-                    Email = "some email",
-                    Username = "usernames",
-                    Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
-                }
-            );
-
-
-            if (await databaseContext.Checklist.CountAsync() <= 0)
-            {
-                string createdById = "";
-                for (int i = 0; i < 10; i++)
-                {
-                    if (i%2 == 0) createdById = "User 1";
-                    if (i%2 != 0) createdById = "User 2";
-                    await databaseContext.Checklist.AddAsync(
-                        new Checklist
-                        {
-                            Id = i.ToString(),
-                            Title = string.Format("Checklist {0}", i),
-                            Status = ChecklistStatus.Active,
-                            CreatedDate = DateTime.Now,
-                            CreatedBy = createdById
-                        }
-                    );
-                }
-                await databaseContext.SaveChangesAsync();
-            }
-            return databaseContext;
-        }
-
-
         [Fact]
         public async void ChecklistService_GetAllChecklists_ReturnsChecklistList()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
         
@@ -103,9 +29,9 @@ namespace turbin.sikker.core.Tests.Services
         {
 
             //Arrange
-            
-            string id = "1";
-            var dbContext = await GetDbContext();
+            string id = "Checklist 1";
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
 
@@ -122,7 +48,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void ChecklistService_GetAllChecklistsByUserId_ReturnsChecklistList()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
             string userId = "User 1";
@@ -139,7 +66,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void ChecklistService_SearchChecklistByName_ReturnsChecklistList()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
             string name = "Checklist";
@@ -156,7 +84,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void ChecklistService_CreateChecklist_ReturnsString()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
 
@@ -172,20 +101,21 @@ namespace turbin.sikker.core.Tests.Services
 
             //Assert
             Assert.IsType<string>(id);
-            Assert.Equal(checklist.Title, newChecklist.Title);
+            Assert.Equal(checklist.Title, "New checklist");
         }
 
         [Fact]
         public async void ChecklistService_UpdateChecklist_ReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
 
             var updatedChecklist = new ChecklistEditDto
             {
-                Id = "0",
+                Id = "Checklist 0",
                 Title = "Updated checklist",
                 Status = "Inactive"
             };
@@ -205,11 +135,12 @@ namespace turbin.sikker.core.Tests.Services
         public async void ChecklistService_SoftDeleteChecklist_ReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
 
-            var id = "0";
+            var id = "Checklist 0";
 
             //Act
             await checklistService.DeleteChecklist(id);
@@ -225,11 +156,12 @@ namespace turbin.sikker.core.Tests.Services
         public async void ChecklistService_HardDeleteChecklist_ReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Checklist");
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
 
-            var id = "0";
+            var id = "Checklist 0";
 
             //Act
             await checklistService.HardDeleteChecklist(id);
