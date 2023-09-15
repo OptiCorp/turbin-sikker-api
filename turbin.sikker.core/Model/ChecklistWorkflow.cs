@@ -32,11 +32,9 @@ namespace turbin.sikker.core.Model
 
         public User? Creator { get; }
 
-        [Required]
         [EnumDataType(typeof(CurrentChecklistStatus))]
         public CurrentChecklistStatus? Status { get; set; }
 
-        [Required]
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
