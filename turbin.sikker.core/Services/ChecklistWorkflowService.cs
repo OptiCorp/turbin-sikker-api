@@ -26,7 +26,9 @@ namespace turbin.sikker.core.Services
         {
             var checklistWorkflow = await _context.ChecklistWorkflow
                 .Include(c => c.User)
+                .ThenInclude(c => c.UserRole)
                 .Include(c => c.Creator)
+                .ThenInclude(c => c.UserRole)
                 .Include(c => c.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -43,7 +45,9 @@ namespace turbin.sikker.core.Services
         {
             var checklistWorkflows = await _context.ChecklistWorkflow
                 .Include(c => c.User)
+                .ThenInclude(c => c.UserRole)
                 .Include(c => c.Creator)
+                .ThenInclude(c => c.UserRole)
                 .Include(p => p.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
                 .Select(c => _checklistWorkflowUtilities.WorkflowToResponseDto(c))
@@ -56,7 +60,9 @@ namespace turbin.sikker.core.Services
         {
             var checklistWorkflows = await _context.ChecklistWorkflow
             .Include(c => c.User)
+            .ThenInclude(c => c.UserRole)
             .Include(c => c.Creator)
+            .ThenInclude(c => c.UserRole)
             .Include(p => p.Checklist)
             .ThenInclude(c => c.ChecklistTasks)
             .Where(cw => cw.UserId == userId)
