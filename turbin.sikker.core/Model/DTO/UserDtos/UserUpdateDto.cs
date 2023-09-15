@@ -4,6 +4,9 @@ namespace turbin.sikker.core.Model.DTO
 {
     public class UserUpdateDto
     {   
+        [Required]
+        public string? Id { get; set; }
+
         [StringLength(150)]
         public string? Username { get; set; }
 
@@ -21,8 +24,5 @@ namespace turbin.sikker.core.Model.DTO
         public string? UserRoleId { get; set; }
 
         public string? Status { get; set; }
-
-        [Required]
-        public string? Id { get; set; }
     }
 }

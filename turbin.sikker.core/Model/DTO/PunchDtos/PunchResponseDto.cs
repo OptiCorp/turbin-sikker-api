@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace turbin.sikker.core.Model.DTO
 {
     public class PunchResponseDto
@@ -7,6 +6,8 @@ namespace turbin.sikker.core.Model.DTO
         public string? Id { get; set; }
 
         public ChecklistTask? ChecklistTask { get; set; }
+
+        public User? User { get; set; }
 
         public string? Status { get; set; }
 
@@ -19,8 +20,6 @@ namespace turbin.sikker.core.Model.DTO
         public string? Severity { get; set; }
 
         public Byte Active { get; set; }
-
-        public User? User { get; set; }
 
     }
 }

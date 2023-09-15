@@ -4,6 +4,8 @@ namespace turbin.sikker.core.Model.DTO
 {
     public class PunchUpdateDto
     {
+        [Required]
+        public string? Id { get; set; }
         public string? PunchDescription { get; set; }
 
         public string? ChecklistWorkflowId { get; set; }
@@ -11,9 +13,6 @@ namespace turbin.sikker.core.Model.DTO
         public string? Severity { get; set; }
 
         public string? Status { get; set; }
-
-        [Required]
-        public string? Id { get; set; }
     }
 }
 
