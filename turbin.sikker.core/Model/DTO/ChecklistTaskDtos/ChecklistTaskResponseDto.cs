@@ -1,14 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace turbin.sikker.core.Model.DTO.TaskDtos
 {
     public class ChecklistTaskResponseDto
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
         public string? Id { get; set; }
 
-        public string Description { get; set; }
+        [Required]
+        public string? Description { get; set; }
 
+        [Required]
         public Category? Category { get; set; }
     }
 }

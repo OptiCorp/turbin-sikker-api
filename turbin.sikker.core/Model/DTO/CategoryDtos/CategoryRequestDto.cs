@@ -6,7 +6,7 @@ namespace turbin.sikker.core.Model.DTO.CategoryDtos
     {
         [Required]
         [StringLength(50)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
     }
 }

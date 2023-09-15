@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace turbin.sikker.core.Model.DTO.TaskDtos
 {
     public class ChecklistTaskUpdateDto
@@ -6,6 +8,7 @@ namespace turbin.sikker.core.Model.DTO.TaskDtos
 
         public string? Description { get; set; }
 
+        [Required]
         public string? Id { get; set; }
 
         public string? ChecklistId { get; set; }

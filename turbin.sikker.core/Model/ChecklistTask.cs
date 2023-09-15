@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
@@ -7,9 +8,11 @@ namespace turbin.sikker.core.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 
-		public string CategoryId { get; set; }
+        [Required]
+		public string? CategoryId { get; set; }
 
-		public string Description { get; set; }
+        [Required]
+		public string? Description { get; set; }
 
         public Category? Category { get; }
 
