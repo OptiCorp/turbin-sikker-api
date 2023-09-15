@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace turbin.sikker.core.Model.DTO.TaskDtos
 {
     public class ChecklistTaskResponseDto

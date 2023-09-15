@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
     public class ChecklistViewNoUserDto
