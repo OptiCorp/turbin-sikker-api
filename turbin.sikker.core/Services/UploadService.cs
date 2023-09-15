@@ -16,15 +16,21 @@ namespace turbin.sikker.core.Services
             _uploadUtilities = uploadUtilities;
         }
 
+        public async Task<IEnumerable<UploadResponseDto>> GetAllUploads()
+        {
+            var uploads = await _context.Upload.Select(u => _uploadUtilities.ToResponseDto(u)).ToListAsync();
+            return uploads;
+        }
+
         public async Task<UploadResponseDto> GetUploadById(string id)
         {   
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
             return _uploadUtilities.ToResponseDto(upload);
         }
 
-        public async Task<IEnumerable<Upload>> GetUploadsByPunchId(string id)
+        public async Task<IEnumerable<UploadResponseDto>> GetUploadsByPunchId(string id)
         {
-            return await _context.Upload.Where(c => c.PunchId == id).ToListAsync();
+            return await _context.Upload.Where(c => c.PunchId == id).Select(c => _uploadUtilities.ToResponseDto(c)).ToListAsync();
         }
 
         public async Task<string> CreateUpload(UploadCreateDto uploadDto)
