@@ -19,6 +19,7 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistResponseDto>> GetAllChecklists()
         {
             return await _context.Checklist.Include(c => c.CreatedByUser)
+                                            .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .Select(c => _checklistUtilities.ChecklistToResponseDto(c))
@@ -28,6 +29,7 @@ namespace turbin.sikker.core.Services
         public async Task<ChecklistResponseDto> GetChecklistById(string id)
         {
             var checklist = await _context.Checklist.Include(c => c.CreatedByUser)
+                                            .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .FirstOrDefaultAsync(checklist => checklist.Id == id);
@@ -49,6 +51,7 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistResponseDto>> SearchChecklistByName(string searchString)
         {
             return await _context.Checklist.Include(c => c.CreatedByUser)
+                                            .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .Where(c => c.Title.Contains(searchString))
