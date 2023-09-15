@@ -251,6 +251,53 @@ namespace turbin.sikker.core.Tests.Services
                 return databaseContext;
             }
 
+            await databaseContext.Punch.AddRangeAsync(
+                new Punch
+                {
+                    Id = "Punch 1",
+                    ChecklistWorkflowId = "Workflow 1",
+                    ChecklistTaskId = "Task 1",
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = "User 1",
+                    PunchDescription = "Punch 1",
+                    Severity = PunchSeverity.Minor,
+                    Status = PunchStatus.Pending,
+                    Active = 1
+                },
+                new Punch
+                {
+                    Id = "Punch 2",
+                    ChecklistWorkflowId = "Workflow 2",
+                    ChecklistTaskId = "Task 2",
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = "User 1",
+                    PunchDescription = "Punch 2",
+                    Severity = PunchSeverity.Minor,
+                    Status = PunchStatus.Pending,
+                    Active = 1
+                }
+            );
+
+            if (testType == "Upload")
+            {
+                if (await databaseContext.Upload.CountAsync() <= 0)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await databaseContext.Upload.AddAsync(
+                            new Upload
+                            {
+                                Id = string.Format("Upload {0}", i),
+                                PunchId = i%2==0 ? "Punch 1" : "Punch 2",
+                                BlobRef = string.Format("Upload {0}", i)
+                            }
+                        );
+                    }
+                    await databaseContext.SaveChangesAsync();
+                }
+                return databaseContext;
+            }
+
             await databaseContext.SaveChangesAsync();
 
             return databaseContext;

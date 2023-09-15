@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
-using turbin.sikker.core.Model;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
 using turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos;
