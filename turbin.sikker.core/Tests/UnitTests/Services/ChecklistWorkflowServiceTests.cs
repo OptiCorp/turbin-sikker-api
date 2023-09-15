@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos;
 using turbin.sikker.core.Services;
 using turbin.sikker.core.Utilities;
@@ -9,113 +7,12 @@ namespace turbin.sikker.core.Tests.Services
 {
     public class ChecklistWorkflowServiceTests
     {
-        private async Task<TurbinSikkerDbContext> GetDbContext()
-        {
-            var options = new DbContextOptionsBuilder<TurbinSikkerDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            var databaseContext = new TurbinSikkerDbContext(options);
-            databaseContext.Database.EnsureCreated();
-
-            await databaseContext.UserRole.AddRangeAsync(
-                new UserRole
-                {
-                    Id = "Inspector",
-                    Name = "Inspector"
-                },
-                new UserRole
-                {
-                    Id = "Leader",
-                    Name = "Leader"
-                }
-            );
-
-            await databaseContext.User.AddRangeAsync(
-                new User
-                {
-                    Id = "User 1",
-                    AzureAdUserId = "Some email",
-                    UserRoleId = "Inspector",
-                    FirstName = "name",
-                    LastName = "nameson",
-                    Email = "some email",
-                    Username = "username1",
-                    Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
-                },
-                new User
-                {
-                    Id = "User 2",
-                    AzureAdUserId = "Some email",
-                    UserRoleId = "Leader",
-                    FirstName = "name",
-                    LastName = "nameson",
-                    Email = "some email",
-                    Username = "username2",
-                    Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
-                },
-                new User
-                {
-                    Id = "User 3",
-                    AzureAdUserId = "Some email",
-                    UserRoleId = "Inspector",
-                    FirstName = "name",
-                    LastName = "nameson",
-                    Email = "some email",
-                    Username = "username3",
-                    Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
-                }
-            );
-
-            await databaseContext.Checklist.AddRangeAsync(
-                new Checklist
-                {
-                    Id = "Checklist 1",
-                    Title = "Checklist 1",
-                    Status = ChecklistStatus.Active,
-                    CreatedDate = DateTime.Now,
-                    CreatedBy = "User 2"
-                },
-                new Checklist
-                {
-                    Id = "Checklist 2",
-                    Title = "Checklist 2",
-                    Status = ChecklistStatus.Active,
-                    CreatedDate = DateTime.Now,
-                    CreatedBy = "User 2"
-                }
-            );
-
-            await databaseContext.SaveChangesAsync();
-
-            for (int i = 0; i < 10; i++)
-            {
-                var checklistId = string.Format("Checklist {0}", (i%2)+1);
-                await databaseContext.AddAsync(
-                    new ChecklistWorkflow
-                    {
-                        Id = string.Format("Workflow {0}", i),
-                        ChecklistId = string.Format("Checklist {0}", (i%2)+1),
-                        UserId = "User 1",
-                        CreatedById = "User 2",
-                        Status = CurrentChecklistStatus.Sent,
-                        CreatedDate = DateTime.Now
-                    }
-                );
-            }
-            databaseContext.SaveChangesAsync();
-
-            return databaseContext;
-        }
-
         [Fact]
         public async void WorkflowService_DoesUserHaveChecklist_ReturnsBool()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Workflow");
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
@@ -134,7 +31,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void WorkflowService_GetWorkflowById_ReturnsWorkflow()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Workflow");
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
@@ -152,7 +50,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void WorkflowService_GetAllWorkflows_ReturnsWorkflowList()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Workflow");
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
@@ -168,7 +67,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void WorkflowService_GetAllWorkflowsByUserId_ReturnsWorkflowList()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Workflow");
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
@@ -186,7 +86,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void WorkflowService_UpdateWorkflow_ReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Workflow");
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
@@ -209,7 +110,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void WorkflowService_CreateWorkflowReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Workflow");
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
@@ -238,7 +140,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void WorkflowService_DeleteWorkflow_ReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Workflow");
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 

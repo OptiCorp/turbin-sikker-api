@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.CategoryDtos;
 using turbin.sikker.core.Services;
@@ -9,40 +8,12 @@ namespace turbin.sikker.core.Tests.Services
 {
     public class CategoryServiceTests
     {
-        private async Task<TurbinSikkerDbContext> GetDbContext()
-        {
-
-            var options = new DbContextOptionsBuilder<TurbinSikkerDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            var databaseContext = new TurbinSikkerDbContext(options);
-            databaseContext.Database.EnsureCreated();
-
-
-            if (await databaseContext.Category.CountAsync() <= 0)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    await databaseContext.Category.AddAsync(
-                        new Category
-                        {
-                            Id = i.ToString(),
-                            Name = string.Format("Category {0}", i)
-                        }
-                    );
-                }
-                await databaseContext.SaveChangesAsync();
-            }
-            return databaseContext;
-        }
-
-
         [Fact]
         public async void CategoryService_GetAllCategories_ReturnsCategoryList()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Category");
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
         
@@ -59,8 +30,9 @@ namespace turbin.sikker.core.Tests.Services
         {
 
             //Arrange
-            string id = "1";
-            var dbContext = await GetDbContext();
+            string id = "Category 1";
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Category");
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
 
@@ -77,7 +49,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void CategoryService_SearchCategoryByName_ReturnsCategoryList()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Category");
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
             var name = "Category";
@@ -94,7 +67,8 @@ namespace turbin.sikker.core.Tests.Services
         public async void CategoryService_CreateCategory_ReturnsString()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Category");
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
 
@@ -116,14 +90,15 @@ namespace turbin.sikker.core.Tests.Services
         public async void CategoryService_UpdateCategory_ReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Category");
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
 
             var updatedCategory = new CategoryUpdateDto
             {
                 Name = "Category 10",
-                Id = "0"
+                Id = "Category 0"
             };
 
             //Act
@@ -140,11 +115,12 @@ namespace turbin.sikker.core.Tests.Services
         public async void CategoryService_DeleteCategory_ReturnsVoid()
         {
             //Arrange
-            var dbContext = await GetDbContext();
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("Category");
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
 
-            var id = "0";
+            var id = "Category 0";
 
             //Act
             await categoryService.DeleteCategory(id);

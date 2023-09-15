@@ -114,8 +114,16 @@ namespace turbin.sikker.core.Services
             if (punch != null)
             {
                 //punch.Active = updatedPunch.Active;
-                punch.ChecklistWorkflowId = updatedPunch.ChecklistWorkflowId;
-                punch.PunchDescription = updatedPunch.PunchDescription;
+                if (updatedPunch.ChecklistWorkflowId != null)
+                {
+                    punch.ChecklistWorkflowId = updatedPunch.ChecklistWorkflowId;
+                }
+
+                if (updatedPunch.PunchDescription != null)
+                {
+                    punch.PunchDescription = updatedPunch.PunchDescription;
+                }
+
                 if (updatedPunch.Status != null)
                 {
 
