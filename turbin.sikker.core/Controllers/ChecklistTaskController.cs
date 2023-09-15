@@ -150,10 +150,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Checklist task updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> UpdateChecklistTask(string taskId, string checklistId, ChecklistTaskRequestDto updatedChecklistTask, [FromServices] IValidator<ChecklistTaskRequestDto> validator)
+        public async Task<IActionResult> UpdateChecklistTask(ChecklistTaskUpdateDto updatedChecklistTask, [FromServices] IValidator<ChecklistTaskUpdateDto> validator)
         {
-
-            var checklist = await _checklistService.GetChecklistById(checklistId);
+            var checklist = await _checklistService.GetChecklistById(updatedChecklistTask.ChecklistId);
             var contains = false;
 
 
@@ -164,7 +163,7 @@ namespace turbin.sikker.core.Controllers
 
             foreach (ChecklistTask task in checklist.ChecklistTasks)
             {
-                if (task.Id == taskId)
+                if (task.Id == updatedChecklistTask.Id)
                 {
                     contains = true;
                 }
@@ -192,7 +191,7 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var checklistTask = await _checklistTaskService.GetChecklistTaskById(taskId);
+            var checklistTask = await _checklistTaskService.GetChecklistTaskById(updatedChecklistTask.Id);
 
             if (checklistTask == null)
             {
@@ -208,7 +207,7 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            await _checklistTaskService.UpdateChecklistTaskInChecklist(taskId, checklistId, updatedChecklistTask);
+            await _checklistTaskService.UpdateChecklistTaskInChecklist(updatedChecklistTask);
 
             return Ok("Checklist task updated");
         }
@@ -219,21 +218,21 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Add task to checklist", Description = "Adds a task to a checklist.")]
         [SwaggerResponse(200, "Task added to checklist")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> AddTaskToChecklist(string checklistId, string taskId)
+        public async Task<IActionResult> AddTaskToChecklist(ChecklistTaskAddTaskToChecklistDto addTaskToChecklist)
         {
-            var checklist = await _checklistService.GetChecklistById(checklistId);
+            var checklist = await _checklistService.GetChecklistById(addTaskToChecklist.ChecklistId);
             if (checklist == null) {
                 return NotFound("Checklist not found");
             }
             
-            var task = await _checklistTaskService.GetChecklistTaskById(taskId);
+            var task = await _checklistTaskService.GetChecklistTaskById(addTaskToChecklist.Id);
 
             if (task == null)
             {
                 return NotFound("Checklist task not found");
             }
 
-            await _checklistTaskService.AddTaskToChecklist(checklistId, taskId);
+            await _checklistTaskService.AddTaskToChecklist(addTaskToChecklist);
 
             return Ok("Task added to checklist");
         }

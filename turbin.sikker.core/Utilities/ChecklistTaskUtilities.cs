@@ -19,5 +19,14 @@ public class ChecklistTaskUtilities : IChecklistTaskUtilities
                 Category = checklistTask.Category
             };
         }
+
+         public ChecklistTaskByCategoryResponseDto TaskToByCategoryResponseDto(ChecklistTask checklistTask)
+        {
+            return new ChecklistTaskByCategoryResponseDto
+            {
+                Id = checklistTask.Id,
+                Description = checklistTask.Description,
+            };
+        }
     }
 }

@@ -95,7 +95,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "User role updated", typeof(UserRoleUpdateDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User role not found")]
-        public async Task<IActionResult> UpdateUserRole(string id, UserRoleUpdateDto updatedUserRole, [FromServices] IValidator<UserRoleUpdateDto> validator)
+        public async Task<IActionResult> UpdateUserRole(UserRoleUpdateDto updatedUserRole, [FromServices] IValidator<UserRoleUpdateDto> validator)
         {
 
             ValidationResult validationResult = validator.Validate(updatedUserRole);
@@ -123,14 +123,14 @@ namespace turbin.sikker.core.Controllers
             }
 
 
-            var userRole = await _userRoleService.GetUserRoleById(id);
+            var userRole = await _userRoleService.GetUserRoleById(updatedUserRole.Id);
 
             if (userRole == null)
             {
                 return NotFound("User role not found");
             }
 
-            await _userRoleService.UpdateUserRole(id, updatedUserRole);
+            await _userRoleService.UpdateUserRole(updatedUserRole);
 
             return Ok($"User role updated, changed name to '{updatedUserRole.Name}'.");
         }

@@ -29,7 +29,9 @@ namespace turbin.sikker.core.Services
                 .Include(c => c.Creator)
                 .Include(c => c.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (checklistWorkflow == null) return null;
             
             ChecklistWorkflowResponseDto checklistWorkflowResponse = _checklistWorkflowUtilities.WorkflowToResponseDto(checklistWorkflow);
 
@@ -64,24 +66,23 @@ namespace turbin.sikker.core.Services
             return checklistWorkflows;
         }
 
-        public async Task UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedChecklistWorkflow)
+        public async Task UpdateChecklistWorkflow(ChecklistWorkflowEditDto updatedChecklistWorkflow)
         {
 
-            var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == id);
+            var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == updatedChecklistWorkflow.Id);
 
             if (checklistWorkFlow != null)
             {
-                if (checklistWorkFlow.Status != null)
+                if (updatedChecklistWorkflow.Status != null)
                 {
                     checklistWorkFlow.Status = Enum.Parse<CurrentChecklistStatus>(updatedChecklistWorkflow.Status);
                 }
-                if (checklistWorkFlow.UserId != null)
+                if (updatedChecklistWorkflow.UserId != null)
                 {
                     checklistWorkFlow.UserId = updatedChecklistWorkflow.UserId;
                 }
             }
             checklistWorkFlow.UpdatedDate = DateTime.Now;
-            //_context.Entry(checklistWorkflow).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 

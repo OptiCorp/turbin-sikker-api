@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Extensions;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Utilities;
@@ -17,48 +16,11 @@ namespace turbin.sikker.core.Services
             _punchUtilities = punchUtilities;
         }
 
-        // public bool IsValidStatus(string value)
-        // {
-        //     string lowerCaseValue = value.ToLower();
-        //     return lowerCaseValue == "pending" || lowerCaseValue == "approved" || lowerCaseValue == "rejected";
-        // }
-
-
-        // public string GetPunchStatus(PunchStatus status)
-        // {
-        //     switch (status)
-        //     {
-        //         case PunchStatus.Pending:
-        //             return "Pending";
-        //         case PunchStatus.Approved:
-        //             return "Approved";
-        //         case PunchStatus.Rejected:
-        //             return "Rejected";
-        //         default:
-        //             return "Pending";
-        //     }
-        // }
-
-        // public string GetPunchSeverity(PunchSeverity status)
-        // {
-        //     switch (status)
-        //     {
-        //         case PunchSeverity.Minor:
-        //             return "Minor";
-        //         case PunchSeverity.Major:
-        //             return "Major";
-        //         case PunchSeverity.Critical:
-        //             return "Critical";
-        //         default:
-        //             return "Critical";
-        //     }
-        // }
-
         public async Task<IEnumerable<PunchResponseDto>> GetAllPunches()
         {
             return await _context.Punch
                             .Include(p => p.ChecklistTask)
-                            .Include(p => p.ChecklistWorkflow)
+                            .Include(u => u.Uploads)
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Select(p => _punchUtilities.PunchToResponseDto(p))
@@ -69,7 +31,7 @@ namespace turbin.sikker.core.Services
         {
             var punch = await _context.Punch
                                 .Include(p => p.ChecklistTask)
-                                .Include(p => p.ChecklistWorkflow)
+                                .Include(u => u.Uploads)
                                 .Include(p => p.CreatedByUser)
                                 .ThenInclude(u => u.UserRole)
                                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -88,7 +50,7 @@ namespace turbin.sikker.core.Services
                 var punches = await _context.Punch
                                     .Where(c => c.ChecklistWorkflowId == workflow.Id)
                                     .Include(p => p.ChecklistTask)
-                                    .Include(p => p.ChecklistWorkflow)
+                                    .Include(u => u.Uploads)
                                     .Include(p => p.CreatedByUser)
                                     .ThenInclude(u => u.UserRole)
                                     .Select(c => _punchUtilities.PunchToResponseDto(c))
@@ -103,7 +65,7 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Punch
                             .Include(p => p.ChecklistTask)
-                            .Include(p => p.ChecklistWorkflow)
+                            .Include(u => u.Uploads)
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.CreatedBy == id)
@@ -115,7 +77,7 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Punch
                             .Include(p => p.ChecklistTask)
-                            .Include(p => p.ChecklistWorkflow)
+                            .Include(u => u.Uploads)
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.ChecklistWorkflowId == id)
@@ -133,7 +95,8 @@ namespace turbin.sikker.core.Services
                 ChecklistWorkflowId = punchDto.ChecklistWorkflowId,
                 ChecklistTaskId = punchDto.ChecklistTaskId,
                 CreatedDate = DateTime.Now,
-                Severity = Enum.Parse<PunchSeverity>(punchDto.Severity)
+                Severity = Enum.Parse<PunchSeverity>(punchDto.Severity),
+                Status = PunchStatus.Pending
             };
 
             _context.Punch.Add(punch);
@@ -144,15 +107,23 @@ namespace turbin.sikker.core.Services
             return newPunchId;
         }
 
-        public async Task UpdatePunch(string punchId, PunchUpdateDto updatedPunch)
+        public async Task UpdatePunch(PunchUpdateDto updatedPunch)
         {
-            var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == punchId);
+            var punch = await _context.Punch.FirstOrDefaultAsync(u => u.Id == updatedPunch.Id);
 
             if (punch != null)
             {
                 //punch.Active = updatedPunch.Active;
-                punch.ChecklistWorkflowId = updatedPunch.ChecklistWorkflowId;
-                punch.PunchDescription = updatedPunch.PunchDescription;
+                if (updatedPunch.ChecklistWorkflowId != null)
+                {
+                    punch.ChecklistWorkflowId = updatedPunch.ChecklistWorkflowId;
+                }
+
+                if (updatedPunch.PunchDescription != null)
+                {
+                    punch.PunchDescription = updatedPunch.PunchDescription;
+                }
+
                 if (updatedPunch.Status != null)
                 {
 
@@ -189,8 +160,6 @@ namespace turbin.sikker.core.Services
                         punch.Severity = PunchSeverity.Critical;
                     }
                 }
-
-                //punch.UserId = updatedPunch.UserId;
 
                 punch.UpdatedDate = DateTime.Now;
                 await _context.SaveChangesAsync();

@@ -13,15 +13,6 @@ namespace turbin.sikker.core.Services
             _context = context;
         }
 
-        // public bool IsUserRoleNameTaken(IEnumerable<UserRole> userRoles, string userRoleName)
-        // {
-        //     return userRoles.Any(role => role.Name == userRoleName);
-        // }
-        // public bool IsValidUserRole(IEnumerable<UserRole> userRoles, string userRoleId)
-        // {
-        //     return userRoles.Any(role => role.Id == userRoleId);
-        // }
-
         public async Task<bool> IsUserRoleInUse(UserRole userRole)
         {
             return  await _context.User.AnyAsync(user => user.UserRole == userRole);
@@ -57,13 +48,16 @@ namespace turbin.sikker.core.Services
             return userRole.Id;
         }
 
-        public async Task UpdateUserRole(string userRoleId, UserRoleUpdateDto updatedUserRole)
+        public async Task UpdateUserRole(UserRoleUpdateDto updatedUserRole)
         {
-            var userRole = await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == userRoleId);
+            var userRole = await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == updatedUserRole.Id);
 
             if (userRole != null)
             {
-                if (updatedUserRole.Name != null) userRole.Name = updatedUserRole.Name;
+                if (updatedUserRole.Name != null) 
+                {
+                    userRole.Name = updatedUserRole.Name;
+                }
 
                 await _context.SaveChangesAsync();
             }

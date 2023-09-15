@@ -70,7 +70,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpPost("CreateChecklistWorkflow")]
         [SwaggerOperation(Summary = "Create a new checklist workflow", Description = "Creates a new checklist workflow.")]
-        [SwaggerResponse(201, "Checklist workflow created", typeof(ChecklistWorkflow))]
+        [SwaggerResponse(200, "Checklist workflow(s) created")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> CreateChecklistWorkflow(ChecklistWorkflowCreateDto workflow, [FromServices] IValidator<ChecklistWorkflowCreateDto> validator)
@@ -92,7 +92,7 @@ namespace turbin.sikker.core.Controllers
             }
 
             var creator = await _userService.GetUserById(workflow.CreatedById);
-            var userRole = await _userRoleService.GetUserRoleById(creator.UserRoleId);
+            var userRole = await _userRoleService.GetUserRoleById(creator.UserRole.Id);
             var checklist = await _checklistService.GetChecklistById(workflow.ChecklistId);
 
             if (creator == null) return NotFound("The creator of this workflow does not exist");
@@ -115,22 +115,38 @@ namespace turbin.sikker.core.Controllers
 
             await _workflowService.CreateChecklistWorkflow(workflow);
 
-            return Ok();
+            return Ok("Workflow(s) created");
         }
 
         [HttpPut("UpdateChecklistWorkflow")]
         [SwaggerOperation(Summary = "Update checklist workflow by ID", Description = "Updates an existing checklist workflow by its ID.")]
         [SwaggerResponse(200, "Checklist workflow updated")]
         [SwaggerResponse(404, "Checklist workflow not found")]
-        public async Task<IActionResult> UpdateChecklistWorkflow(string id, ChecklistWorkflowEditDto updatedWorkflow)
-        {
-            var existingWorkflow = await _workflowService.GetChecklistWorkflowById(id);
+        public async Task<IActionResult> UpdateChecklistWorkflow(ChecklistWorkflowEditDto updatedWorkflow, [FromServices] IValidator<ChecklistWorkflowEditDto> validator)
+        {   
+            ValidationResult validationResult = validator.Validate(updatedWorkflow);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
+            var existingWorkflow = await _workflowService.GetChecklistWorkflowById(updatedWorkflow.Id);
             if (existingWorkflow == null)
             {
                 return NotFound("Checklist workflow not found");
             }
 
-            await _workflowService.UpdateChecklistWorkflow(id, updatedWorkflow);
+            await _workflowService.UpdateChecklistWorkflow(updatedWorkflow);
 
             return Ok("Checklist workflow updated");
         }

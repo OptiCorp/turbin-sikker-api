@@ -28,45 +28,42 @@ namespace turbin.sikker.core.Model
         public string? Id { get; set; }
 
         [Required]
-        public string ChecklistWorkflowId { get; set; }
+        public string? ChecklistWorkflowId { get; set; }
+        
+        public ChecklistWorkflow? ChecklistWorkflow { get; }
 
-        public ChecklistWorkflow ChecklistWorkflow { get; }
+        [Required]
+        public string? ChecklistTaskId {get; set; }
 
-        public string ChecklistTaskId {get; set; }
-
-        public ChecklistTask ChecklistTask { get; }
-
-        //[Required]
-        //[StringLength(450)]
-        //public string UserId { get; set; }
+        public ChecklistTask? ChecklistTask { get; }
 
         [Required]
         public DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 
+        [Required]
         [StringLength(450)]
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
         public User? CreatedByUser { get; }
 
         [Required]
         [StringLength(1500)]
-        public string PunchDescription { get; set; }
+        public string? PunchDescription { get; set; }
 
-
-        // Enum? ('Minor', 'Major', 'Critical')
-        //public int Severity { get; set; }
-
-
+        [Required]
         [EnumDataType(typeof(PunchSeverity))]
         public PunchSeverity Severity { get; set; }
 
+        [Required]
         [EnumDataType(typeof(PunchStatus))]
         public PunchStatus Status { get; set; }
 
         // Boolean? 
         public Byte Active { get; set; }
+
+        public ICollection<Upload>? Uploads { get; }
     }
 }
 

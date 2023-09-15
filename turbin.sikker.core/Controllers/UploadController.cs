@@ -4,6 +4,10 @@ using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using turbin.sikker.core.Model.DTO;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 namespace turbin.sikker.core.Controllers
@@ -26,7 +30,7 @@ namespace turbin.sikker.core.Controllers
         // Get specific upload based on given Id
         [HttpGet("GetUpload")]
         [SwaggerOperation(Summary = "Get upload by ID", Description = "Retrieves a upload by their ID.")]
-        [SwaggerResponse(200, "Success", typeof(Upload))]
+        [SwaggerResponse(200, "Success", typeof(UploadResponseDto))]
         [SwaggerResponse(404, "Upload not found")]
         public async Task<IActionResult> GetUploadById(string id)
         {
@@ -64,31 +68,53 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new upload", Description = "Creates a new upload.")]
         [SwaggerResponse(201, "Upload created", typeof(User))]
         [SwaggerResponse(400, "Invalid request")]
-        public async Task<IActionResult> CreateUpload(Upload upload)
+        public async Task<IActionResult> CreateUpload(UploadCreateDto upload, [FromServices] IValidator<UploadCreateDto> validator)
         {
-            if (ModelState.IsValid)
+            ValidationResult validationResult = validator.Validate(upload);
+
+            if (!validationResult.IsValid)
             {
-                var newUploadId = await _uploadService.CreateUpload(upload);
-                return CreatedAtAction(nameof(GetUploadById), new { id = newUploadId }, upload);
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
             }
-            
-            return BadRequest(ModelState);
+
+            var newUploadId = await _uploadService.CreateUpload(upload);
+            return CreatedAtAction(nameof(GetUploadById), new { id = newUploadId }, upload);
+
         }
 
         // Creates a new upload
         [HttpPost("UpdateUpload")]
         [SwaggerOperation(Summary = "Update upload by ID", Description = "Updates an existing upload by their ID.")]
         [SwaggerResponse(200, "Upload updated")]
-        [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Upload not found")]
-        public async Task<IActionResult> UpdateUpload(string id, Upload updatedUpload)
-        {
-            if (id != updatedUpload.Id)
+        public async Task<IActionResult> UpdateUpload(UploadUpdateDto updatedUpload, [FromServices] IValidator<UploadUpdateDto> validator)
+        {   
+            ValidationResult validationResult = validator.Validate(updatedUpload);
+
+            if (!validationResult.IsValid)
             {
-                return BadRequest();
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
             }
 
-            var upload = await _uploadService.GetUploadById(id);
+            var upload = await _uploadService.GetUploadById(updatedUpload.Id);
 
             if (upload == null)
             {

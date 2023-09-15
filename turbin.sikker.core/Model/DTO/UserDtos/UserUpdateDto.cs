@@ -3,7 +3,7 @@
 namespace turbin.sikker.core.Model.DTO
 {
     public class UserUpdateDto
-    {
+    {   
         [StringLength(150)]
         public string? Username { get; set; }
 
@@ -13,6 +13,7 @@ namespace turbin.sikker.core.Model.DTO
         [StringLength(150)]
         public string? LastName { get; set; }
 
+        [EmailAddress]
         [StringLength(300)]
         public string? Email { get; set; }
 
@@ -21,5 +22,7 @@ namespace turbin.sikker.core.Model.DTO
 
         public string? Status { get; set; }
 
+        [Required]
+        public string? Id { get; set; }
     }
 }

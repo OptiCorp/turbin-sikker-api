@@ -1,16 +1,19 @@
 ﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model.DTO.CategoryDtos;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
 	public class CategoryService : ICategoryService
 	{
         public readonly TurbinSikkerDbContext _context;
+        private readonly ICategoryUtilities _categoryUtilities;
 
-        public CategoryService(TurbinSikkerDbContext context)
+        public CategoryService(TurbinSikkerDbContext context, ICategoryUtilities categoryUtilities)
         {
             _context = context;
+            _categoryUtilities = categoryUtilities;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategories()
@@ -42,9 +45,9 @@ namespace turbin.sikker.core.Services
             return categoryId;
         }
 
-        public async Task UpdateCategory(string id, CategoryRequestDto updatedCategory)
+        public async Task UpdateCategory(CategoryUpdateDto updatedCategory)
         {
-            var category = await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
+            var category = await _context.Category.FirstOrDefaultAsync(category => category.Id == updatedCategory.Id);
 
             if (category != null)
             {
@@ -56,7 +59,6 @@ namespace turbin.sikker.core.Services
 
         public async Task DeleteCategory(string id)
         {
-
             var category =  await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
             if (category != null)
             {
@@ -64,11 +66,5 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-
-
-        // public bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName)
-        // {
-        //     return categories.Any(c => c.Name == categoryName);
-        // }
     }
 }

@@ -6,9 +6,9 @@ namespace turbin.sikker.core.Utilities
 {
 public interface IChecklistUtilities
     {
-        bool checklistExists(IEnumerable<ChecklistMultipleResponseDto> checklists, string userId, string title);
+        bool checklistExists(IEnumerable<ChecklistResponseDto> checklists, string userId, string title);
 
-        public ChecklistMultipleResponseDto ChecklistToMultipleDto(Checklist checklist);
+        public ChecklistResponseDto ChecklistToResponseDto(Checklist checklist);
 
         public ChecklistViewNoUserDto ChecklistToNoUserDto(Checklist checklist);
     }

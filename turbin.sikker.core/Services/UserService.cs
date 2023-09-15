@@ -15,33 +15,7 @@ namespace turbin.sikker.core.Services
             _context = context;
             _userUtilities = userUtilities;
         }
-        // public bool IsUsernameTaken(IEnumerable<UserDto> users, string username)
-        // {
-        //     return users.Any(u => u.Username == username);
-        // }
-        // public bool IsEmailTaken(IEnumerable<UserDto> users, string userEmail)
-        // {
-        //     return users.Any(u => u.Email == userEmail);
-        // }
-        // public bool IsValidStatus(string value)
-        // {
-        //     string lowerCaseValue = value.ToLower();
-        //     return lowerCaseValue == "active" || lowerCaseValue == "disabled" || lowerCaseValue == "deleted";
-        // }
-        // private static string GetUserStatus(UserStatus status)
-        // {
-        //     switch (status)
-        //     {
-        //         case UserStatus.Active:
-        //             return "Active";
-        //         case UserStatus.Disabled:
-        //             return "Disabled";
-        //         case UserStatus.Deleted:
-        //             return "Deleted";
-        //         default:
-        //             return "Active";
-        //     }
-        // }
+
         public async Task<string> GetInspectorRoleId()
         {
             var inspectorRole = await _context.UserRole
@@ -64,24 +38,30 @@ namespace turbin.sikker.core.Services
                             .ToListAsync();
         }
 
-        public async Task<User> GetUserById(string id)
+        public async Task<UserDto> GetUserById(string id)
         {
-            return await _context.User
+            var user = await _context.User
                             .Include(u => u.UserRole)
                             .FirstOrDefaultAsync(u => u.Id == id);
+
+            return _userUtilities.UserToDto(user);                
         }
+        
         public async Task<User> GetUserByAzureAdUserId(string azureAdUserId)
         {
             return await _context.User
                             .Include(u => u.UserRole)
                             .FirstOrDefaultAsync(u => u.AzureAdUserId == azureAdUserId);
         }
-        public async Task<User> GetUserByUsername(string username)
+        public async Task<UserDto> GetUserByUsername(string username)
         {
-            return await _context.User
+            var user = await _context.User
                             .Include(u => u.UserRole)
                             .FirstOrDefaultAsync(u => u.Username == username);
+
+            return _userUtilities.UserToDto(user);                
         }
+
         public async Task<string> CreateUser(UserCreateDto userDto)
         {
             var user = new User
@@ -93,15 +73,16 @@ namespace turbin.sikker.core.Services
                 Email = userDto.Email,
                 UserRoleId = userDto.UserRoleId,
                 CreatedDate = DateTime.Now,
+                Status = UserStatus.Active
             };
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
             return user.Id;
         }
-        public async Task UpdateUser(string userId, UserUpdateDto updatedUserDto)
+        public async Task UpdateUser(UserUpdateDto updatedUserDto)
         {
-            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Id == updatedUserDto.Id);
             if (user != null)
             {
                 if (updatedUserDto.Username != null)

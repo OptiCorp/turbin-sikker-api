@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using turbin.sikker.core.Migrations;
 using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Configuration
@@ -84,6 +83,10 @@ namespace turbin.sikker.core.Configuration
                 .WithMany()
                 .HasForeignKey(c => c.ChecklistTaskId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+                modelBuilder.Entity<Punch>()
+                .HasMany(e => e.Uploads)
+                .WithOne(e => e.Punch);
         }
     }
 
@@ -123,9 +126,10 @@ namespace turbin.sikker.core.Configuration
 
             modelBuilder.Entity<Upload>()
                 .HasOne(c => c.Punch)
-                .WithMany()
+                .WithMany(c => c.Uploads)
                 .HasForeignKey(c => c.PunchId)
                 .OnDelete(DeleteBehavior.NoAction);
+            
         }
     }
 

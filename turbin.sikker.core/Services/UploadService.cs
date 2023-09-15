@@ -1,20 +1,25 @@
 ﻿using turbin.sikker.core.Model;
 using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
     public class UploadService : IUploadService
     {
         private readonly TurbinSikkerDbContext _context;
+        private readonly IUploadUtilities _uploadUtilities;
 
-        public UploadService(TurbinSikkerDbContext context)
+        public UploadService(TurbinSikkerDbContext context, IUploadUtilities uploadUtilities)
         {
             _context = context;
+            _uploadUtilities = uploadUtilities;
         }
 
-        public async Task<Upload> GetUploadById(string id)
-        {
-            return await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
+        public async Task<UploadResponseDto> GetUploadById(string id)
+        {   
+            var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
+            return _uploadUtilities.ToResponseDto(upload);
         }
 
         public async Task<IEnumerable<Upload>> GetUploadsByPunchId(string id)
@@ -22,20 +27,19 @@ namespace turbin.sikker.core.Services
             return await _context.Upload.Where(c => c.PunchId == id).ToListAsync();
         }
 
-        // public async Task<IEnumerable<Upload>> GetUploadsByWorkflowId(string id)
-        // {
-        //     return await _context.Upload.Where(c => c.ChecklistWorkflowId == id).ToListAsync();
-        // }
-
-        public async Task<string> CreateUpload(Upload upload)
-        {
+        public async Task<string> CreateUpload(UploadCreateDto uploadDto)
+        {   
+            var upload = new Upload{
+                PunchId = uploadDto.PunchId,
+                BlobRef = uploadDto.BlobRef
+            };
             await _context.Upload.AddAsync(upload);
             await _context.SaveChangesAsync();
 
             return upload.Id;
         }
 
-        public async Task UpdateUpload(Upload updatedUpload)
+        public async Task UpdateUpload(UploadUpdateDto updatedUpload)
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == updatedUpload.Id);
 
