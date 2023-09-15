@@ -122,8 +122,24 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Update checklist workflow by ID", Description = "Updates an existing checklist workflow by its ID.")]
         [SwaggerResponse(200, "Checklist workflow updated")]
         [SwaggerResponse(404, "Checklist workflow not found")]
-        public async Task<IActionResult> UpdateChecklistWorkflow(ChecklistWorkflowEditDto updatedWorkflow)
-        {
+        public async Task<IActionResult> UpdateChecklistWorkflow(ChecklistWorkflowEditDto updatedWorkflow, [FromServices] IValidator<ChecklistWorkflowEditDto> validator)
+        {   
+            ValidationResult validationResult = validator.Validate(updatedWorkflow);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
             var existingWorkflow = await _workflowService.GetChecklistWorkflowById(updatedWorkflow.Id);
             if (existingWorkflow == null)
             {

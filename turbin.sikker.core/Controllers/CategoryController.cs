@@ -105,7 +105,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
-        public async Task<IActionResult> UpdateCategory(string id, CategoryUpdateDto updatedCategory, [FromServices] IValidator<CategoryUpdateDto> validator)
+        public async Task<IActionResult> UpdateCategory(CategoryUpdateDto updatedCategory, [FromServices] IValidator<CategoryUpdateDto> validator)
         {
             ValidationResult validationResult = validator.Validate(updatedCategory);
 
@@ -122,7 +122,7 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
-            var category = await _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryById(updatedCategory.Id);
 
             if (category == null)
             {

@@ -152,7 +152,6 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> UpdateChecklistTask(ChecklistTaskUpdateDto updatedChecklistTask, [FromServices] IValidator<ChecklistTaskUpdateDto> validator)
         {
-
             var checklist = await _checklistService.GetChecklistById(updatedChecklistTask.ChecklistId);
             var contains = false;
 
