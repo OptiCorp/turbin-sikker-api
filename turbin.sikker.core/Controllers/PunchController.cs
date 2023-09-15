@@ -5,6 +5,9 @@ using turbin.sikker.core.Services;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -137,8 +140,24 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]
         [SwaggerResponse(201, "Punch created", typeof(PunchCreateDto))]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> PostPunch(PunchCreateDto punch)
-        {
+        public async Task<IActionResult> PostPunch(PunchCreateDto punch, [FromServices] IValidator<PunchCreateDto> validator)
+        {   
+            ValidationResult validationResult = validator.Validate(punch);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
             var user = await _userService.GetUserById(punch.CreatedBy);
             var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(punch.ChecklistWorkflowId);
 
@@ -164,8 +183,24 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Punch updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> UpdatePunch(PunchUpdateDto updatedPunch)
-        {
+        public async Task<IActionResult> UpdatePunch(PunchUpdateDto updatedPunch, [FromServices] IValidator<PunchUpdateDto> validator)
+        {   
+            ValidationResult validationResult = validator.Validate(updatedPunch);
+
+            if (!validationResult.IsValid)
+            {
+                var modelStateDictionary = new ModelStateDictionary();
+
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    modelStateDictionary.AddModelError(
+                        failure.PropertyName,
+                        failure.ErrorMessage
+                        );
+                }
+                return ValidationProblem(modelStateDictionary);
+            }
+
             var punch = await _punchService.GetPunchById(updatedPunch.Id);
             if (punch == null)
             {
