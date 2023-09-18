@@ -19,6 +19,7 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Checklist_Task
                             .Include(ct => ct.Category)
+                            .OrderBy(ct => ct.Category.Id)
                             .Select(ct => _checklistTaskUtilities.TaskToResponseDto(ct))
                             .ToListAsync();
         }
@@ -51,6 +52,7 @@ namespace turbin.sikker.core.Services
                 .Where(c => c.Id == checklistId)
                 .SelectMany(c => c.ChecklistTasks)
                 .Include(c => c.Category)
+                .OrderBy(ct => ct.Category.Id)
                 .Select(ct => _checklistTaskUtilities.TaskToResponseDto(ct))
                 .ToListAsync();
 

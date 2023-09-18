@@ -22,6 +22,7 @@ namespace turbin.sikker.core.Services
                                             .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
+                                            .OrderBy(c => c.CreatedDate)
                                             .Select(c => _checklistUtilities.ChecklistToResponseDto(c))
                                             .ToListAsync();
         }
@@ -44,6 +45,7 @@ namespace turbin.sikker.core.Services
             return await _context.Checklist.Where(c => c.CreatedBy == id && c.Status == ChecklistStatus.Active)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
+                                            .OrderBy(c => c.CreatedDate)
                                             .Select(c => _checklistUtilities.ChecklistToNoUserDto(c))
                                             .ToListAsync();
         }

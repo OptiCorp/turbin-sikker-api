@@ -68,7 +68,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new upload", Description = "Creates a new upload.")]
         [SwaggerResponse(201, "Upload created", typeof(User))]
         [SwaggerResponse(400, "Invalid request")]
-        public async Task<IActionResult> CreateUpload(UploadCreateDto upload, [FromServices] IValidator<UploadCreateDto> validator)
+        public async Task<IActionResult> CreateUpload([FromForm] UploadCreateDto upload, [FromServices] IValidator<UploadCreateDto> validator)
         {
             ValidationResult validationResult = validator.Validate(upload);
 

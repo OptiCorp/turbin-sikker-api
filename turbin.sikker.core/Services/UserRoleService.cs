@@ -1,21 +1,24 @@
 ﻿using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 using Microsoft.EntityFrameworkCore;
+using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
 {
     public class UserRoleService : IUserRoleService
     {
         public readonly TurbinSikkerDbContext _context;
+        private readonly IUserRoleUtilities _userRoleUtilities;
 
-        public UserRoleService(TurbinSikkerDbContext context)
+        public UserRoleService(TurbinSikkerDbContext context, IUserRoleUtilities userRoleUtilities)
         {
             _context = context;
+            _userRoleUtilities = userRoleUtilities;
         }
 
         public async Task<bool> IsUserRoleInUse(UserRole userRole)
         {
-            return  await _context.User.AnyAsync(user => user.UserRole == userRole);
+            return await _context.User.AnyAsync(user => user.UserRole == userRole);
         }
 
         public async Task<IEnumerable<UserRole>> GetUserRoles()

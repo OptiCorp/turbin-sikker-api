@@ -50,6 +50,7 @@ namespace turbin.sikker.core.Services
                 .ThenInclude(c => c.UserRole)
                 .Include(p => p.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
+                .OrderByDescending(c => c.CreatedDate)
                 .Select(c => _checklistWorkflowUtilities.WorkflowToResponseDto(c))
                 .ToListAsync();
             
@@ -66,6 +67,7 @@ namespace turbin.sikker.core.Services
             .Include(p => p.Checklist)
             .ThenInclude(c => c.ChecklistTasks)
             .Where(cw => cw.UserId == userId)
+            .OrderByDescending(c => c.CreatedDate)
             .Select(c => _checklistWorkflowUtilities.WorkflowToResponseDto(c))
             .ToListAsync();
             
