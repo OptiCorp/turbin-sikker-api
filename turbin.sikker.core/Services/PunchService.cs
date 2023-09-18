@@ -23,6 +23,7 @@ namespace turbin.sikker.core.Services
                             .Include(u => u.Uploads)
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
+                            .OrderByDescending(c => c.CreatedDate)
                             .Select(p => _punchUtilities.PunchToResponseDto(p))
                             .ToListAsync();
         }
@@ -53,6 +54,7 @@ namespace turbin.sikker.core.Services
                                     .Include(u => u.Uploads)
                                     .Include(p => p.CreatedByUser)
                                     .ThenInclude(u => u.UserRole)
+                                    .OrderByDescending(c => c.CreatedDate)
                                     .Select(c => _punchUtilities.PunchToResponseDto(c))
                                     .ToListAsync();
                 allPunches.AddRange(punches);
@@ -69,6 +71,7 @@ namespace turbin.sikker.core.Services
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.CreatedBy == id)
+                            .OrderByDescending(c => c.CreatedDate)
                             .Select(c => _punchUtilities.PunchToResponseDto(c))
                             .ToListAsync();
         }
@@ -81,6 +84,7 @@ namespace turbin.sikker.core.Services
                             .Include(p => p.CreatedByUser)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.ChecklistWorkflowId == id)
+                            .OrderByDescending(c => c.CreatedDate)
                             .Select(c => _punchUtilities.PunchToResponseDto(c))
                             .ToListAsync();
         }
