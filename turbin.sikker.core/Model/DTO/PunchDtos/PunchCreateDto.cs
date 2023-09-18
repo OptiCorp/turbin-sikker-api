@@ -19,8 +19,6 @@ namespace turbin.sikker.core.Model.DTO
         [Required]
         public string? Severity { get; set; }
 
-        [Required]
-        public DateTime? CreatedDate { get; set; }
     }
 }
 
