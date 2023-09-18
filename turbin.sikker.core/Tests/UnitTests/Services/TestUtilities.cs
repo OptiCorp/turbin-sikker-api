@@ -46,6 +46,39 @@ namespace turbin.sikker.core.Tests.Services
                 }
             );
 
+            if (testType == "UserRole")
+            {
+                if (await databaseContext.UserRole.CountAsync() <= 0)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await databaseContext.UserRole.AddAsync(
+                            new UserRole
+                            {
+                                Id = string.Format("UserRole {0}", i),
+                                Name = string.Format("UserRole {0}", i)
+                            }
+                        );
+                    }
+                    await databaseContext.User.AddAsync(
+                        new User
+                        {
+                            Id = "User 1",
+                            AzureAdUserId = "Some email",
+                            UserRoleId = "UserRole 1",
+                            FirstName = "name",
+                            LastName = "nameson",
+                            Email = "some email",
+                            Username = "username1",
+                            Status = UserStatus.Active,
+                            CreatedDate = DateTime.Now
+                        }
+                    );
+                    await databaseContext.SaveChangesAsync();
+                }
+                return databaseContext;
+            }
+
             await databaseContext.UserRole.AddRangeAsync(
                 new UserRole
                 {
