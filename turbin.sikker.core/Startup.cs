@@ -1,26 +1,13 @@
 ﻿using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Logging;
 using turbin.sikker.core.Services;
-using Duende.IdentityServer.Stores;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using FluentValidation.AspNetCore;
-using turbin.sikker.core.Model.DTO;
-using turbin.sikker.core.Model;
-using turbin.sikker.core.Validation;
 using FluentValidation;
-using turbin.sikker.core.Validation.UserValidations;
-using turbin.sikker.core.Validation.UserRoleValidations;
 using turbin.sikker.core.Common;
 using turbin.sikker.core.Utilities;
-using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
-using Serilog.AspNetCore;
 using Serilog;
 
 namespace turbin.sikker.core
@@ -115,45 +102,6 @@ namespace turbin.sikker.core
                 config.AddPolicy("AuthZPolicy", policyBuilder => 
                 policyBuilder.Requirements.Add(new ScopeAuthorizationRequirement() { RequiredScopesConfigurationKey = $"AzureAd.Scopes"}));
             });
-
-            // services.AddAuthentication(options =>
-            // {
-            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            // });
-
-
-
-            // services.AddAuthentication()
-            //     .AddJwtBearer("Bearer", options =>
-            //     {
-            //         options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
-            //         options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
-            //         options.RequireHttpsMetadata = false; //Bad? 
-            //     });
-
-
-            // services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
-            //     .AddJwtBearer(options =>
-            //     {
-            //         options.Audience = "3fe72596-7439-4d86-b45e-c8ae20fd6075";
-            //         options.Authority = "https://login.microsoftonline.com/1a3889b2-f76f-4dd8-831e-b2d5e716c986/";
-            //         options.SaveToken = true;
-            //     });
-            // services.AddAuthorization();
-
-            // // TODO: Implement Authorization
-            // services.AddAuthorization(options =>
-            // {
-            //    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-            //        JwtBearerDefaults.AuthenticationScheme, "AzureAD"
-            //        );
-            //    defaultAuthorizationPolicyBuilder = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-            //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-            // });
-
-            // services.AddAuthentication().AddIdentityServerJwt();
         
             services.AddControllersWithViews();
             services.AddRazorPages();

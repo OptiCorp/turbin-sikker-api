@@ -96,19 +96,21 @@ namespace turbin.sikker.core.Services
                 if (updatedUserDto.UserRoleId != null)
                     user.UserRoleId = updatedUserDto.UserRoleId;
                 if (updatedUserDto.Status != null)
-                {
+                {   
                     string status = updatedUserDto.Status.ToLower();
-                    if (status == "active")
+                    switch (status)
                     {
-                        user.Status = UserStatus.Active;
-                    }
-                    else if (status == "disabled")
-                    {
-                        user.Status = UserStatus.Disabled;
-                    }
-                    else if (status == "deleted")
-                    {
-                        user.Status = UserStatus.Deleted;
+                        case "active":
+                            user.Status = UserStatus.Active;
+                            break;
+                        case "disabled":
+                            user.Status = UserStatus.Disabled;
+                            break;
+                        case "deleted":
+                            user.Status = UserStatus.Deleted;
+                            break;
+                        default:
+                            break;
                     }
                 }
                 user.UpdatedDate = DateTime.Now;

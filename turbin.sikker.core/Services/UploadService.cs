@@ -4,7 +4,6 @@ using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Utilities;
 using Azure.Storage.Blobs;
 using Azure.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace turbin.sikker.core.Services
 {
@@ -19,17 +18,6 @@ namespace turbin.sikker.core.Services
             _uploadUtilities = uploadUtilities;
         }
 
-        public async Task<IEnumerable<UploadResponseDto>> GetAllUploads()
-        {
-            var uploads = await _context.Upload.Select(u => _uploadUtilities.ToResponseDto(u)).ToListAsync();
-            return uploads;
-        }
-
-        // public async Task<UploadResponseDto> GetUploadById(string id)
-        // {   
-        //     var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
-        //     return _uploadUtilities.ToResponseDto(upload);
-        // }
 
         public async Task<UploadResponseDto> GetUploadById(string id)
         {
@@ -39,40 +27,41 @@ namespace turbin.sikker.core.Services
 
             BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
 
-            // var stream = File.OpenWrite("../../image.png");
-
             var stream = new MemoryStream();
 
             var blobClient = containerClient.GetBlobClient(upload.BlobRef);
 
             await blobClient.DownloadToAsync(stream);
 
-            var uploadResponse = new UploadResponseDto
-            {
-                Bytes = stream.ToArray(),
-                PunchId = upload.PunchId,
-                BlobRef = upload.BlobRef
-            };
+            var uploadResponse = _uploadUtilities.ToResponseDto(upload, stream.ToArray());
 
             return uploadResponse;
         }
 
         public async Task<IEnumerable<UploadResponseDto>> GetUploadsByPunchId(string id)
         {
-            return await _context.Upload.Where(c => c.PunchId == id).Select(c => _uploadUtilities.ToResponseDto(c)).ToListAsync();
+            string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/container-turbinsikker-test";
+            BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
+            var uploadList = new List<UploadResponseDto>();
+
+            var uploads = _context.Upload.Where(u => u.PunchId == id);
+
+            foreach (var upload in uploads)
+            {
+                var stream = new MemoryStream();
+
+                var blobClient = containerClient.GetBlobClient(upload.BlobRef);
+
+                await blobClient.DownloadToAsync(stream);
+
+                var uploadResponse = _uploadUtilities.ToResponseDto(upload, stream.ToArray());
+
+                uploadList.Add(uploadResponse);
+            }
+
+            return uploadList;
         }
 
-        // public async Task<string> CreateUpload(UploadCreateDto uploadDto)
-        // {   
-        //     var upload = new Upload{
-        //         PunchId = uploadDto.PunchId,
-        //         BlobRef = uploadDto.BlobRef
-        //     };
-        //     await _context.Upload.AddAsync(upload);
-        //     await _context.SaveChangesAsync();
-
-        //     return upload.Id;
-        // }
 
         public async Task<string> CreateUpload(UploadCreateDto upload)
         {
@@ -80,7 +69,8 @@ namespace turbin.sikker.core.Services
             var newUpload = new Upload
             {
                 PunchId = upload.PunchId,
-                BlobRef = upload.BlobRef
+                BlobRef = upload.BlobRef,
+                ContentType = upload.File.ContentType
             };
 
 
@@ -117,10 +107,13 @@ namespace turbin.sikker.core.Services
 
             if (upload != null)
             {
-                upload.PunchId = updatedUpload.PunchId;
-                upload.BlobRef = updatedUpload.BlobRef;
+                if (updatedUpload.PunchId != null)
+                {
+                    upload.PunchId = updatedUpload.PunchId;
 
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
+            
             }
         }
 
@@ -130,6 +123,13 @@ namespace turbin.sikker.core.Services
 
             if (upload != null)
             {
+                string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/container-turbinsikker-test";
+                BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
+
+                var blobClient = containerClient.GetBlobClient(upload.BlobRef);
+
+                await blobClient.DeleteAsync();
+
                 _context.Upload.Remove(upload);
                 await _context.SaveChangesAsync();
             }

@@ -15,6 +15,8 @@ namespace turbin.sikker.core.Model
 
 		[Required]
 		public string? BlobRef { get; set; }
+
+		public string ContentType { get; set; }
 	}
 }
 
