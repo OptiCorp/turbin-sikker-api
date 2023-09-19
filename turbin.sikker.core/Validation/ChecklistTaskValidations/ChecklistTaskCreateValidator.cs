@@ -7,10 +7,13 @@ namespace turbin.sikker.core.Validation.ChecklistTaskValidations
     {
         public ChecklistTaskCreateValidation()
         {
-            RuleFor(task => task.Description).NotNull().NotEmpty().WithMessage("Description is required.")
-                .MinimumLength(5).WithMessage("Description must be at least 5 characters.");
+            RuleFor(task => task.Description).NotEmpty().WithMessage("Description is required.")
+                .NotNull().WithMessage("Description cannot be null.")
+                .MinimumLength(5).WithMessage("Description must be at least 5 characters.")
+                .MaximumLength(500).WithMessage("Category name cannot exceed 500 characters.");
             
-             RuleFor(task => task.CategoryId).NotNull().NotEmpty().WithMessage("Category ID is required.");
+             RuleFor(task => task.CategoryId).NotEmpty().WithMessage("Category ID is required.")
+                .NotNull().WithMessage("Category ID cannot be null.");
         }
     }
 }

@@ -13,7 +13,8 @@ namespace turbin.sikker.core.Validation.ChecklistValidations
                 .MaximumLength(20).WithMessage("Checklist title cannot exceed 20 characters.")
                 .Matches("^[a-zæøåA-ZÆØÅ0-9_.\\- ]+$").WithMessage("Checklist title can only contain letters, numbers, underscores, periods or hyphens.");
 
-            RuleFor(checklist => checklist.CreatedBy).NotEmpty().NotNull().WithMessage("A checklist creator is required");
+            RuleFor(checklist => checklist.CreatedBy).NotEmpty().WithMessage("A checklist creator is required")
+                .NotNull().WithMessage("A checklist creator is required");
         }
     }
 }
