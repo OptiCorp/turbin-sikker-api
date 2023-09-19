@@ -7,8 +7,6 @@ namespace turbin.sikker.core.Model.DTO
         [Required]
         public string? Id { get; set; }
         public string? PunchId { get; set; }
-        [Required]
-        public string? BlobRef { get; set; }
     }
 }
 

@@ -140,5 +140,24 @@ namespace turbin.sikker.core.Tests.Services
             //Assert
             Assert.Equal(updatedUserRole.Name, "UserRole 10");
         }
+
+        [Fact]
+        public async void UserRoleService_DeleteUserRole_ReturnsVoid()
+        {
+            //Arrange
+            var testUtilities = new TestUtilities();
+            var dbContext = await testUtilities.GetDbContext("UserRole");
+            var userRoleUtilities = new UserRoleUtilities();
+            var userRoleService = new UserRoleService(dbContext, userRoleUtilities);
+
+            var id = "UserRole 1";
+
+            //Act
+            await userRoleService.DeleteUserRole(id);
+            var userRoles = await userRoleService.GetUserRoles();
+
+            //Assert
+            Assert.Equal(userRoles.Count(), 9);
+        }
     }
 }
