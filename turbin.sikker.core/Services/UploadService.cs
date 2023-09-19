@@ -4,7 +4,6 @@ using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Utilities;
 using Azure.Storage.Blobs;
 using Azure.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace turbin.sikker.core.Services
 {
@@ -25,11 +24,6 @@ namespace turbin.sikker.core.Services
             return uploads;
         }
 
-        // public async Task<UploadResponseDto> GetUploadById(string id)
-        // {   
-        //     var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
-        //     return _uploadUtilities.ToResponseDto(upload);
-        // }
 
         public async Task<UploadResponseDto> GetUploadById(string id)
         {
@@ -62,17 +56,6 @@ namespace turbin.sikker.core.Services
             return await _context.Upload.Where(c => c.PunchId == id).Select(c => _uploadUtilities.ToResponseDto(c)).ToListAsync();
         }
 
-        // public async Task<string> CreateUpload(UploadCreateDto uploadDto)
-        // {   
-        //     var upload = new Upload{
-        //         PunchId = uploadDto.PunchId,
-        //         BlobRef = uploadDto.BlobRef
-        //     };
-        //     await _context.Upload.AddAsync(upload);
-        //     await _context.SaveChangesAsync();
-
-        //     return upload.Id;
-        // }
 
         public async Task<string> CreateUpload(UploadCreateDto upload)
         {

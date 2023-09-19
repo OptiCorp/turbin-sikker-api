@@ -132,18 +132,19 @@ namespace turbin.sikker.core.Services
                 {
 
                     string status = updatedPunch.Status.ToLower();
-
-                    if (status == "pending")
+                    switch (status)
                     {
-                        punch.Status = PunchStatus.Pending;
-                    }
-                    if (status == "approved")
-                    {
-                        punch.Status = PunchStatus.Approved;
-                    }
-                    if (status == "rejected")
-                    {
-                        punch.Status = PunchStatus.Rejected;
+                        case "pending":
+                            punch.Status = PunchStatus.Pending;
+                            break;
+                        case "approved":
+                            punch.Status = PunchStatus.Approved;
+                            break;
+                        case "rejected":
+                            punch.Status = PunchStatus.Rejected;
+                            break;
+                        default:
+                            break;
                     }
                 }
 
@@ -151,17 +152,19 @@ namespace turbin.sikker.core.Services
                 {
                     string severity = updatedPunch.Severity.ToLower();
 
-                    if (severity == "minor")
+                     switch (severity)
                     {
-                        punch.Severity = PunchSeverity.Minor;
-                    }
-                    if (severity == "major")
-                    {
-                        punch.Severity = PunchSeverity.Major;
-                    }
-                    if (severity == "critical")
-                    {
-                        punch.Severity = PunchSeverity.Critical;
+                        case "minor":
+                            punch.Severity = PunchSeverity.Minor;
+                            break;
+                        case "major":
+                            punch.Severity = PunchSeverity.Major;
+                            break;
+                        case "critical":
+                            punch.Severity = PunchSeverity.Critical;
+                            break;
+                        default:
+                            break;
                     }
                 }
 
