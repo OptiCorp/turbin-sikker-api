@@ -6,6 +6,6 @@ namespace turbin.sikker.core.Utilities
 {
 public interface IUploadUtilities
     {
-        public UploadResponseDto ToResponseDto(Upload upload);
+        public UploadResponseDto ToResponseDto(Upload upload, byte[] bytes);
     }
 }
