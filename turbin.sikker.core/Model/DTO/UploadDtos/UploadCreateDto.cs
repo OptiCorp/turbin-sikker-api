@@ -9,10 +9,9 @@ namespace turbin.sikker.core.Model.DTO
 
         [Required]
         public string? BlobRef { get; set; }
-
+        [Required]
         public IFormFile File { get; set; }
 
-		public string ContentType { get; set; }
     }
 }
 
