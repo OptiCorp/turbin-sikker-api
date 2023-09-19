@@ -8,8 +8,6 @@ namespace turbin.sikker.core.Model.DTO
         public string? PunchId { get; set; }
 
         [Required]
-        public string? BlobRef { get; set; }
-        [Required]
         public IFormFile File { get; set; }
 
     }

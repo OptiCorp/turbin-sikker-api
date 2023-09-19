@@ -69,7 +69,7 @@ namespace turbin.sikker.core.Services
             var newUpload = new Upload
             {
                 PunchId = upload.PunchId,
-                BlobRef = upload.BlobRef,
+                BlobRef = Guid.NewGuid().ToString(),
                 ContentType = upload.File.ContentType
             };
 
@@ -86,7 +86,7 @@ namespace turbin.sikker.core.Services
                     {
                         await upload.File.CopyToAsync(stream);
                         stream.Position = 0;
-                        await containerClient.UploadBlobAsync(upload.BlobRef, stream);
+                        await containerClient.UploadBlobAsync(newUpload.BlobRef, stream);
                     }
                 }
                 catch (Exception e)
