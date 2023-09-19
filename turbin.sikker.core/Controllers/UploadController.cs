@@ -70,7 +70,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         public async Task<IActionResult> CreateUpload([FromForm] UploadCreateDto upload, [FromServices] IValidator<UploadCreateDto> validator)
         {
-            var punch = _punchService.GetPunchById(upload.PunchId);
+            var punch = await _punchService.GetPunchById(upload.PunchId);
 
             if (punch == null) return NotFound("Punch does not exist");
 
