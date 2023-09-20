@@ -43,7 +43,7 @@ namespace turbin.sikker.core.Controllers
         }
 
         // Get specific form task based on given Id
-        [HttpGet("GetChecklistTask")]
+        [HttpGet("GetTask")]
         [SwaggerOperation(Summary = "Get checklist task by ID", Description = "Retrieves a checklist task by their ID.")]
         [SwaggerResponse(200, "Success", typeof(ChecklistTaskResponseDto))]
         [SwaggerResponse(404, "Checklist task not found")]
@@ -108,7 +108,7 @@ namespace turbin.sikker.core.Controllers
         }
 
         // Creates a new form task
-        [HttpPost("AddChecklistTask")]
+        [HttpPost("AddTask")]
         [SwaggerOperation(Summary = "Create new checklist task", Description = "Creates a new check list task.")]
         [SwaggerResponse(201, "Checklist task created", typeof(ChecklistTaskResponseDto))]
         [SwaggerResponse(400, "Invalid request")]
@@ -145,7 +145,7 @@ namespace turbin.sikker.core.Controllers
         }
 
         // Edit a form task
-        [HttpPost("UpdateChecklistTask")]
+        [HttpPost("UpdateTask")]
         [SwaggerOperation(Summary = "Update checklist task by task ID and checklist ID", Description = "Updates an existing checklist task by their ID.")]
         [SwaggerResponse(200, "Checklist task updated")]
         [SwaggerResponse(400, "Invalid request")]
@@ -238,7 +238,7 @@ namespace turbin.sikker.core.Controllers
         }
 
         // Deletes form task based on given Id
-        [HttpDelete("DeleteChecklistTask")]
+        [HttpDelete("DeleteTask")]
         [SwaggerOperation(Summary = "Delete checklist task by ID", Description = "Deletes a checklist task by their ID.")]
         [SwaggerResponse(200, "Checklist task deleted")]
         [SwaggerResponse(404, "Checklist task not found")]

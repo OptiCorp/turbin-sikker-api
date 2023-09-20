@@ -24,6 +24,11 @@ namespace turbin.sikker.core
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddMvc(options => 
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
+
             IdentityModelEventSource.ShowPII = true;
             ConfigureAuthenticationAndAuthorization(services);
 
