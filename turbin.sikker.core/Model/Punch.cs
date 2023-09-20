@@ -28,9 +28,9 @@ namespace turbin.sikker.core.Model
         public string? Id { get; set; }
 
         [Required]
-        public string? ChecklistWorkflowId { get; set; }
+        public string? WorkflowId { get; set; }
         
-        public ChecklistWorkflow? ChecklistWorkflow { get; }
+        public Workflow? Workflow { get; }
 
         [Required]
         public string? ChecklistTaskId {get; set; }

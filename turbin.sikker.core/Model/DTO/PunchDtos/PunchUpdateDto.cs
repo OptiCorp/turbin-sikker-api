@@ -8,7 +8,7 @@ namespace turbin.sikker.core.Model.DTO
         public string? Id { get; set; }
         public string? Description { get; set; }
 
-        public string? ChecklistWorkflowId { get; set; }
+        public string? WorkflowId { get; set; }
 
         public string? Severity { get; set; }
 

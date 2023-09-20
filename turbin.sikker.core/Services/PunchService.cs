@@ -44,10 +44,10 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<PunchResponseDto>> GetPunchesByLeaderIdAsync(string id)
         {   
             var allPunches = new List<PunchResponseDto>();
-            var workflows = await _context.ChecklistWorkflow.Where(c => c.CreatorId == id).ToListAsync();
-            foreach (ChecklistWorkflow workflow in workflows) {
+            var workflows = await _context.Workflow.Where(c => c.CreatorId == id).ToListAsync();
+            foreach (Workflow workflow in workflows) {
                 var punches = await _context.Punch
-                                    .Where(c => c.ChecklistWorkflowId == workflow.Id)
+                                    .Where(c => c.WorkflowId == workflow.Id)
                                     .Include(p => p.ChecklistTask)
                                     .Include(u => u.Uploads)
                                     .Include(p => p.Creator)
@@ -81,7 +81,7 @@ namespace turbin.sikker.core.Services
                             .Include(u => u.Uploads)
                             .Include(p => p.Creator)
                             .ThenInclude(u => u.UserRole)
-                            .Where(c => c.ChecklistWorkflowId == id)
+                            .Where(c => c.WorkflowId == id)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(c => _punchUtilities.PunchToResponseDto(c))
                             .ToListAsync();
@@ -94,7 +94,7 @@ namespace turbin.sikker.core.Services
             {
                 Description = punchDto.Description,
                 CreatorId = punchDto.CreatorId,
-                ChecklistWorkflowId = punchDto.ChecklistWorkflowId,
+                WorkflowId = punchDto.WorkflowId,
                 ChecklistTaskId = punchDto.ChecklistTaskId,
                 CreatedDate = DateTime.Now,
                 Severity = Enum.Parse<PunchSeverity>(punchDto.Severity),
@@ -114,9 +114,9 @@ namespace turbin.sikker.core.Services
             if (punch != null)
             {
                 //punch.Active = updatedPunch.Active;
-                if (updatedPunch.ChecklistWorkflowId != null)
+                if (updatedPunch.WorkflowId != null)
                 {
-                    punch.ChecklistWorkflowId = updatedPunch.ChecklistWorkflowId;
+                    punch.WorkflowId = updatedPunch.WorkflowId;
                 }
 
                 if (updatedPunch.Description != null)

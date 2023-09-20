@@ -3,7 +3,7 @@ using turbin.sikker.core.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
-using turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos;
+using turbin.sikker.core.Model.DTO.WorkflowDtos;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -14,16 +14,16 @@ namespace turbin.sikker.core.Controllers
     [EnableCors("AllowAllHeaders")]
     [ApiController]
     [Route("api")]
-    public class ChecklistWorkflowController : ControllerBase
+    public class WorkflowController : ControllerBase
     {
-        private readonly IChecklistWorkflowService _workflowService;
+        private readonly IWorkflowService _workflowService;
         private readonly IUserService _userService;
         private readonly IUserRoleService _userRoleService;
         private readonly IChecklistService _checklistService;
 
         private readonly TurbinSikkerDbContext _context;
 
-        public ChecklistWorkflowController(IChecklistWorkflowService workflowService, IUserService userService, IUserRoleService userRoleService, IChecklistService checklistService, TurbinSikkerDbContext context)
+        public WorkflowController(IWorkflowService workflowService, IUserService userService, IUserRoleService userRoleService, IChecklistService checklistService, TurbinSikkerDbContext context)
         {
             _workflowService = workflowService;
             _userService = userService;
@@ -32,47 +32,47 @@ namespace turbin.sikker.core.Controllers
             _context = context;
         }
 
-        [HttpGet("GetAllChecklistWorkflows")]
-        [SwaggerOperation(Summary = "Get all checklist workflows", Description = "Retrieves a list of all checklist workflows.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflowResponseDto>))]
-        public async Task<IActionResult> GetAllChecklistWorkflowsAsync()
+        [HttpGet("GetAllWorkflows")]
+        [SwaggerOperation(Summary = "Get all workflows", Description = "Retrieves a list of all workflows.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<WorkflowResponseDto>))]
+        public async Task<IActionResult> GetAllWorkflowsAsync()
         {
-            return Ok(await _workflowService.GetAllChecklistWorkflowsAsync());
+            return Ok(await _workflowService.GetAllWorkflowsAsync());
         }
 
-        [HttpGet("GetChecklistWorkflow")]
-        [SwaggerOperation(Summary = "Get checklist workflow by ID", Description = "Retrieves a checklist workflow by its ID.")]
-        [SwaggerResponse(200, "Success", typeof(ChecklistWorkflowResponseDto))]
-        [SwaggerResponse(404, "Checklist workflow not found")]
-        public async Task<IActionResult> GetChecklistWorkflowByIdAsync(string id)
+        [HttpGet("GetWorkflow")]
+        [SwaggerOperation(Summary = "Get workflow by ID", Description = "Retrieves a workflow by its ID.")]
+        [SwaggerResponse(200, "Success", typeof(WorkflowResponseDto))]
+        [SwaggerResponse(404, "Workflow not found")]
+        public async Task<IActionResult> GetWorkflowByIdAsync(string id)
         {
-            var workflow = await _workflowService.GetChecklistWorkflowByIdAsync(id);
+            var workflow = await _workflowService.GetWorkflowByIdAsync(id);
             if (workflow == null)
             {
-                return NotFound("Checklist workflow not found");
+                return NotFound("Workflow not found");
             }
             return Ok(workflow);
         }
 
-        [HttpGet("GetAllChecklistWorkflowsByUserId")]
-        [SwaggerOperation(Summary = "Get all checklist workflows by user ID", Description = "Retrieves a list of all checklist workflows created by a user.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistWorkflowResponseDto>))]
+        [HttpGet("GetAllWorkflowsByUserId")]
+        [SwaggerOperation(Summary = "Get all workflows by user ID", Description = "Retrieves a list of all workflows created by a user.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<WorkflowResponseDto>))]
         [SwaggerResponse(404, "User not found")]
-        public async Task<IActionResult> GetAllChecklistWorkflowsByUserIdAsync(string userId)
+        public async Task<IActionResult> GetAllWorkflowsByUserIdAsync(string userId)
         {   
             if (userId == null)
             {
                 return NotFound("User not found");
             }
-            return Ok(await _workflowService.GetAllChecklistWorkflowsByUserIdAsync(userId));
+            return Ok(await _workflowService.GetAllWorkflowsByUserIdAsync(userId));
         }
 
-        [HttpPost("CreateChecklistWorkflow")]
-        [SwaggerOperation(Summary = "Create a new checklist workflow", Description = "Creates a new checklist workflow.")]
-        [SwaggerResponse(200, "Checklist workflow(s) created")]
+        [HttpPost("CreateWorkflow")]
+        [SwaggerOperation(Summary = "Create a new workflow", Description = "Creates a new workflow.")]
+        [SwaggerResponse(200, "Workflow(s) created")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public async Task<IActionResult> CreateChecklistWorkflowAsync(ChecklistWorkflowCreateDto workflow, [FromServices] IValidator<ChecklistWorkflowCreateDto> validator)
+        public async Task<IActionResult> CreateWorkflowAsync(WorkflowCreateDto workflow, [FromServices] IValidator<WorkflowCreateDto> validator)
         {
             ValidationResult validationResult = validator.Validate(workflow);
 
@@ -112,16 +112,16 @@ namespace turbin.sikker.core.Controllers
                 if (userHasChecklist) return Conflict($"User already has that checklist");
             }
 
-            await _workflowService.CreateChecklistWorkflowAsync(workflow);
+            await _workflowService.CreateWorkflowAsync(workflow);
 
             return Ok("Workflow(s) created");
         }
 
-        [HttpPut("UpdateChecklistWorkflow")]
-        [SwaggerOperation(Summary = "Update checklist workflow by ID", Description = "Updates an existing checklist workflow by its ID.")]
-        [SwaggerResponse(200, "Checklist workflow updated")]
-        [SwaggerResponse(404, "Checklist workflow not found")]
-        public async Task<IActionResult> UpdateChecklistWorkflowAsync(ChecklistWorkflowUpdateDto updatedWorkflow, [FromServices] IValidator<ChecklistWorkflowUpdateDto> validator)
+        [HttpPut("UpdateWorkflow")]
+        [SwaggerOperation(Summary = "Update workflow by ID", Description = "Updates an existing workflow by its ID.")]
+        [SwaggerResponse(200, "Workflow updated")]
+        [SwaggerResponse(404, "Workflow not found")]
+        public async Task<IActionResult> UpdateWorkflowAsync(WorkflowUpdateDto updatedWorkflow, [FromServices] IValidator<WorkflowUpdateDto> validator)
         {   
             ValidationResult validationResult = validator.Validate(updatedWorkflow);
 
@@ -139,32 +139,32 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var existingWorkflow = await _workflowService.GetChecklistWorkflowByIdAsync(updatedWorkflow.Id);
+            var existingWorkflow = await _workflowService.GetWorkflowByIdAsync(updatedWorkflow.Id);
             if (existingWorkflow == null)
             {
-                return NotFound("Checklist workflow not found");
+                return NotFound("Workflow not found");
             }
 
-            await _workflowService.UpdateChecklistWorkflowAsync(updatedWorkflow);
+            await _workflowService.UpdateWorkflowAsync(updatedWorkflow);
 
-            return Ok("Checklist workflow updated");
+            return Ok("Workflow updated");
         }
 
-        [HttpDelete("DeleteChecklistWorkflow")]
-        [SwaggerOperation(Summary = "Delete checklist workflow by ID", Description = "Deletes a checklist workflow by its ID.")]
-        [SwaggerResponse(200, "Checklist workflow deleted")]
-        [SwaggerResponse(404, "Checklist workflow not found")]
-        public async Task<IActionResult> DeleteChecklistWorkflowAsync(string id)
+        [HttpDelete("DeleteWorkflow")]
+        [SwaggerOperation(Summary = "Delete workflow by ID", Description = "Deletes a workflow by its ID.")]
+        [SwaggerResponse(200, "Workflow deleted")]
+        [SwaggerResponse(404, "Workflow not found")]
+        public async Task<IActionResult> DeleteWorkflowAsync(string id)
         {
-            var existingWorkflow = await _workflowService.GetChecklistWorkflowByIdAsync(id);
+            var existingWorkflow = await _workflowService.GetWorkflowByIdAsync(id);
             if (existingWorkflow == null)
             {
-                return NotFound("Checklist workflow not found");
+                return NotFound("Workflow not found");
             }
 
-            await _workflowService.DeleteChecklistWorkflowAsync(id);
+            await _workflowService.DeleteWorkflowAsync(id);
 
-            return Ok("Checklist workflow deleted");
+            return Ok("Workflow deleted");
         }
     }
 }

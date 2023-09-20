@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
-    public enum CurrentChecklistStatus
+    public enum WorkflowStatus
     {
         [Display(Name = "Sent")]
         Sent,
@@ -12,7 +12,7 @@ namespace turbin.sikker.core.Model
         [Display(Name = "Done")]
         Done
     }
-    public class ChecklistWorkflow
+    public class Workflow
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
@@ -32,8 +32,8 @@ namespace turbin.sikker.core.Model
 
         public User? Creator { get; }
 
-        [EnumDataType(typeof(CurrentChecklistStatus))]
-        public CurrentChecklistStatus? Status { get; set; }
+        [EnumDataType(typeof(WorkflowStatus))]
+        public WorkflowStatus? Status { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 

@@ -26,7 +26,7 @@ namespace turbin.sikker.core
 
         public DbSet<Punch> Punch { get; set; }
 
-        public DbSet<ChecklistWorkflow> ChecklistWorkflow { get; set; }
+        public DbSet<Workflow> Workflow { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

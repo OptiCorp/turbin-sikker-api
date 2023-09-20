@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos
+namespace turbin.sikker.core.Model.DTO.WorkflowDtos
 {
-    public class ChecklistWorkflowCreateDto
+    public class WorkflowCreateDto
     {   
         [Required]
         public string? ChecklistId { get; set; }

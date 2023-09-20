@@ -51,7 +51,7 @@ namespace turbin.sikker.core
             services.AddScoped<IChecklistTaskService, ChecklistTaskService>();
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IPunchService, PunchService>();
-            services.AddScoped<IChecklistWorkflowService, ChecklistWorkflowService>();
+            services.AddScoped<IWorkflowService, WorkflowService>();
 
             services.AddScoped<IUserUtilities, UserUtilities>();
             services.AddScoped<IUserRoleUtilities, UserRoleUtilities>();
@@ -59,7 +59,7 @@ namespace turbin.sikker.core
             services.AddScoped<ICategoryUtilities, CategoryUtilities>();
             services.AddScoped<IChecklistTaskUtilities, ChecklistTaskUtilities>();
             services.AddScoped<IPunchUtilities, PunchUtilities>();
-            services.AddScoped<IChecklistWorkflowUtilities, ChecklistWorkflowUtilities>();
+            services.AddScoped<IWorkflowUtilities, WorkflowUtilities>();
             services.AddScoped<IUploadUtilities, UploadUtilities>();
 
             services.AddScoped<ValidationHelper>();

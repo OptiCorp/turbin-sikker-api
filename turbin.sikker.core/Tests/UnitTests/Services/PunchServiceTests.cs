@@ -116,7 +116,7 @@ namespace turbin.sikker.core.Tests.Services
             {
                 CreatorId = "User 1",
                 Description = "Punch 10",
-                ChecklistWorkflowId = "Workflow 1",
+                WorkflowId = "Workflow 1",
                 ChecklistTaskId = "Task 1",
                 Severity = "Minor"
             };

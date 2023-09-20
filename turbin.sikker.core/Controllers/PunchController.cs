@@ -21,15 +21,15 @@ namespace turbin.sikker.core.Controllers
         private readonly IUserService _userService;
         private readonly IChecklistService _checklistService;
         private readonly IPunchUtilities _punchUtilities;
-        private readonly IChecklistWorkflowService _checklistWorkflowService;
+        private readonly IWorkflowService _workflowService;
 
-        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities, IChecklistWorkflowService checklistWorkflowService)
+        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities, IWorkflowService workflowService)
         {
             _punchService = punchService;
             _userService = userService;
             _checklistService = checklistService;
             _punchUtilities = punchUtilities;
-            _checklistWorkflowService = checklistWorkflowService;
+            _workflowService = workflowService;
         }
 
         [HttpGet("GetAllPunches")]
@@ -70,10 +70,10 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> GetPunchesByWorkflowIdAsync(string workflowId)
         {   
-            var workflow = await _checklistWorkflowService.GetChecklistWorkflowByIdAsync(workflowId);
+            var workflow = await _workflowService.GetWorkflowByIdAsync(workflowId);
             if (workflow == null)
             {
-                return NotFound("Checklist workflow not found");
+                return NotFound("Workflow not found");
             }
 
             var punches = await _punchService.GetPunchesByWorkflowIdAsync(workflowId);
@@ -96,7 +96,7 @@ namespace turbin.sikker.core.Controllers
             if (user == null) {
                 return NotFound("User not found");
             }
-            
+         
             if (user.UserRole.Name != "Inspector") {
                 return BadRequest("User is not an inspector");
             }
@@ -121,7 +121,7 @@ namespace turbin.sikker.core.Controllers
             if (user == null) {
                 return NotFound("User not found");
             }
-            
+         
             if (user.UserRole.Name != "Leader") {
                 return BadRequest("User is not a leader");
             }
@@ -159,7 +159,7 @@ namespace turbin.sikker.core.Controllers
             }
 
             var user = await _userService.GetUserByIdAsync(punch.CreatorId);
-            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowByIdAsync(punch.ChecklistWorkflowId);
+            var workflow = await _workflowService.GetWorkflowByIdAsync(punch.WorkflowId);
 
 
             if (user == null)
@@ -167,9 +167,9 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("User not found.");
             }
 
-            if (checklistWorkflow == null)
+            if (workflow == null)
             {
-                return NotFound("Could not find specified checklist workflow.");
+                return NotFound("Could not find specified workflow.");
             }
 
             var newPunchId = await _punchService.CreatePunchAsync(punch);
@@ -199,7 +199,7 @@ namespace turbin.sikker.core.Controllers
                         );
                 }
                 return ValidationProblem(modelStateDictionary);
-            }
+           }
 
             var punch = await _punchService.GetPunchByIdAsync(updatedPunch.Id);
             if (punch == null)
@@ -207,10 +207,10 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Punch not found.");
             }
 
-            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowByIdAsync(updatedPunch.ChecklistWorkflowId);
-            if (checklistWorkflow == null)
+            var workflow = await _workflowService.GetWorkflowByIdAsync(updatedPunch.WorkflowId);
+            if (workflow == null)
             {
-                return NotFound("Could not find specified checklist workflow.");
+                return NotFound("Could not find specified workflow.");
             }
 
             if (updatedPunch.Status != null)
