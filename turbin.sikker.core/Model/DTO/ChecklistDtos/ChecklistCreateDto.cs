@@ -10,9 +10,9 @@ namespace turbin.sikker.core.Model.DTO.ChecklistDtos
             public string? Title { get; set; }
 
             [Required]
-            public string? CreatedBy { get; set; }
+            public string? CreatorId { get; set; }
 
-            public ICollection<ChecklistTaskRequestDto>? ChecklistTasks { get; set; }
+            public ICollection<ChecklistTaskCreateDto>? ChecklistTasks { get; set; }
         
     }
 }

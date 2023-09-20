@@ -5,11 +5,11 @@ namespace turbin.sikker.core.Services
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<Category>> GetAllCategories();
-        Task<Category> GetCategoryById(string id);
-        Task<IEnumerable<Category>> SearchCategoryByName(string searchString);
-        Task UpdateCategory(CategoryUpdateDto category);
-        Task<string> CreateCategory(CategoryRequestDto category);
-        Task DeleteCategory(string id);
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        Task<Category> GetCategoryByIdAsync(string id);
+        Task<IEnumerable<Category>> SearchCategoryByNameAsync(string searchString);
+        Task UpdateCategoryAsync(CategoryUpdateDto category);
+        Task<string> CreateCategoryAsync(CategoryCreateDto category);
+        Task DeleteCategoryAsync(string id);
     }
 }

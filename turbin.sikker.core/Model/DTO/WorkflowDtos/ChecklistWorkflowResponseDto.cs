@@ -1,7 +1,7 @@
 
-namespace turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos
+namespace turbin.sikker.core.Model.DTO.WorkflowDtos
 {
-    public class ChecklistWorkflowResponseDto
+    public class WorkflowResponseDto
     {   
         public string? Id { get; set; }
         

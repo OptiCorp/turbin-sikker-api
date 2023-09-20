@@ -21,25 +21,25 @@ namespace turbin.sikker.core.Common
 
         public bool BeUnqiueUsername(string username)
         {
-            var users = _userService.GetAllUsers().Result;
+            var users = _userService.GetAllUsersAsync().Result;
             return !_userUtilities.IsUsernameTaken(users, username);
         }
 
         public bool BeUnqiueEmail(string email)
         {
-            var users = _userService.GetAllUsers().Result;
+            var users = _userService.GetAllUsersAsync().Result;
             return !_userUtilities.IsEmailTaken(users, email);
         }
 
         public bool BeValidUserRole(string userRoleId)
         {
-            var userRoles = _userRoleService.GetUserRoles().Result;
+            var userRoles = _userRoleService.GetUserRolesAsync().Result;
             return _userRoleUtilities.IsValidUserRole(userRoles, userRoleId);
         }
 
         public bool BeUniqueUserRole(string userRoleName)
         {
-            var userRoles = _userRoleService.GetUserRoles().Result;
+            var userRoles = _userRoleService.GetUserRolesAsync().Result;
             return !userRoles.Any(userRole => userRole.Name.ToLower() == userRoleName.ToLower());
         }
 

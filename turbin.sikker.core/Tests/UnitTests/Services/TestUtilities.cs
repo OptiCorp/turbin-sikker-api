@@ -147,7 +147,7 @@ namespace turbin.sikker.core.Tests.Services
                                 Title = string.Format("Checklist {0}", i),
                                 Status = ChecklistStatus.Active,
                                 CreatedDate = DateTime.Now,
-                                CreatedBy = createdById
+                                CreatorId = createdById
                             }
                         );
                     }
@@ -163,7 +163,7 @@ namespace turbin.sikker.core.Tests.Services
                     Title = "Checklist 1",
                     Status = ChecklistStatus.Active,
                     CreatedDate = DateTime.Now,
-                    CreatedBy = "User 2"
+                    CreatorId = "User 2"
                 },
                 new Checklist
                 {
@@ -171,25 +171,25 @@ namespace turbin.sikker.core.Tests.Services
                     Title = "Checklist 2",
                     Status = ChecklistStatus.Active,
                     CreatedDate = DateTime.Now,
-                    CreatedBy = "User 2"
+                    CreatorId = "User 2"
                 }
             );
 
             if (testType == "Workflow")
             {
-                if (await databaseContext.ChecklistWorkflow.CountAsync() <= 0)
+                if (await databaseContext.Workflow.CountAsync() <= 0)
                 {
                     for (int i = 0; i < 10; i++)
                     {
                         var checklistId = string.Format("Checklist {0}", (i%2)+1);
                         await databaseContext.AddAsync(
-                            new ChecklistWorkflow
+                            new Workflow
                             {
                                 Id = string.Format("Workflow {0}", i),
                                 ChecklistId = string.Format("Checklist {0}", (i%2)+1),
                                 UserId = "User 1",
-                                CreatedById = "User 2",
-                                Status = CurrentChecklistStatus.Sent,
+                                CreatorId = "User 2",
+                                Status = WorkflowStatus.Sent,
                                 CreatedDate = DateTime.Now
                             }
                         );
@@ -237,23 +237,23 @@ namespace turbin.sikker.core.Tests.Services
                 }
             );
 
-            await databaseContext.ChecklistWorkflow.AddRangeAsync(
-                    new ChecklistWorkflow
+            await databaseContext.Workflow.AddRangeAsync(
+                    new Workflow
                     {
                         Id = "Workflow 1",
                         ChecklistId = "Checklist 1",
                         UserId = "User 1",
-                        CreatedById = "User 2",
-                        Status = CurrentChecklistStatus.Sent,
+                        CreatorId = "User 2",
+                        Status = WorkflowStatus.Sent,
                         CreatedDate = DateTime.Now
                     },
-                    new ChecklistWorkflow
+                    new Workflow
                     {
                         Id = "Workflow 2",
                         ChecklistId = "Checklist 2",
                         UserId = "User 3",
-                        CreatedById = "User 2",
-                        Status = CurrentChecklistStatus.Sent,
+                        CreatorId = "User 2",
+                        Status = WorkflowStatus.Sent,
                         CreatedDate = DateTime.Now
                     }
             );
@@ -268,11 +268,11 @@ namespace turbin.sikker.core.Tests.Services
                             new Punch
                             {
                                 Id = string.Format("Punch {0}", i),
-                                ChecklistWorkflowId = string.Format("Workflow {0}", (i%2)+1),
+                                WorkflowId = string.Format("Workflow {0}", (i%2)+1),
                                 ChecklistTaskId = string.Format("Task {0}", (i%2)+1),
                                 CreatedDate = DateTime.Now,
-                                CreatedBy = i%2==0 ? "User 1" : "User 3",
-                                PunchDescription = string.Format("Punch {0}", i),
+                                CreatorId = i%2==0 ? "User 1" : "User 3",
+                                Description = string.Format("Punch {0}", i),
                                 Severity = PunchSeverity.Minor,
                                 Status = PunchStatus.Pending,
                                 Active = 1
@@ -288,11 +288,11 @@ namespace turbin.sikker.core.Tests.Services
                 new Punch
                 {
                     Id = "Punch 1",
-                    ChecklistWorkflowId = "Workflow 1",
+                    WorkflowId = "Workflow 1",
                     ChecklistTaskId = "Task 1",
                     CreatedDate = DateTime.Now,
-                    CreatedBy = "User 1",
-                    PunchDescription = "Punch 1",
+                    CreatorId = "User 1",
+                    Description = "Punch 1",
                     Severity = PunchSeverity.Minor,
                     Status = PunchStatus.Pending,
                     Active = 1
@@ -300,11 +300,11 @@ namespace turbin.sikker.core.Tests.Services
                 new Punch
                 {
                     Id = "Punch 2",
-                    ChecklistWorkflowId = "Workflow 2",
+                    WorkflowId = "Workflow 2",
                     ChecklistTaskId = "Task 2",
                     CreatedDate = DateTime.Now,
-                    CreatedBy = "User 1",
-                    PunchDescription = "Punch 2",
+                    CreatorId = "User 1",
+                    Description = "Punch 2",
                     Severity = PunchSeverity.Minor,
                     Status = PunchStatus.Pending,
                     Active = 1

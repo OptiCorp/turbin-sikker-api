@@ -16,29 +16,29 @@ namespace turbin.sikker.core.Services
             _userRoleUtilities = userRoleUtilities;
         }
 
-        public async Task<bool> IsUserRoleInUse(UserRole userRole)
+        public async Task<bool> IsUserRoleInUseAsync(UserRole userRole)
         {
             return await _context.User.AnyAsync(user => user.UserRole == userRole);
         }
 
-        public async Task<IEnumerable<UserRole>> GetUserRoles()
+        public async Task<IEnumerable<UserRole>> GetUserRolesAsync()
         {
             return await _context.UserRole.ToListAsync();
         }
 
 
-        public async Task<UserRole> GetUserRoleById(string id)
+        public async Task<UserRole> GetUserRoleByIdAsync(string id)
         {
             return await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == id);
 
         }
 
-        public async Task<UserRole> GetUserRoleByUserRoleName(string userRoleName)
+        public async Task<UserRole> GetUserRoleByUserRoleNameAsync(string userRoleName)
         {
             return await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Name == userRoleName);
         }
 
-        public async Task<string> CreateUserRole(UserRoleCreateDto userRoleDto)
+        public async Task<string> CreateUserRoleAsync(UserRoleCreateDto userRoleDto)
         {
             var userRole = new UserRole
             {
@@ -51,7 +51,7 @@ namespace turbin.sikker.core.Services
             return userRole.Id;
         }
 
-        public async Task UpdateUserRole(UserRoleUpdateDto updatedUserRole)
+        public async Task UpdateUserRoleAsync(UserRoleUpdateDto updatedUserRole)
         {
             var userRole = await _context.UserRole.FirstOrDefaultAsync(userRole => userRole.Id == updatedUserRole.Id);
 
@@ -66,10 +66,10 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async Task DeleteUserRole(string id)
+        public async Task DeleteUserRoleAsync(string id)
         {
 
-            var userRole = await GetUserRoleById(id);
+            var userRole = await GetUserRoleByIdAsync(id);
 
             if (userRole != null)
             {

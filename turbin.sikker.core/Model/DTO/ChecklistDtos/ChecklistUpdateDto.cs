@@ -2,7 +2,7 @@
 
 namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
-    public class ChecklistEditDto
+    public class ChecklistUpdateDto
     {   
         [Required]
         public string? Id { get; set; }

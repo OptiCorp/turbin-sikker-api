@@ -12,6 +12,6 @@ public interface IUserUtilities
 
         bool IsValidStatus(string value);
 
-        public UserDto UserToDto(User user);
+        UserDto UserToDto(User user);
     }
 }

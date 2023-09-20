@@ -18,7 +18,7 @@ namespace turbin.sikker.core.Tests.Services
             var categoryService = new CategoryService(dbContext, categoryUtilities);
         
             //Act
-            var result = await categoryService.GetAllCategories();
+            var result = await categoryService.GetAllCategoriesAsync();
         
             //Assert
             Assert.IsType<List<Category>>(result);
@@ -38,7 +38,7 @@ namespace turbin.sikker.core.Tests.Services
 
         
             //Act
-            var result = await categoryService.GetCategoryById(id);
+            var result = await categoryService.GetCategoryByIdAsync(id);
         
             //Assert
             Assert.IsType<Category>(result);
@@ -56,7 +56,7 @@ namespace turbin.sikker.core.Tests.Services
             var name = "Category";
         
             //Act
-            var result = await categoryService.SearchCategoryByName(name);
+            var result = await categoryService.SearchCategoryByNameAsync(name);
         
             //Assert
             Assert.IsType<List<Category>>(result);
@@ -72,14 +72,14 @@ namespace turbin.sikker.core.Tests.Services
             var categoryUtilities = new CategoryUtilities();
             var categoryService = new CategoryService(dbContext, categoryUtilities);
 
-            var newCategory = new CategoryRequestDto
+            var newCategory = new CategoryCreateDto
             {
                 Name = "New category"
             };
 
             //Act
-            var id = await categoryService.CreateCategory(newCategory);
-            var category = await categoryService.GetCategoryById(id);
+            var id = await categoryService.CreateCategoryAsync(newCategory);
+            var category = await categoryService.GetCategoryByIdAsync(id);
 
             //Assert
             Assert.IsType<string>(id);
@@ -102,9 +102,9 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            var oldCategoryName = (await categoryService.GetCategoryById(updatedCategory.Id)).Name;
-            await categoryService.UpdateCategory(updatedCategory);
-            var newCategory = await categoryService.GetCategoryById(updatedCategory.Id);
+            var oldCategoryName = (await categoryService.GetCategoryByIdAsync(updatedCategory.Id)).Name;
+            await categoryService.UpdateCategoryAsync(updatedCategory);
+            var newCategory = await categoryService.GetCategoryByIdAsync(updatedCategory.Id);
 
             //Assert
             Assert.NotEqual(oldCategoryName, newCategory.Name);
@@ -123,9 +123,9 @@ namespace turbin.sikker.core.Tests.Services
             var id = "Category 0";
 
             //Act
-            await categoryService.DeleteCategory(id);
-            var category = await categoryService.GetCategoryById(id);
-            var categories = await categoryService.GetAllCategories();
+            await categoryService.DeleteCategoryAsync(id);
+            var category = await categoryService.GetCategoryByIdAsync(id);
+            var categories = await categoryService.GetAllCategoriesAsync();
 
             //Assert
             Assert.Equal(category, null);

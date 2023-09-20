@@ -10,6 +10,6 @@ public interface IChecklistUtilities
 
         public ChecklistResponseDto ChecklistToResponseDto(Checklist checklist);
 
-        public ChecklistViewNoUserDto ChecklistToNoUserDto(Checklist checklist);
+        public ChecklistResponseNoUserDto ChecklistToNoUserDto(Checklist checklist);
     }
 }
