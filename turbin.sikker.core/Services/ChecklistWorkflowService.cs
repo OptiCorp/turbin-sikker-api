@@ -17,12 +17,12 @@ namespace turbin.sikker.core.Services
         }
 
 
-        public async Task<bool> DoesUserHaveChecklist(string userId, string checklistId)
+        public async Task<bool> DoesUserHaveChecklistAsync(string userId, string checklistId)
         {
             return await _context.ChecklistWorkflow.AnyAsync(workflow => workflow.UserId == userId && workflow.ChecklistId == checklistId);
         }
 
-        public async Task<ChecklistWorkflowResponseDto> GetChecklistWorkflowById(string id)
+        public async Task<ChecklistWorkflowResponseDto> GetChecklistWorkflowByIdAsync(string id)
         {
             var checklistWorkflow = await _context.ChecklistWorkflow
                 .Include(c => c.User)
@@ -35,14 +35,12 @@ namespace turbin.sikker.core.Services
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (checklistWorkflow == null) return null;
-            
-            ChecklistWorkflowResponseDto checklistWorkflowResponse = _checklistWorkflowUtilities.WorkflowToResponseDto(checklistWorkflow);
 
-            return checklistWorkflowResponse;
+            return _checklistWorkflowUtilities.WorkflowToResponseDto(checklistWorkflow);
         }
 
 
-        public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflows()
+        public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflowsAsync()
         {
             var checklistWorkflows = await _context.ChecklistWorkflow
                 .Include(c => c.User)
@@ -59,7 +57,7 @@ namespace turbin.sikker.core.Services
             return checklistWorkflows;
         }
 
-        public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflowsByUserId(string userId)
+        public async Task<IEnumerable<ChecklistWorkflowResponseDto>> GetAllChecklistWorkflowsByUserIdAsync(string userId)
         {
             var checklistWorkflows = await _context.ChecklistWorkflow
             .Include(c => c.User)
@@ -77,9 +75,8 @@ namespace turbin.sikker.core.Services
             return checklistWorkflows;
         }
 
-        public async Task UpdateChecklistWorkflow(ChecklistWorkflowEditDto updatedChecklistWorkflow)
+        public async Task UpdateChecklistWorkflowAsync(ChecklistWorkflowUpdateDto updatedChecklistWorkflow)
         {
-
             var checklistWorkFlow = await _context.ChecklistWorkflow.FirstOrDefaultAsync(checklistWorkflow => checklistWorkflow.Id == updatedChecklistWorkflow.Id);
 
             if (checklistWorkFlow != null)
@@ -97,16 +94,15 @@ namespace turbin.sikker.core.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task CreateChecklistWorkflow(ChecklistWorkflowCreateDto checklistWorkflow)
+        public async Task CreateChecklistWorkflowAsync(ChecklistWorkflowCreateDto checklistWorkflow)
         {
-
             foreach (string userId in checklistWorkflow.UserIds)
             {
                 ChecklistWorkflow newChecklistWorkflow = new ChecklistWorkflow
                 {
                     ChecklistId = checklistWorkflow.ChecklistId,
                     UserId = userId,
-                    CreatedById = checklistWorkflow.CreatedById,
+                    CreatorId = checklistWorkflow.CreatorId,
                     Status = Enum.Parse<CurrentChecklistStatus>("Sent"),
                     CreatedDate = DateTime.Now
                 };
@@ -118,7 +114,7 @@ namespace turbin.sikker.core.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteChecklistWorkflow(string id)
+        public async Task DeleteChecklistWorkflowAsync(string id)
         {
             var checklistWorkflow = await _context.ChecklistWorkflow.FindAsync(id);
             if (checklistWorkflow != null)

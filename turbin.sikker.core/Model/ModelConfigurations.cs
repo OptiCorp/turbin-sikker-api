@@ -35,9 +35,9 @@ namespace turbin.sikker.core.Configuration
                 .UsingEntity("ChecklistToTaskLink");
 
             modelBuilder.Entity<Checklist>()
-                .HasOne(c => c.CreatedByUser)
+                .HasOne(c => c.Creator)
                 .WithMany()
-                .HasForeignKey(c => c.CreatedBy)
+                .HasForeignKey(c => c.CreatorId)
                 .HasPrincipalKey(u => u.Id);
         }
     }
@@ -67,9 +67,9 @@ namespace turbin.sikker.core.Configuration
                 .HasKey(c => c.Id);
 
             modelBuilder.Entity<Punch>()
-                .HasOne(p => p.CreatedByUser)
+                .HasOne(p => p.Creator)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedBy)
+                .HasForeignKey(p => p.CreatorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Punch>()
@@ -112,7 +112,7 @@ namespace turbin.sikker.core.Configuration
             modelBuilder.Entity<ChecklistWorkflow>()
                 .HasOne(p => p.Creator)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedById)
+                .HasForeignKey(p => p.CreatorId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

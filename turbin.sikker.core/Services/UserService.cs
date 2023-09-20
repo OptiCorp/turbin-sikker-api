@@ -16,13 +16,13 @@ namespace turbin.sikker.core.Services
             _userUtilities = userUtilities;
         }
 
-        public async Task<string> GetInspectorRoleId()
+        public async Task<string> GetInspectorRoleIdAsync()
         {
             var inspectorRole = await _context.UserRole
                                         .FirstOrDefaultAsync(role => role.Name == "Inspector");
             return inspectorRole?.Id;
         }
-        public async Task<IEnumerable<UserDto>> GetUsers()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             return await _context.User
                             .Include(u => u.UserRole)
@@ -30,7 +30,7 @@ namespace turbin.sikker.core.Services
                             .Select(u => _userUtilities.UserToDto(u))
                             .ToListAsync();
         }
-        public async Task<IEnumerable<UserDto>> GetAllUsers()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAdminAsync()
         {            
             return await _context.User
                             .Include(u => u.UserRole)
@@ -38,7 +38,7 @@ namespace turbin.sikker.core.Services
                             .ToListAsync();
         }
 
-        public async Task<UserDto> GetUserById(string id)
+        public async Task<UserDto> GetUserByIdAsync(string id)
         {
             var user = await _context.User
                             .Include(u => u.UserRole)
@@ -47,13 +47,13 @@ namespace turbin.sikker.core.Services
             return _userUtilities.UserToDto(user);                
         }
         
-        public async Task<User> GetUserByAzureAdUserId(string azureAdUserId)
+        public async Task<User> GetUserByAzureAdUserIdAsync(string azureAdUserId)
         {
             return await _context.User
                             .Include(u => u.UserRole)
                             .FirstOrDefaultAsync(u => u.AzureAdUserId == azureAdUserId);
         }
-        public async Task<UserDto> GetUserByUsername(string username)
+        public async Task<UserDto> GetUserByUsernameAsync(string username)
         {
             var user = await _context.User
                             .Include(u => u.UserRole)
@@ -62,7 +62,7 @@ namespace turbin.sikker.core.Services
             return _userUtilities.UserToDto(user);                
         }
 
-        public async Task<string> CreateUser(UserCreateDto userDto)
+        public async Task<string> CreateUserAsync(UserCreateDto userDto)
         {
             var user = new User
             {
@@ -80,7 +80,7 @@ namespace turbin.sikker.core.Services
 
             return user.Id;
         }
-        public async Task UpdateUser(UserUpdateDto updatedUserDto)
+        public async Task UpdateUserAsync(UserUpdateDto updatedUserDto)
         {
             var user = await _context.User.FirstOrDefaultAsync(u => u.Id == updatedUserDto.Id);
             if (user != null)
@@ -117,7 +117,7 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task DeleteUser(string id)
+        public async Task DeleteUserAsync(string id)
         {
             var user = await _context.User.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
@@ -126,7 +126,7 @@ namespace turbin.sikker.core.Services
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task HardDeleteUser(string id)
+        public async Task HardDeleteUserAsync(string id)
         {
             var user = await _context.User.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)

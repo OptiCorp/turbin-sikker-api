@@ -6,7 +6,7 @@ namespace turbin.sikker.core.Model.DTO
     {
         [Required]
         public string? Id { get; set; }
-        public string? PunchDescription { get; set; }
+        public string? Description { get; set; }
 
         public string? ChecklistWorkflowId { get; set; }
 

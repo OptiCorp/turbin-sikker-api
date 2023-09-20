@@ -20,7 +20,7 @@ namespace turbin.sikker.core.Tests.Services
             var checklistId = "Checklist 1";
 
             //Act
-            var result = await workflowService.DoesUserHaveChecklist(userId, checklistId);
+            var result = await workflowService.DoesUserHaveChecklistAsync(userId, checklistId);
 
             //Assert
             Assert.IsType<bool>(result);
@@ -39,7 +39,7 @@ namespace turbin.sikker.core.Tests.Services
             var id = "Workflow 1";
 
             //Act
-            var workflow = await workflowService.GetChecklistWorkflowById(id);
+            var workflow = await workflowService.GetChecklistWorkflowByIdAsync(id);
 
             //Assert
             Assert.IsType<ChecklistWorkflowResponseDto>(workflow);
@@ -56,7 +56,7 @@ namespace turbin.sikker.core.Tests.Services
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
             //Act
-            var workflows = await workflowService.GetAllChecklistWorkflows();
+            var workflows = await workflowService.GetAllChecklistWorkflowsAsync();
 
             //Assert
             Assert.IsType<List<ChecklistWorkflowResponseDto>>(workflows);
@@ -75,7 +75,7 @@ namespace turbin.sikker.core.Tests.Services
             var userId = "User 1";
 
             //Act
-            var workflows = await workflowService.GetAllChecklistWorkflowsByUserId(userId);
+            var workflows = await workflowService.GetAllChecklistWorkflowsByUserIdAsync(userId);
 
             //Assert
             Assert.IsType<List<ChecklistWorkflowResponseDto>>(workflows);
@@ -91,15 +91,15 @@ namespace turbin.sikker.core.Tests.Services
             var workflowUtilities = new ChecklistWorkflowUtilities();
             var workflowService = new ChecklistWorkflowService(dbContext, workflowUtilities);
 
-            var updatedWorkflow = new ChecklistWorkflowEditDto
+            var updatedWorkflow = new ChecklistWorkflowUpdateDto
             {
                 Status = "Committed",
                 Id = "Workflow 1"
             };
 
             //Act
-            await workflowService.UpdateChecklistWorkflow(updatedWorkflow);
-            var workflow = await workflowService.GetChecklistWorkflowById("Workflow 1");
+            await workflowService.UpdateChecklistWorkflowAsync(updatedWorkflow);
+            var workflow = await workflowService.GetChecklistWorkflowByIdAsync("Workflow 1");
 
             //Assert
             Assert.Equal(workflow.Status, "Committed");
@@ -123,13 +123,13 @@ namespace turbin.sikker.core.Tests.Services
             {
                 ChecklistId = "Checklist 1",
                 UserIds = userIds,
-                CreatedById = "User 2"
+                CreatorId = "User 2"
             };
 
             //Act
-            await workflowService.CreateChecklistWorkflow(newWorkflow);
-            var workflows = await workflowService.GetAllChecklistWorkflowsByUserId("User 3");
-            var allWorkflows = await workflowService.GetAllChecklistWorkflows();
+            await workflowService.CreateChecklistWorkflowAsync(newWorkflow);
+            var workflows = await workflowService.GetAllChecklistWorkflowsByUserIdAsync("User 3");
+            var allWorkflows = await workflowService.GetAllChecklistWorkflowsAsync();
 
             //Assert
             Assert.Equal(workflows.Count(), 1);
@@ -148,8 +148,8 @@ namespace turbin.sikker.core.Tests.Services
             var id = "Workflow 1";
 
             //Act
-            await workflowService.DeleteChecklistWorkflow(id);
-            var workflows = await workflowService.GetAllChecklistWorkflows();
+            await workflowService.DeleteChecklistWorkflowAsync(id);
+            var workflows = await workflowService.GetAllChecklistWorkflowsAsync();
 
             //Assert
             Assert.Equal(workflows.Count(), 9);

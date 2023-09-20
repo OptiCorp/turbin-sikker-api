@@ -2,7 +2,7 @@
 
 namespace turbin.sikker.core.Model.DTO.CategoryDtos
 {
-    public class CategoryRequestDto
+    public class CategoryCreateDto
     {
         [Required]
         [StringLength(50)]

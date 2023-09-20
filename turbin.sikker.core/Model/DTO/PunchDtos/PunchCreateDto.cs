@@ -5,10 +5,10 @@ namespace turbin.sikker.core.Model.DTO
     public class PunchCreateDto
     {   
         [Required]
-        public string? CreatedBy { get; set; }
+        public string? CreatorId { get; set; }
 
         [Required]
-        public string? PunchDescription { get; set; }
+        public string? Description { get; set; }
 
         [Required]
         public string? ChecklistWorkflowId { get; set; }

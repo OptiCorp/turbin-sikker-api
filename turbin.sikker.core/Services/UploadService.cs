@@ -19,7 +19,7 @@ namespace turbin.sikker.core.Services
         }
 
 
-        public async Task<UploadResponseDto> GetUploadById(string id)
+        public async Task<UploadResponseDto> GetUploadByIdAsync(string id)
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
 
@@ -38,7 +38,7 @@ namespace turbin.sikker.core.Services
             return uploadResponse;
         }
 
-        public async Task<IEnumerable<UploadResponseDto>> GetUploadsByPunchId(string id)
+        public async Task<IEnumerable<UploadResponseDto>> GetUploadsByPunchIdAsync(string id)
         {
             string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/container-turbinsikker-test";
             BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
@@ -63,7 +63,7 @@ namespace turbin.sikker.core.Services
         }
 
 
-        public async Task<string> CreateUpload(UploadCreateDto upload)
+        public async Task<string> CreateUploadAsync(UploadCreateDto upload)
         {
 
             var newUpload = new Upload
@@ -101,7 +101,7 @@ namespace turbin.sikker.core.Services
             return newUpload.Id;
         }
 
-        public async Task UpdateUpload(UploadUpdateDto updatedUpload)
+        public async Task UpdateUploadAsync(UploadUpdateDto updatedUpload)
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == updatedUpload.Id);
 
@@ -117,7 +117,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async Task DeleteUpload(string id)
+        public async Task DeleteUploadAsync(string id)
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
 

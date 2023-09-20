@@ -5,6 +5,6 @@ namespace turbin.sikker.core.Utilities
 {
 public interface ICategoryUtilities
     {
-        bool isCategoryNametaken(IEnumerable<Category> categories, string categoryName);
+        bool IsCategoryNametaken(IEnumerable<Category> categories, string categoryName);
     }
 }

@@ -7,9 +7,9 @@ namespace turbin.sikker.core.Validation.ChecklistTaskValidations
     {
         public PunchCreateValidation()
         {
-            RuleFor(punch => punch.CreatedBy).NotEmpty().WithMessage("You must specify a creator for this punch").NotNull().WithMessage("You must specify a creator for this punch");    
+            RuleFor(punch => punch.CreatorId).NotEmpty().WithMessage("You must specify a creator for this punch").NotNull().WithMessage("You must specify a creator for this punch");    
             
-            RuleFor(punch => punch.PunchDescription).NotEmpty().WithMessage("Description is required.")
+            RuleFor(punch => punch.Description).NotEmpty().WithMessage("Description is required.")
                 .NotNull().WithMessage("Description cannot be null.")
                 .MinimumLength(5).WithMessage("Description must be at least 5 characters.")
                 .MaximumLength(500).WithMessage("Category name cannot exceed 500 characters.");

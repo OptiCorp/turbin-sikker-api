@@ -16,9 +16,9 @@ namespace turbin.sikker.core.Services
             _checklistUtilities = checklistUtilities;
         }
 
-        public async Task<IEnumerable<ChecklistResponseDto>> GetAllChecklists()
+        public async Task<IEnumerable<ChecklistResponseDto>> GetAllChecklistsAsync()
         {
-            return await _context.Checklist.Include(c => c.CreatedByUser)
+            return await _context.Checklist.Include(c => c.Creator)
                                             .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
@@ -27,9 +27,9 @@ namespace turbin.sikker.core.Services
                                             .ToListAsync();
         }
 
-        public async Task<ChecklistResponseDto> GetChecklistById(string id)
+        public async Task<ChecklistResponseDto> GetChecklistByIdAsync(string id)
         {
-            var checklist = await _context.Checklist.Include(c => c.CreatedByUser)
+            var checklist = await _context.Checklist.Include(c => c.Creator)
                                             .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
@@ -40,9 +40,9 @@ namespace turbin.sikker.core.Services
             return _checklistUtilities.ChecklistToResponseDto(checklist);
         }
 
-        public async Task<IEnumerable<ChecklistViewNoUserDto>> GetAllChecklistsByUserId(string id)
+        public async Task<IEnumerable<ChecklistResponseNoUserDto>> GetAllChecklistsByUserIdAsync(string id)
         {
-            return await _context.Checklist.Where(c => c.CreatedBy == id && c.Status == ChecklistStatus.Active)
+            return await _context.Checklist.Where(c => c.CreatorId == id && c.Status == ChecklistStatus.Active)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .OrderBy(c => c.CreatedDate)
@@ -50,9 +50,9 @@ namespace turbin.sikker.core.Services
                                             .ToListAsync();
         }
 
-        public async Task<IEnumerable<ChecklistResponseDto>> SearchChecklistByName(string searchString)
+        public async Task<IEnumerable<ChecklistResponseDto>> SearchChecklistByNameAsync(string searchString)
         {
-            return await _context.Checklist.Include(c => c.CreatedByUser)
+            return await _context.Checklist.Include(c => c.Creator)
                                             .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
@@ -61,24 +61,22 @@ namespace turbin.sikker.core.Services
                                             .ToListAsync();
         }
 
-        public async Task<string> CreateChecklist(ChecklistCreateDto checklistDto)
+        public async Task<string> CreateChecklistAsync(ChecklistCreateDto checklistDto)
         {
             var checklist = new Checklist
             {
                 Title = checklistDto.Title,
-                CreatedBy = checklistDto.CreatedBy,
+                CreatorId = checklistDto.CreatorId,
                 CreatedDate = DateTime.Now
             };
 
             _context.Checklist.Add(checklist);
             await _context.SaveChangesAsync();
 
-            string newChecklistId = checklist.Id;
-
-            return newChecklistId;
+            return checklist.Id;
         }
 
-        public async Task UpdateChecklist(ChecklistEditDto updatedChecklist)
+        public async Task UpdateChecklistAsync(ChecklistUpdateDto updatedChecklist)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == updatedChecklist.Id);
 
@@ -102,7 +100,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async Task DeleteChecklist(string id)
+        public async Task DeleteChecklistAsync(string id)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(checklist => checklist.Id == id);
             if (checklist != null)
@@ -112,7 +110,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async Task HardDeleteChecklist(string id)
+        public async Task HardDeleteChecklistAsync(string id)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(checklist => checklist.Id == id);
             if (checklist != null) 

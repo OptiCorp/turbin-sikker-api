@@ -17,7 +17,7 @@ namespace turbin.sikker.core.Tests.Services
             var punchService = new PunchService(dbContext, punchUtilities);
 
             //Act
-            var punches = await punchService.GetAllPunches();
+            var punches = await punchService.GetAllPunchesAsync();
 
             //Assert
             Assert.IsType<List<PunchResponseDto>>(punches);
@@ -36,7 +36,7 @@ namespace turbin.sikker.core.Tests.Services
             var id = "Punch 1";
 
             //Act
-            var punch = await punchService.GetPunchById(id);
+            var punch = await punchService.GetPunchByIdAsync(id);
 
             //Assert
             Assert.IsType<PunchResponseDto>(punch);
@@ -55,7 +55,7 @@ namespace turbin.sikker.core.Tests.Services
             var leaderId = "User 2";
 
             //Act
-            var punches = await punchService.GetPunchesByLeaderId(leaderId);
+            var punches = await punchService.GetPunchesByLeaderIdAsync(leaderId);
 
             //Assert
             Assert.IsType<List<PunchResponseDto>>(punches);
@@ -75,8 +75,8 @@ namespace turbin.sikker.core.Tests.Services
             var inspectorId2 = "User 3";
 
             //Act
-            var punchesUser1 = await punchService.GetPunchesByInspectorId(inspectorId1);
-            var punchesUser2 = await punchService.GetPunchesByInspectorId(inspectorId2);
+            var punchesUser1 = await punchService.GetPunchesByInspectorIdAsync(inspectorId1);
+            var punchesUser2 = await punchService.GetPunchesByInspectorIdAsync(inspectorId2);
 
             //Assert
             Assert.IsType<List<PunchResponseDto>>(punchesUser1);
@@ -96,7 +96,7 @@ namespace turbin.sikker.core.Tests.Services
             var workflowId = "Workflow 1";
 
             //Act
-            var punches = await punchService.GetPunchesByWorkflowId(workflowId);
+            var punches = await punchService.GetPunchesByWorkflowIdAsync(workflowId);
 
             //Assert
             Assert.IsType<List<PunchResponseDto>>(punches);
@@ -114,18 +114,18 @@ namespace turbin.sikker.core.Tests.Services
 
             var newPunch = new PunchCreateDto
             {
-                CreatedBy = "User 1",
-                PunchDescription = "Punch 10",
+                CreatorId = "User 1",
+                Description = "Punch 10",
                 ChecklistWorkflowId = "Workflow 1",
                 ChecklistTaskId = "Task 1",
                 Severity = "Minor"
             };
 
             //Act
-            var newId = await punchService.CreatePunch(newPunch);
-            var punchesInspector = await punchService.GetPunchesByInspectorId("User 1");
-            var allPunches = await punchService.GetAllPunches();
-            var punchesWorkflow = await punchService.GetPunchesByWorkflowId("Workflow 1");
+            var newId = await punchService.CreatePunchAsync(newPunch);
+            var punchesInspector = await punchService.GetPunchesByInspectorIdAsync("User 1");
+            var allPunches = await punchService.GetAllPunchesAsync();
+            var punchesWorkflow = await punchService.GetPunchesByWorkflowIdAsync("Workflow 1");
 
             //Assert
             Assert.IsType<string>(newId);
@@ -146,16 +146,16 @@ namespace turbin.sikker.core.Tests.Services
             var updatedPunch = new PunchUpdateDto
             {
                 Id = "Punch 1",
-                PunchDescription = "Punch 10",
+                Description = "Punch 10",
                 Severity = "Major"
             };
 
             //Act
-            await punchService.UpdatePunch(updatedPunch);
-            var punch = await punchService.GetPunchById("Punch 1");
+            await punchService.UpdatePunchAsync(updatedPunch);
+            var punch = await punchService.GetPunchByIdAsync("Punch 1");
 
             //Assert
-            Assert.Equal(punch.PunchDescription, "Punch 10");
+            Assert.Equal(punch.Description, "Punch 10");
             Assert.Equal(punch.Severity, "Major");
         }
 
@@ -173,10 +173,10 @@ namespace turbin.sikker.core.Tests.Services
             var workflowId = "Workflow 2";
 
             //Act
-            await punchService.DeletePunch(punchId);
-            var allPunches = await punchService.GetAllPunches();
-            var punchesByInspector = await punchService.GetPunchesByInspectorId(inspectorId);
-            var punchesByWorkflow = await punchService.GetPunchesByWorkflowId(workflowId);
+            await punchService.DeletePunchAsync(punchId);
+            var allPunches = await punchService.GetAllPunchesAsync();
+            var punchesByInspector = await punchService.GetPunchesByInspectorIdAsync(inspectorId);
+            var punchesByWorkflow = await punchService.GetPunchesByWorkflowIdAsync(workflowId);
 
             //Assert
             Assert.Equal(allPunches.Count(), 9);

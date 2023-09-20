@@ -4,15 +4,15 @@ namespace turbin.sikker.core.Services
 {
     public interface IChecklistTaskService
     {
-        Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasks();
-        Task<ChecklistTaskResponseDto> GetChecklistTaskById(string id);
-        Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksByChecklistId(string checklistId);
-        Task<IEnumerable<ChecklistTaskByCategoryResponseDto>> GetAllTasksByCategoryId(string categoryId);
-        Task<IEnumerable<ChecklistTaskResponseDto>> GetTasksByDescription(string searchString);
-        Task UpdateChecklistTask(ChecklistTaskUpdateDto checklistTask);
-        Task UpdateChecklistTaskInChecklist(ChecklistTaskUpdateDto checklistTask);
-        Task<string> CreateChecklistTask(ChecklistTaskRequestDto checklistTask);
-        public Task AddTaskToChecklist(ChecklistTaskAddTaskToChecklistDto checklistAddTask);
-        Task DeleteChecklistTask(string id);
+        Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksAsync();
+        Task<ChecklistTaskResponseDto> GetChecklistTaskByIdAsync(string id);
+        Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksByChecklistIdAsync(string checklistId);
+        Task<IEnumerable<ChecklistTaskByCategoryResponseDto>> GetAllTasksByCategoryIdAsync(string categoryId);
+        Task<IEnumerable<ChecklistTaskResponseDto>> GetTasksByDescriptionAsync(string searchString);
+        Task UpdateChecklistTaskAsync(ChecklistTaskUpdateDto checklistTask);
+        Task UpdateChecklistTaskInChecklistAsync(ChecklistTaskUpdateDto checklistTask);
+        Task<string> CreateChecklistTaskAsync(ChecklistTaskCreateDto checklistTask);
+        public Task AddTaskToChecklistAsync(ChecklistTaskAddTaskToChecklistDto checklistAddTask);
+        Task DeleteChecklistTaskAsync(string id);
     }
 }

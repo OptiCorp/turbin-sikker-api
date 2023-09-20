@@ -44,13 +44,13 @@ namespace turbin.sikker.core.Model
 
         [Required]
         [StringLength(450)]
-        public string? CreatedBy { get; set; }
+        public string? CreatorId { get; set; }
 
-        public User? CreatedByUser { get; }
+        public User? Creator { get; }
 
         [Required]
         [StringLength(1500)]
-        public string? PunchDescription { get; set; }
+        public string? Description { get; set; }
 
         [Required]
         [EnumDataType(typeof(PunchSeverity))]

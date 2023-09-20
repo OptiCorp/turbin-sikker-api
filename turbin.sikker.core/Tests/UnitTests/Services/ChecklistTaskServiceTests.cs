@@ -17,7 +17,7 @@ namespace turbin.sikker.core.Tests.Services
             var checklistTaskService = new ChecklistTaskService(dbContext, checklistTaskUtilities);
         
             //Act
-            var result = await checklistTaskService.GetAllTasks();
+            var result = await checklistTaskService.GetAllTasksAsync();
         
             //Assert
             Assert.IsType<List<ChecklistTaskResponseDto>>(result);
@@ -36,7 +36,7 @@ namespace turbin.sikker.core.Tests.Services
 
         
             //Act
-            var result = await checklistTaskService.GetChecklistTaskById(id);
+            var result = await checklistTaskService.GetChecklistTaskByIdAsync(id);
         
             //Assert
             Assert.IsType<ChecklistTaskResponseDto>(result);
@@ -55,7 +55,7 @@ namespace turbin.sikker.core.Tests.Services
             var categoryId = "Category 1";
         
             //Act
-            var result = await checklistTaskService.GetAllTasksByCategoryId(categoryId);
+            var result = await checklistTaskService.GetAllTasksByCategoryIdAsync(categoryId);
         
             //Assert
             Assert.IsType<List<ChecklistTaskByCategoryResponseDto>>(result);
@@ -79,9 +79,9 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            var oldTasks = await checklistTaskService.GetAllTasksByChecklistId(taskToChecklist.ChecklistId);
-            await checklistTaskService.AddTaskToChecklist(taskToChecklist);
-            var tasks = await checklistTaskService.GetAllTasksByChecklistId(taskToChecklist.ChecklistId);
+            var oldTasks = await checklistTaskService.GetAllTasksByChecklistIdAsync(taskToChecklist.ChecklistId);
+            await checklistTaskService.AddTaskToChecklistAsync(taskToChecklist);
+            var tasks = await checklistTaskService.GetAllTasksByChecklistIdAsync(taskToChecklist.ChecklistId);
 
             //Assert
             Assert.IsType<List<ChecklistTaskResponseDto>>(tasks);
@@ -102,8 +102,8 @@ namespace turbin.sikker.core.Tests.Services
             var descriptionTest2 = "Task 1";
 
             //Act
-            var tasksTests1 = await checklistTaskService.GetTasksByDescription(descriptionTest1);
-            var tasksTests2 = await checklistTaskService.GetTasksByDescription(descriptionTest2);
+            var tasksTests1 = await checklistTaskService.GetTasksByDescriptionAsync(descriptionTest1);
+            var tasksTests2 = await checklistTaskService.GetTasksByDescriptionAsync(descriptionTest2);
 
             //Assert
             Assert.IsType<List<ChecklistTaskResponseDto>>(tasksTests1);
@@ -121,15 +121,15 @@ namespace turbin.sikker.core.Tests.Services
             var checklistTaskUtilities = new ChecklistTaskUtilities();
             var checklistTaskService = new ChecklistTaskService(dbContext, checklistTaskUtilities);           
 
-            var newChecklistTask = new ChecklistTaskRequestDto
+            var newChecklistTask = new ChecklistTaskCreateDto
             {
                 CategoryId = "Category 1",
                 Description = "New task"
             };
 
             //Act
-            var id = await checklistTaskService.CreateChecklistTask(newChecklistTask);
-            var checklistTask = await checklistTaskService.GetChecklistTaskById(id);
+            var id = await checklistTaskService.CreateChecklistTaskAsync(newChecklistTask);
+            var checklistTask = await checklistTaskService.GetChecklistTaskByIdAsync(id);
 
             //Assert
             Assert.IsType<string>(id);
@@ -153,9 +153,9 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            var oldChecklistTaskDescription = (await checklistTaskService.GetChecklistTaskById(updatedChecklistTask.Id)).Description;
-            await checklistTaskService.UpdateChecklistTask(updatedChecklistTask);
-            var newChecklistTask = await checklistTaskService.GetChecklistTaskById(updatedChecklistTask.Id);
+            var oldChecklistTaskDescription = (await checklistTaskService.GetChecklistTaskByIdAsync(updatedChecklistTask.Id)).Description;
+            await checklistTaskService.UpdateChecklistTaskAsync(updatedChecklistTask);
+            var newChecklistTask = await checklistTaskService.GetChecklistTaskByIdAsync(updatedChecklistTask.Id);
 
             //Assert
             Assert.NotEqual(oldChecklistTaskDescription, newChecklistTask.Description);
@@ -180,18 +180,18 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            await checklistTaskService.AddTaskToChecklist(new ChecklistTaskAddTaskToChecklistDto{
+            await checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskAddTaskToChecklistDto{
                                                                     Id = "Task 0",
                                                                     ChecklistId = "Checklist 1"
                                                                 });
-            await checklistTaskService.AddTaskToChecklist(new ChecklistTaskAddTaskToChecklistDto{
+            await checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskAddTaskToChecklistDto{
                                                                     Id = "Task 0",
                                                                     ChecklistId = "Checklist 2"
                                                                 });
-            await checklistTaskService.UpdateChecklistTaskInChecklist(updatedChecklistTask);
-            var tasksChecklist1 = await checklistTaskService.GetAllTasksByChecklistId("Checklist 1");
-            var tasksChecklist2 = await checklistTaskService.GetAllTasksByChecklistId("Checklist 2");
-            var tasks = await checklistTaskService.GetAllTasks();
+            await checklistTaskService.UpdateChecklistTaskInChecklistAsync(updatedChecklistTask);
+            var tasksChecklist1 = await checklistTaskService.GetAllTasksByChecklistIdAsync("Checklist 1");
+            var tasksChecklist2 = await checklistTaskService.GetAllTasksByChecklistIdAsync("Checklist 2");
+            var tasks = await checklistTaskService.GetAllTasksAsync();
 
             //Assert
             Assert.NotEqual(tasksChecklist1, tasksChecklist2);
@@ -216,8 +216,8 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            await checklistTaskService.AddTaskToChecklist(taskToChecklist);
-            var checklist = await checklistService.GetChecklistById(taskToChecklist.ChecklistId);
+            await checklistTaskService.AddTaskToChecklistAsync(taskToChecklist);
+            var checklist = await checklistService.GetChecklistByIdAsync(taskToChecklist.ChecklistId);
 
             //Assert
             Assert.Equal(checklist.ChecklistTasks.Count(), 1);
@@ -235,9 +235,9 @@ namespace turbin.sikker.core.Tests.Services
             var id = "Task 0";
 
             //Act
-            await checklistTaskService.DeleteChecklistTask(id);
-            var checklistTask = await checklistTaskService.GetChecklistTaskById(id);
-            var checklistTasks = await checklistTaskService.GetAllTasks();
+            await checklistTaskService.DeleteChecklistTaskAsync(id);
+            var checklistTask = await checklistTaskService.GetChecklistTaskByIdAsync(id);
+            var checklistTasks = await checklistTaskService.GetAllTasksAsync();
 
             //Assert
             Assert.Equal(checklistTask, null);

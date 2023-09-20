@@ -15,7 +15,7 @@ namespace turbin.sikker.core.Model.DTO
 
         public DateTime? UpdatedDate { get; set; }
 
-        public string? PunchDescription { get; set; }
+        public string? Description { get; set; }
 
         public string? Severity { get; set; }
 

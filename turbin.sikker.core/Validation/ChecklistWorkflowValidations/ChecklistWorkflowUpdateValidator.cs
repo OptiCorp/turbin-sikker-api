@@ -4,7 +4,7 @@ using turbin.sikker.core.Model.DTO.ChecklistWorkflowDtos;
 
 namespace turbin.sikker.core.Validation.ChecklistValidations
 {
-    public class ChecklistWorkflowUpdateValidator : AbstractValidator<ChecklistWorkflowEditDto>
+    public class ChecklistWorkflowUpdateValidator : AbstractValidator<ChecklistWorkflowUpdateDto>
     {
         public ChecklistWorkflowUpdateValidator()
         {

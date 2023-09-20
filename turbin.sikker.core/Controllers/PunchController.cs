@@ -36,9 +36,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get all punches", Description = "Retrieves a list of all punches")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<PunchResponseDto>))]
         [SwaggerResponse(404, "Punches not found")]
-        public async Task<IActionResult> GetAllPunches()
+        public async Task<IActionResult> GetAllPunchesAsync()
         {
-            var punches = await _punchService.GetAllPunches();
+            var punches = await _punchService.GetAllPunchesAsync();
 
             if (punches == null)
             {
@@ -53,9 +53,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get punch by ID", Description = "Retrieves a punch by their ID.")]
         [SwaggerResponse(200, "Success", typeof(PunchResponseDto))]
         [SwaggerResponse(404, "Punch not found")]
-        public async Task<IActionResult> GetPunchById(string id)
+        public async Task<IActionResult> GetPunchByIdAsync(string id)
         {
-            var punch = await _punchService.GetPunchById(id);
+            var punch = await _punchService.GetPunchByIdAsync(id);
             if (punch == null)
             {
                 return NotFound("Punch not found.");
@@ -68,15 +68,15 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get punches by workflow ID", Description = "Retrieves all punches by their workflow ID.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<PunchResponseDto>))]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> GetPunchesByWorkflowId(string workflowId)
+        public async Task<IActionResult> GetPunchesByWorkflowIdAsync(string workflowId)
         {   
-            var workflow = await _checklistWorkflowService.GetChecklistWorkflowById(workflowId);
+            var workflow = await _checklistWorkflowService.GetChecklistWorkflowByIdAsync(workflowId);
             if (workflow == null)
             {
                 return NotFound("Checklist workflow not found");
             }
 
-            var punches = await _punchService.GetPunchesByWorkflowId(workflowId);
+            var punches = await _punchService.GetPunchesByWorkflowIdAsync(workflowId);
             if (punches == null)
             {
                 return NotFound("Punches not found.");
@@ -90,9 +90,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<PunchResponseDto>))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Punches not found")]
-        public async Task<IActionResult> GetPunchesByInspectorId(string id)
+        public async Task<IActionResult> GetPunchesByInspectorIdAsync(string id)
         {   
-            var user = await _userService.GetUserById(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user == null) {
                 return NotFound("User not found");
             }
@@ -101,7 +101,7 @@ namespace turbin.sikker.core.Controllers
                 return BadRequest("User is not an inspector");
             }
 
-            var punches = await _punchService.GetPunchesByInspectorId(id);
+            var punches = await _punchService.GetPunchesByInspectorIdAsync(id);
             if (punches == null)
             {
                 return NotFound("Punches not found.");
@@ -115,9 +115,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<PunchResponseDto>))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Punches not found")]
-        public async Task<IActionResult> GetPunchesByLeaderId(string id)
+        public async Task<IActionResult> GetPunchesByLeaderIdAsync(string id)
         {   
-            var user = await _userService.GetUserById(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user == null) {
                 return NotFound("User not found");
             }
@@ -126,7 +126,7 @@ namespace turbin.sikker.core.Controllers
                 return BadRequest("User is not a leader");
             }
 
-            var punches = await _punchService.GetPunchesByLeaderId(id);
+            var punches = await _punchService.GetPunchesByLeaderIdAsync(id);
             if (punches == null)
             {
                 return NotFound("Punches not found.");
@@ -140,7 +140,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]
         [SwaggerResponse(201, "Punch created", typeof(PunchCreateDto))]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> PostPunch(PunchCreateDto punch, [FromServices] IValidator<PunchCreateDto> validator)
+        public async Task<IActionResult> CreatePunchAsync(PunchCreateDto punch, [FromServices] IValidator<PunchCreateDto> validator)
         {   
             ValidationResult validationResult = validator.Validate(punch);
 
@@ -158,8 +158,8 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var user = await _userService.GetUserById(punch.CreatedBy);
-            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(punch.ChecklistWorkflowId);
+            var user = await _userService.GetUserByIdAsync(punch.CreatorId);
+            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowByIdAsync(punch.ChecklistWorkflowId);
 
 
             if (user == null)
@@ -172,10 +172,10 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Could not find specified checklist workflow.");
             }
 
-            var newPunchId = await _punchService.CreatePunch(punch);
-            var newPunch = await _punchService.GetPunchById(newPunchId);
+            var newPunchId = await _punchService.CreatePunchAsync(punch);
+            var newPunch = await _punchService.GetPunchByIdAsync(newPunchId);
 
-            return CreatedAtAction(nameof(GetPunchById), new { id = newPunchId }, newPunch);
+            return CreatedAtAction(nameof(GetPunchByIdAsync), new { id = newPunchId }, newPunch);
         }
 
         [HttpPost("UpdatePunch")]
@@ -183,7 +183,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Punch updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> UpdatePunch(PunchUpdateDto updatedPunch, [FromServices] IValidator<PunchUpdateDto> validator)
+        public async Task<IActionResult> UpdatePunchAsync(PunchUpdateDto updatedPunch, [FromServices] IValidator<PunchUpdateDto> validator)
         {   
             ValidationResult validationResult = validator.Validate(updatedPunch);
 
@@ -201,13 +201,13 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var punch = await _punchService.GetPunchById(updatedPunch.Id);
+            var punch = await _punchService.GetPunchByIdAsync(updatedPunch.Id);
             if (punch == null)
             {
                 return NotFound("Punch not found.");
             }
 
-            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowById(updatedPunch.ChecklistWorkflowId);
+            var checklistWorkflow = await _checklistWorkflowService.GetChecklistWorkflowByIdAsync(updatedPunch.ChecklistWorkflowId);
             if (checklistWorkflow == null)
             {
                 return NotFound("Could not find specified checklist workflow.");
@@ -223,7 +223,7 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            await _punchService.UpdatePunch(updatedPunch);
+            await _punchService.UpdatePunchAsync(updatedPunch);
 
             return Ok("Punch updated.");
         }
@@ -233,16 +233,16 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Delete punch by ID", Description = "Deletes a punch by their ID.")]
         [SwaggerResponse(200, "Punch deleted")]
         [SwaggerResponse(404, "Punch not found")]
-        public async Task<IActionResult> DeletePunch(string id)
+        public async Task<IActionResult> DeletePunchAsync(string id)
         {
-            var punch = await _punchService.GetPunchById(id);
+            var punch = await _punchService.GetPunchByIdAsync(id);
 
             if (punch == null)
             {
                 return NotFound("Punch not found");
             }
 
-            await _punchService.DeletePunch(id);
+            await _punchService.DeletePunchAsync(id);
 
             return Ok("Punch deleted");
         }

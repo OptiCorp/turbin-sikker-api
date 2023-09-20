@@ -16,22 +16,22 @@ namespace turbin.sikker.core.Services
             _categoryUtilities = categoryUtilities;
         }
 
-        public async Task<IEnumerable<Category>> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
             return await _context.Category.ToListAsync();
         }
 
-        public async Task<Category> GetCategoryById(string id)
+        public async Task<Category> GetCategoryByIdAsync(string id)
         {
             return await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
         }
 
-        public async Task<IEnumerable<Category>> SearchCategoryByName(string searchString)
+        public async Task<IEnumerable<Category>> SearchCategoryByNameAsync(string searchString)
         {
             return await _context.Category.Where(c => c.Name.Contains(searchString)).ToListAsync();
         }
       
-        public async Task<string> CreateCategory(CategoryRequestDto categoryDto)
+        public async Task<string> CreateCategoryAsync(CategoryCreateDto categoryDto)
         {
             var category = new Category
             {
@@ -40,12 +40,10 @@ namespace turbin.sikker.core.Services
             _context.Category.Add(category);
             await _context.SaveChangesAsync();
 
-            string categoryId = category.Id;
-
-            return categoryId;
+            return category.Id;
         }
 
-        public async Task UpdateCategory(CategoryUpdateDto updatedCategory)
+        public async Task UpdateCategoryAsync(CategoryUpdateDto updatedCategory)
         {
             var category = await _context.Category.FirstOrDefaultAsync(category => category.Id == updatedCategory.Id);
 
@@ -56,8 +54,7 @@ namespace turbin.sikker.core.Services
             }
         }
         
-
-        public async Task DeleteCategory(string id)
+        public async Task DeleteCategoryAsync(string id)
         {
             var category =  await _context.Category.FirstOrDefaultAsync(category => category.Id == id);
             if (category != null)

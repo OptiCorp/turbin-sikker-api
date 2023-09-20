@@ -16,7 +16,7 @@ public class ChecklistUtilities : IChecklistUtilities
             {
                 Id = checklist.Id,
                 Title = checklist.Title,
-                User = checklist.CreatedByUser,
+                User = checklist.Creator,
                 Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                 CreatedDate = checklist.CreatedDate,
                 UpdatedDate = checklist.UpdatedDate,
@@ -24,9 +24,9 @@ public class ChecklistUtilities : IChecklistUtilities
             };
         }
 
-        public ChecklistViewNoUserDto ChecklistToNoUserDto(Checklist checklist)
+        public ChecklistResponseNoUserDto ChecklistToNoUserDto(Checklist checklist)
         {
-            return new ChecklistViewNoUserDto
+            return new ChecklistResponseNoUserDto
             {
                 Id = checklist.Id,
                 Title = checklist.Title,

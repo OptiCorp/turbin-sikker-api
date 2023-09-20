@@ -1,7 +1,7 @@
 ﻿
 namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
-    public class ChecklistViewNoUserDto
+    public class ChecklistResponseNoUserDto
     {   
         public string? Id { get; set; }
 

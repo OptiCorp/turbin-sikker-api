@@ -28,7 +28,7 @@ namespace turbin.sikker.core.Model
         public User? User { get; }
 
         [Required]
-        public string? CreatedById { get; set; }
+        public string? CreatorId{ get; set; }
 
         public User? Creator { get; }
 
