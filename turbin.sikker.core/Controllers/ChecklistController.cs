@@ -39,9 +39,9 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllChecklists")]
         [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseDto>))]
-        public async Task<IActionResult> GetAllChecklists()
+        public async Task<IActionResult> GetAllChecklistsAsync()
         {   
-            return Ok(await _checklistService.GetAllChecklists());
+            return Ok(await _checklistService.GetAllChecklistsAsync());
         }
 
         // Get specific Checklist based on given Id
@@ -49,9 +49,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get checklist by ID", Description = "Retrieves a checklist by their ID.")]
         [SwaggerResponse(200, "Success", typeof(ChecklistResponseDto))]
         [SwaggerResponse(404, "Checklist not found")]
-        public async Task<IActionResult> GetChecklistById(string id)
+        public async Task<IActionResult> GetChecklistByIdAsync(string id)
         {
-            var checklist = await _checklistService.GetChecklistById(id);
+            var checklist = await _checklistService.GetChecklistByIdAsync(id);
             if (checklist == null)
             {
                 return NotFound("Checklist not found");
@@ -63,26 +63,26 @@ namespace turbin.sikker.core.Controllers
         // Get all Checklists by userId
         [HttpGet("GetAllChecklistsByUserId")]
         [SwaggerOperation(Summary = "Get all checklists by userId", Description = "Retrieves a list of all checklists created by user.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistViewNoUserDto>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseNoUserDto>))]
         [SwaggerResponse(404, "User not found")]
-        public async Task<IActionResult> GetAllChecklistsByUserId(string id)
+        public async Task<IActionResult> GetAllChecklistsByUserIdAsync(string id)
         {   
-            var user = await _userService.GetUserById(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound("User not found");
             }
-            return Ok(await _checklistService.GetAllChecklistsByUserId(id));
+            return Ok(await _checklistService.GetAllChecklistsByUserIdAsync(id));
         }
 
 
         [HttpGet("GetChecklistsByName")]
         [SwaggerOperation(Summary = "Search checklists by name", Description = "Retrieves all checklist which include search word.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistViewNoUserDto>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseNoUserDto>))]
         [SwaggerResponse(404, "No checklists found")]
-        public async Task<IActionResult> SearchChecklistByName(string searchString)
+        public async Task<IActionResult> SearchChecklistByNameAsync(string searchString)
         {   
-            var checklists = await _checklistService.SearchChecklistByName(searchString);
+            var checklists = await _checklistService.SearchChecklistByNameAsync(searchString);
 
             if (checklists.IsNullOrEmpty())
             {
@@ -95,10 +95,10 @@ namespace turbin.sikker.core.Controllers
         // Creates a new Checklist
         [HttpPost("AddChecklist")]
         [SwaggerOperation(Summary = "Create a new checklist", Description = "Creates a new checklist.")]
-        [SwaggerResponse(201, "Checklist created", typeof(ChecklistViewNoUserDto))]
+        [SwaggerResponse(201, "Checklist created", typeof(ChecklistResponseNoUserDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
-        public async Task<IActionResult> CreateChecklist(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> validator)
+        public async Task<IActionResult> CreateChecklistAsync(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> validator)
         {
 
             ValidationResult validationResult = validator.Validate(checklist);
@@ -117,33 +117,33 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var checklists = await _checklistService.GetAllChecklists();
-            var user = await _userService.GetUserById(checklist.CreatedBy);
+            var checklists = await _checklistService.GetAllChecklistsAsync();
+            var user = await _userService.GetUserByIdAsync(checklist.CreatorId);
 
             if (user == null)
             {
                 return NotFound("User not found");
             }
-            if (_checklistUtilities.checklistExists(checklists, checklist.CreatedBy, checklist.Title))
+            if (_checklistUtilities.checklistExists(checklists, checklist.CreatorId, checklist.Title))
             {
                 return Conflict("You already have a checklist by that name");
             }
 
 
-            var newChecklistId = await _checklistService.CreateChecklist(checklist);
-            var newChecklist = await _checklistService.GetChecklistById(newChecklistId);
+            var newChecklistId = await _checklistService.CreateChecklistAsync(checklist);
+            var newChecklist = await _checklistService.GetChecklistByIdAsync(newChecklistId);
 
-            return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
+            return CreatedAtAction(nameof(GetChecklistByIdAsync), new { id = newChecklistId }, newChecklist);
         }
 
 
         //Creates a checklist and adds tasks
         [HttpPost("AddChecklistWithTasks")]
         [SwaggerOperation(Summary = "Create a new checklist with tasks", Description = "Creates a new checklist.")]
-        [SwaggerResponse(201, "Checklist created", typeof(ChecklistViewNoUserDto))]
+        [SwaggerResponse(201, "Checklist created", typeof(ChecklistResponseNoUserDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> CreateChecklistWithTasks(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> checklistValidator, [FromServices] IValidator<ChecklistTaskRequestDto> checklistTaskValidator)
+        public async Task<IActionResult> CreateChecklistWithTasksAsync(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> checklistValidator, [FromServices] IValidator<ChecklistTaskCreateDto> checklistTaskValidator)
         {
 
             ValidationResult checklistValidationResult = checklistValidator.Validate(checklist);
@@ -162,22 +162,22 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var checklists = await _checklistService.GetAllChecklists();
-            var user = await _userService.GetUserById(checklist.CreatedBy);
+            var checklists = await _checklistService.GetAllChecklistsAsync();
+            var user = await _userService.GetUserByIdAsync(checklist.CreatorId);
 
             if (user == null)
             {
                 return NotFound("User not found");
             }
-            if (_checklistUtilities.checklistExists(checklists, checklist.CreatedBy, checklist.Title))
+            if (_checklistUtilities.checklistExists(checklists, checklist.CreatorId, checklist.Title))
             {
                 return Conflict("You already have a checklist by that name");
             }
 
-            var newChecklistId = await _checklistService.CreateChecklist(checklist);
-            var newChecklist = await _checklistService.GetChecklistById(newChecklistId);
+            var newChecklistId = await _checklistService.CreateChecklistAsync(checklist);
+            var newChecklist = await _checklistService.GetChecklistByIdAsync(newChecklistId);
 
-            foreach (ChecklistTaskRequestDto checklistTask in checklist.ChecklistTasks)
+            foreach (ChecklistTaskCreateDto checklistTask in checklist.ChecklistTasks)
             {
                 ValidationResult checklistTaskValidationResult = checklistTaskValidator.Validate(checklistTask);
 
@@ -192,41 +192,41 @@ namespace turbin.sikker.core.Controllers
                             failure.ErrorMessage
                             );
                     }
-                    await _checklistService.HardDeleteChecklist(newChecklistId);
+                    await _checklistService.HardDeleteChecklistAsync(newChecklistId);
                     return ValidationProblem(modelStateDictionary);
                 }
 
-                var category = await _categoryService.GetCategoryById(checklistTask.CategoryId);
+                var category = await _categoryService.GetCategoryByIdAsync(checklistTask.CategoryId);
 
                 if (category == null)
                 {
-                    await _checklistService.HardDeleteChecklist(newChecklistId);
+                    await _checklistService.HardDeleteChecklistAsync(newChecklistId);
                     return NotFound("Category not found");
                 }
             }
 
-            foreach (ChecklistTaskRequestDto checklistTask in checklist.ChecklistTasks)
+            foreach (ChecklistTaskCreateDto checklistTask in checklist.ChecklistTasks)
             {
-                var tasks = await _checklistTaskService.GetAllTasks();
+                var tasks = await _checklistTaskService.GetAllTasksAsync();
 
                 if(_checklistTaskUtilities.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
                 {
                     var task = tasks.FirstOrDefault(t => t.Category.Id == checklistTask.CategoryId && t.Description == checklistTask.Description);
-                    await _checklistTaskService.AddTaskToChecklist(new ChecklistTaskAddTaskToChecklistDto{
+                    await _checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskAddTaskToChecklistDto{
                                                                         ChecklistId = newChecklistId, 
                                                                         Id = task.Id
                                                                         });
                     continue;
                 }
 
-                var taskId = await _checklistTaskService.CreateChecklistTask(checklistTask);
-                await _checklistTaskService.AddTaskToChecklist(new ChecklistTaskAddTaskToChecklistDto{
+                var taskId = await _checklistTaskService.CreateChecklistTaskAsync(checklistTask);
+                await _checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskAddTaskToChecklistDto{
                                                                         ChecklistId = newChecklistId, 
                                                                         Id = taskId
                                                                         });
             }
             
-            return CreatedAtAction(nameof(GetChecklistById), new { id = newChecklistId }, newChecklist);
+            return CreatedAtAction(nameof(GetChecklistByIdAsync), new { id = newChecklistId }, newChecklist);
 
         }
 
@@ -236,7 +236,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Checklist updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Checklist not found")]
-        public async Task<IActionResult> UpdateChecklist(ChecklistEditDto updatedChecklist, [FromServices] IValidator<ChecklistEditDto> validator)
+        public async Task<IActionResult> UpdateChecklistAsync(ChecklistUpdateDto updatedChecklist, [FromServices] IValidator<ChecklistUpdateDto> validator)
         {
             ValidationResult validationResult = validator.Validate(updatedChecklist);
 
@@ -255,7 +255,7 @@ namespace turbin.sikker.core.Controllers
             }
 
 
-            var checklist = await _checklistService.GetChecklistById(updatedChecklist.Id);
+            var checklist = await _checklistService.GetChecklistByIdAsync(updatedChecklist.Id);
 
             if (checklist == null)
             {
@@ -267,7 +267,7 @@ namespace turbin.sikker.core.Controllers
                 return Conflict("Status must be 'Active' or 'Inactive'");
             }
 
-            await _checklistService.UpdateChecklist(updatedChecklist);
+            await _checklistService.UpdateChecklistAsync(updatedChecklist);
 
             return Ok($"Checklist '{checklist.Title}' updated");
         }
@@ -278,9 +278,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Checklist deleted")]
         [SwaggerResponse(400, "Checklist already deleted")]
         [SwaggerResponse(404, "Checklist not found")]
-        public async Task<IActionResult> DeleteChecklist(string id)
+        public async Task<IActionResult> DeleteChecklistAsync(string id)
         {
-            var checklist = await _checklistService.GetChecklistById(id);
+            var checklist = await _checklistService.GetChecklistByIdAsync(id);
 
             if (checklist == null)
             {
@@ -290,7 +290,7 @@ namespace turbin.sikker.core.Controllers
             {
                 return Conflict("Checklist already deleted");
             }
-            await _checklistService.DeleteChecklist(id);
+            await _checklistService.DeleteChecklistAsync(id);
 
             return Ok($"Checklist '{checklist.Title}' deleted");
         }

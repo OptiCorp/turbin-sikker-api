@@ -2,7 +2,7 @@
 
 namespace turbin.sikker.core.Model.DTO.TaskDtos
 {
-    public class ChecklistTaskRequestDto
+    public class ChecklistTaskCreateDto
     {   
         [Required]
         public string? CategoryId { get; set; }

@@ -35,9 +35,9 @@ namespace turbin.sikker.core.Configuration
                 .UsingEntity("ChecklistToTaskLink");
 
             modelBuilder.Entity<Checklist>()
-                .HasOne(c => c.CreatedByUser)
+                .HasOne(c => c.Creator)
                 .WithMany()
-                .HasForeignKey(c => c.CreatedBy)
+                .HasForeignKey(c => c.CreatorId)
                 .HasPrincipalKey(u => u.Id);
         }
     }
@@ -67,15 +67,15 @@ namespace turbin.sikker.core.Configuration
                 .HasKey(c => c.Id);
 
             modelBuilder.Entity<Punch>()
-                .HasOne(p => p.CreatedByUser)
+                .HasOne(p => p.Creator)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedBy)
+                .HasForeignKey(p => p.CreatorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Punch>()
-                .HasOne(c => c.ChecklistWorkflow)
+                .HasOne(c => c.Workflow)
                 .WithMany()
-                .HasForeignKey(c => c.ChecklistWorkflowId)
+                .HasForeignKey(c => c.WorkflowId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Punch>()
@@ -94,25 +94,25 @@ namespace turbin.sikker.core.Configuration
     {
         public static void Configure(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ChecklistWorkflow>()
+            modelBuilder.Entity<Workflow>()
                 .HasKey(c => c.Id);
 
-            modelBuilder.Entity<ChecklistWorkflow>()
+            modelBuilder.Entity<Workflow>()
                 .HasOne(p => p.Checklist)
                 .WithMany()
                 .HasForeignKey(p => p.ChecklistId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<ChecklistWorkflow>()
+            modelBuilder.Entity<Workflow>()
                 .HasOne(p => p.User)
                 .WithMany()
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<ChecklistWorkflow>()
+            modelBuilder.Entity<Workflow>()
                 .HasOne(p => p.Creator)
                 .WithMany()
-                .HasForeignKey(p => p.CreatedById)
+                .HasForeignKey(p => p.CreatorId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

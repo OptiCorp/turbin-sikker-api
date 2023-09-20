@@ -50,10 +50,10 @@ public class PunchUtilities : IPunchUtilities
                 Status = GetPunchStatus(punch.Status),
                 CreatedDate = punch.CreatedDate,
                 UpdatedDate = punch.UpdatedDate,
-                PunchDescription = punch.PunchDescription,
+                Description = punch.Description,
                 Severity = GetPunchSeverity(punch.Severity),
                 Active = punch.Active,
-                User = punch.CreatedByUser
+                User = punch.Creator
             };
         }
     }

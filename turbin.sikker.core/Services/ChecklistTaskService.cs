@@ -15,7 +15,7 @@ namespace turbin.sikker.core.Services
             _context = context;
             _checklistTaskUtilities = checklistTaskUtilities;
         }
-        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasks()
+        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksAsync()
         {
             return await _context.Checklist_Task
                             .Include(ct => ct.Category)
@@ -24,7 +24,7 @@ namespace turbin.sikker.core.Services
                             .ToListAsync();
         }
 
-        public async Task<ChecklistTaskResponseDto> GetChecklistTaskById(string id)
+        public async Task<ChecklistTaskResponseDto> GetChecklistTaskByIdAsync(string id)
         {   
             var checklist = await _context.Checklist_Task
                             .Include(ct => ct.Category)
@@ -38,7 +38,7 @@ namespace turbin.sikker.core.Services
             return _checklistTaskUtilities.TaskToResponseDto(checklist);
         }
 
-        public async Task<IEnumerable<ChecklistTaskByCategoryResponseDto>> GetAllTasksByCategoryId(string categoryId)
+        public async Task<IEnumerable<ChecklistTaskByCategoryResponseDto>> GetAllTasksByCategoryIdAsync(string categoryId)
         {
             return await _context.Checklist_Task
                             .Where(ct => ct.CategoryId == categoryId)
@@ -46,7 +46,7 @@ namespace turbin.sikker.core.Services
                             .ToListAsync();
         }
 
-        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksByChecklistId(string checklistId)
+        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetAllTasksByChecklistIdAsync(string checklistId)
         {
             var tasks = await _context.Checklist
                 .Where(c => c.Id == checklistId)
@@ -59,7 +59,7 @@ namespace turbin.sikker.core.Services
             return tasks;
         }
 
-        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetTasksByDescription(string searchString)
+        public async Task<IEnumerable<ChecklistTaskResponseDto>> GetTasksByDescriptionAsync(string searchString)
         {
             return await _context.Checklist_Task
                             .Where(ct => ct.Description.Contains(searchString))
@@ -69,7 +69,7 @@ namespace turbin.sikker.core.Services
         }
 
 
-        public async Task<string> CreateChecklistTask(ChecklistTaskRequestDto checklistTask)
+        public async Task<string> CreateChecklistTaskAsync(ChecklistTaskCreateDto checklistTask)
         {
             var task = new ChecklistTask
             {
@@ -80,12 +80,10 @@ namespace turbin.sikker.core.Services
             _context.Checklist_Task.Add(task);
             await _context.SaveChangesAsync();
 
-            string taskId = task.Id;
-
-            return taskId;
+            return task.Id;
         }
 
-        public async Task UpdateChecklistTask(ChecklistTaskUpdateDto updatedChecklistTask)
+        public async Task UpdateChecklistTaskAsync(ChecklistTaskUpdateDto updatedChecklistTask)
         {
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == updatedChecklistTask.Id);
 
@@ -96,7 +94,6 @@ namespace turbin.sikker.core.Services
                     checklistTask.CategoryId = updatedChecklistTask.CategoryId;
                 }
 
-
                 if (updatedChecklistTask.Description != null)
                 {
                     checklistTask.Description = updatedChecklistTask.Description;
@@ -106,7 +103,7 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async Task UpdateChecklistTaskInChecklist(ChecklistTaskUpdateDto updatedChecklistTask)
+        public async Task UpdateChecklistTaskInChecklistAsync(ChecklistTaskUpdateDto updatedChecklistTask)
         {
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == updatedChecklistTask.Id);
             var newChecklistTask = new ChecklistTask
@@ -137,9 +134,8 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async Task AddTaskToChecklist(ChecklistTaskAddTaskToChecklistDto checklistAddTask)
+        public async Task AddTaskToChecklistAsync(ChecklistTaskAddTaskToChecklistDto checklistAddTask)
         {
-
             var checklist = await _context.Checklist.Include(c => c.ChecklistTasks).FirstOrDefaultAsync(c => c.Id == checklistAddTask.ChecklistId);
             var task = await _context.Checklist_Task.FirstOrDefaultAsync(t => t.Id == checklistAddTask.Id);
 
@@ -151,9 +147,8 @@ namespace turbin.sikker.core.Services
             }
         }
 
-        public async Task DeleteChecklistTask(string id)
+        public async Task DeleteChecklistTaskAsync(string id)
         {
-
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == id);
             if (checklistTask != null)
             {

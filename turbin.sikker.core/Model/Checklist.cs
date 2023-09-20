@@ -30,9 +30,9 @@ namespace turbin.sikker.core.Model
         public DateTime? UpdatedDate { get; set; }
 
         [Required]
-        public string? CreatedBy { get; set; }
+        public string? CreatorId{ get; set; }
 
-        public User? CreatedByUser { get; }
+        public User? Creator { get; }
         public ICollection<ChecklistTask>? ChecklistTasks { get; }
 
     }

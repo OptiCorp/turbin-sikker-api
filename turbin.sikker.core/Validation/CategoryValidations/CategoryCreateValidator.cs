@@ -3,7 +3,7 @@ using turbin.sikker.core.Model.DTO.CategoryDtos;
 
 namespace turbin.sikker.core.Validation.CategoryValidations
 {
-    public class CategoryCreateValidator : AbstractValidator<CategoryRequestDto>
+    public class CategoryCreateValidator : AbstractValidator<CategoryCreateDto>
     {
 
         public CategoryCreateValidator()

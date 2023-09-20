@@ -30,9 +30,9 @@ namespace turbin.sikker.core.Controllers
         [HttpGet("GetAllCategories")]
         [SwaggerOperation(Summary = "Get all categories", Description = "Retrieves a list of all categories.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAllCategoriesAsync()
         {   
-            return Ok(await _categoryService.GetAllCategories());
+            return Ok(await _categoryService.GetAllCategoriesAsync());
         }
 
         // Get specific Category based on given Id
@@ -40,9 +40,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get category by ID", Description = "Retrives a category by the ID.")]
         [SwaggerResponse(200, "Success", typeof(Category))]
         [SwaggerResponse(404, "Category not found")]
-        public async Task<IActionResult> GetCategoryById(string id)
+        public async Task<IActionResult> GetCategoryByIdAsync(string id)
         {
-            var category = await _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound("Category not found");
@@ -54,9 +54,9 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Search for categories", Description = "Retrieves a list of all categories which contains the search word.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<Category>))]
         [SwaggerResponse(404, "Categories not found")]
-        public async Task<IActionResult> SearchCategoryByName(string searchString)
+        public async Task<IActionResult> SearchCategoryByNameAsync(string searchString)
         {   
-            var categories = await _categoryService.SearchCategoryByName(searchString);
+            var categories = await _categoryService.SearchCategoryByNameAsync(searchString);
             if (categories.IsNullOrEmpty())
             {
                 return NotFound("No categories found");
@@ -70,7 +70,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new category", Description = "Create a new category.")]
         [SwaggerResponse(201, "Category created", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
-        public async Task<IActionResult> CreateCategory(CategoryRequestDto category, [FromServices] IValidator<CategoryRequestDto> validator)
+        public async Task<IActionResult> CreateCategoryAsync(CategoryCreateDto category, [FromServices] IValidator<CategoryCreateDto> validator)
         {
 
             ValidationResult validationResult = validator.Validate(category);
@@ -89,15 +89,15 @@ namespace turbin.sikker.core.Controllers
                 return ValidationProblem(modelStateDictionary);
             }
 
-            var categories = await _categoryService.GetAllCategories();
-            if (_categoryUtilities.isCategoryNametaken(categories, category.Name))
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            if (_categoryUtilities.IsCategoryNametaken(categories, category.Name))
             {
                 return Conflict($"Category '{category.Name}' already exists.");
             }
 
-            var categoryId = await _categoryService.CreateCategory(category);
-            var newCategory = await _categoryService.GetCategoryById(categoryId);
-            return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, newCategory);
+            var categoryId = await _categoryService.CreateCategoryAsync(category);
+            var newCategory = await _categoryService.GetCategoryByIdAsync(categoryId);
+            return CreatedAtAction(nameof(GetCategoryByIdAsync), new { id = categoryId }, newCategory);
         }
 
         [HttpPost("UpdateCategory")]
@@ -105,7 +105,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Category updated", typeof(Category))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
-        public async Task<IActionResult> UpdateCategory(CategoryUpdateDto updatedCategory, [FromServices] IValidator<CategoryUpdateDto> validator)
+        public async Task<IActionResult> UpdateCategoryAsync(CategoryUpdateDto updatedCategory, [FromServices] IValidator<CategoryUpdateDto> validator)
         {
             ValidationResult validationResult = validator.Validate(updatedCategory);
 
@@ -122,20 +122,20 @@ namespace turbin.sikker.core.Controllers
                 }
                 return ValidationProblem(modelStateDictionary);
             }
-            var category = await _categoryService.GetCategoryById(updatedCategory.Id);
+            var category = await _categoryService.GetCategoryByIdAsync(updatedCategory.Id);
 
             if (category == null)
             {
                 return NotFound("Category not found");
             }
-            var categories = await _categoryService.GetAllCategories();
+            var categories = await _categoryService.GetAllCategoriesAsync();
 
-            if (_categoryUtilities.isCategoryNametaken(categories, updatedCategory.Name))
+            if (_categoryUtilities.IsCategoryNametaken(categories, updatedCategory.Name))
             {
                 return Conflict($"Category already exists.");
             }
 
-            await _categoryService.UpdateCategory(updatedCategory);
+            await _categoryService.UpdateCategoryAsync(updatedCategory);
 
             return Ok($"Category renamed to '{updatedCategory.Name}'");
         }
@@ -145,16 +145,16 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Delete category by ID", Description = "Deletes a category by their ID.")]
         [SwaggerResponse(200, "Category deleted")]
         [SwaggerResponse(404, "Category not found")]
-        public async Task<IActionResult> DeleteCategory(string id)
+        public async Task<IActionResult> DeleteCategoryAsync(string id)
         {
-            var category = await _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryByIdAsync(id);
 
             if (category == null)
             {
                 return NotFound("Category not found");
             }
 
-            await _categoryService.DeleteCategory(id);
+            await _categoryService.DeleteCategoryAsync(id);
 
             return Ok($"Category '{category.Name}' deleted");
         }

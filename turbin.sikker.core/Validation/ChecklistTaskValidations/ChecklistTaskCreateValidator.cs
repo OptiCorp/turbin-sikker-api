@@ -3,7 +3,7 @@ using turbin.sikker.core.Model.DTO.TaskDtos;
 
 namespace turbin.sikker.core.Validation.ChecklistTaskValidations
 {
-    public class ChecklistTaskCreateValidation : AbstractValidator<ChecklistTaskRequestDto>
+    public class ChecklistTaskCreateValidation : AbstractValidator<ChecklistTaskCreateDto>
     {
         public ChecklistTaskCreateValidation()
         {

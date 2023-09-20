@@ -23,11 +23,11 @@ namespace turbin.sikker.core.Tests.Services
                 Name = "UserRole 10"
             };
 
-            var inUseUserRole = await userRoleService.GetUserRoleById("UserRole 1");
+            var inUseUserRole = await userRoleService.GetUserRoleByIdAsync("UserRole 1");
 
             //Act
-            var notInUse = await userRoleService.IsUserRoleInUse(notInUseUserRole);
-            var inUse = await userRoleService.IsUserRoleInUse(inUseUserRole);
+            var notInUse = await userRoleService.IsUserRoleInUseAsync(notInUseUserRole);
+            var inUse = await userRoleService.IsUserRoleInUseAsync(inUseUserRole);
 
             //Assert
             Assert.IsType<bool>(notInUse);
@@ -46,7 +46,7 @@ namespace turbin.sikker.core.Tests.Services
             var userRoleService = new UserRoleService(dbContext, userRoleUtilities);
 
             //Act
-            var userRoles = await userRoleService.GetUserRoles();
+            var userRoles = await userRoleService.GetUserRolesAsync();
 
             //Assert
             Assert.IsType<List<UserRole>>(userRoles);
@@ -65,7 +65,7 @@ namespace turbin.sikker.core.Tests.Services
             var id = "UserRole 1";
 
             //Act
-            var userRole = await userRoleService.GetUserRoleById(id);
+            var userRole = await userRoleService.GetUserRoleByIdAsync(id);
 
             //Assert
             Assert.IsType<UserRole>(userRole);
@@ -85,7 +85,7 @@ namespace turbin.sikker.core.Tests.Services
             var roleName = "UserRole 1";
 
             //Act
-            var userRole = await userRoleService.GetUserRoleByUserRoleName(roleName);
+            var userRole = await userRoleService.GetUserRoleByUserRoleNameAsync(roleName);
 
             //Assert
             Assert.IsType<UserRole>(userRole);
@@ -108,9 +108,9 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            var newUserRoleId = await userRoleService.CreateUserRole(newUserRoleCreateDto);
-            var newUserRole = await userRoleService.GetUserRoleById(newUserRoleId);
-            var userRoles = await userRoleService.GetUserRoles();
+            var newUserRoleId = await userRoleService.CreateUserRoleAsync(newUserRoleCreateDto);
+            var newUserRole = await userRoleService.GetUserRoleByIdAsync(newUserRoleId);
+            var userRoles = await userRoleService.GetUserRolesAsync();
 
             //Assert
             Assert.IsType<string>(newUserRoleId);
@@ -134,8 +134,8 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            await userRoleService.UpdateUserRole(updateUserRoleDto);
-            var updatedUserRole = await userRoleService.GetUserRoleById("UserRole 1");
+            await userRoleService.UpdateUserRoleAsync(updateUserRoleDto);
+            var updatedUserRole = await userRoleService.GetUserRoleByIdAsync("UserRole 1");
 
             //Assert
             Assert.Equal(updatedUserRole.Name, "UserRole 10");
@@ -153,8 +153,8 @@ namespace turbin.sikker.core.Tests.Services
             var id = "UserRole 1";
 
             //Act
-            await userRoleService.DeleteUserRole(id);
-            var userRoles = await userRoleService.GetUserRoles();
+            await userRoleService.DeleteUserRoleAsync(id);
+            var userRoles = await userRoleService.GetUserRolesAsync();
 
             //Assert
             Assert.Equal(userRoles.Count(), 9);

@@ -39,11 +39,11 @@ namespace turbin.sikker.core.Tests
                 Name = "Category 1"
             };
 
-            Assert.True(_categoryUtilities.isCategoryNametaken(categories, cat4.Name));
+            Assert.True(_categoryUtilities.IsCategoryNametaken(categories, cat4.Name));
         }
 
         [Fact]
-        public void isCategoryNametaken_differentName_False()
+        public void IsCategoryNametaken_differentName_False()
         {
             List<Category> categories = new List<Category>();
             var cat1 = new Category {
@@ -68,7 +68,7 @@ namespace turbin.sikker.core.Tests
                 Name = "Category 4"
             };
 
-            Assert.False(_categoryUtilities.isCategoryNametaken(categories, cat4.Name));
+            Assert.False(_categoryUtilities.IsCategoryNametaken(categories, cat4.Name));
         }
     }
 }

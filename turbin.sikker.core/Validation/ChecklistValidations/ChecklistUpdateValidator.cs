@@ -3,7 +3,7 @@ using turbin.sikker.core.Model.DTO.ChecklistDtos;
 
 namespace turbin.sikker.core.Validation.ChecklistValidations
 {
-    public class ChecklistUpdateValidator : AbstractValidator<ChecklistEditDto>
+    public class ChecklistUpdateValidator : AbstractValidator<ChecklistUpdateDto>
     {
         public ChecklistUpdateValidator()
         {

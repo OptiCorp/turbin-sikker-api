@@ -1,7 +1,7 @@
 using FluentValidation;
 using turbin.sikker.core.Model.DTO;
 
-namespace turbin.sikker.core.Validation.ChecklistTaskValidations
+namespace turbin.sikker.core.Validation.PunchValidations
 {
     public class PunchUpdateValidation : AbstractValidator<PunchUpdateDto>
     {

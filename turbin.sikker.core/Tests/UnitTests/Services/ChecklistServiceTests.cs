@@ -17,7 +17,7 @@ namespace turbin.sikker.core.Tests.Services
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
         
             //Act
-            var result = await checklistService.GetAllChecklists();
+            var result = await checklistService.GetAllChecklistsAsync();
         
             //Assert
             Assert.IsType<List<ChecklistResponseDto>>(result);
@@ -37,7 +37,7 @@ namespace turbin.sikker.core.Tests.Services
 
         
             //Act
-            var result = await checklistService.GetChecklistById(id);
+            var result = await checklistService.GetChecklistByIdAsync(id);
         
             //Assert
             Assert.IsType<ChecklistResponseDto>(result);
@@ -55,10 +55,10 @@ namespace turbin.sikker.core.Tests.Services
             string userId = "User 1";
         
             //Act
-            var result = await checklistService.GetAllChecklistsByUserId(userId);
+            var result = await checklistService.GetAllChecklistsByUserIdAsync(userId);
         
             //Assert
-            Assert.IsType<List<ChecklistViewNoUserDto>>(result);
+            Assert.IsType<List<ChecklistResponseNoUserDto>>(result);
             Assert.InRange(result.Count(), 5, 5);
         }
 
@@ -73,7 +73,7 @@ namespace turbin.sikker.core.Tests.Services
             string name = "Checklist";
 
             //Act
-            var result = await checklistService.SearchChecklistByName(name);
+            var result = await checklistService.SearchChecklistByNameAsync(name);
 
             //Assert
             Assert.IsType<List<ChecklistResponseDto>>(result);
@@ -92,12 +92,12 @@ namespace turbin.sikker.core.Tests.Services
             var newChecklist = new ChecklistCreateDto
             {
                 Title = "New checklist",
-                CreatedBy = "User 1"
+                CreatorId = "User 1"
             };
 
             //Act
-            var id = await checklistService.CreateChecklist(newChecklist);
-            var checklist = await checklistService.GetChecklistById(id);
+            var id = await checklistService.CreateChecklistAsync(newChecklist);
+            var checklist = await checklistService.GetChecklistByIdAsync(id);
 
             //Assert
             Assert.IsType<string>(id);
@@ -113,7 +113,7 @@ namespace turbin.sikker.core.Tests.Services
             var checklistUtilities = new ChecklistUtilities();
             var checklistService = new ChecklistService(dbContext, checklistUtilities);
 
-            var updatedChecklist = new ChecklistEditDto
+            var updatedChecklist = new ChecklistUpdateDto
             {
                 Id = "Checklist 0",
                 Title = "Updated checklist",
@@ -121,9 +121,9 @@ namespace turbin.sikker.core.Tests.Services
             };
 
             //Act
-            var oldChecklistTitle = (await checklistService.GetChecklistById(updatedChecklist.Id)).Title;
-            await checklistService.UpdateChecklist(updatedChecklist);
-            var newChecklist = await checklistService.GetChecklistById(updatedChecklist.Id);
+            var oldChecklistTitle = (await checklistService.GetChecklistByIdAsync(updatedChecklist.Id)).Title;
+            await checklistService.UpdateChecklistAsync(updatedChecklist);
+            var newChecklist = await checklistService.GetChecklistByIdAsync(updatedChecklist.Id);
 
             //Assert
             Assert.NotEqual(oldChecklistTitle, newChecklist.Title);
@@ -143,9 +143,9 @@ namespace turbin.sikker.core.Tests.Services
             var id = "Checklist 0";
 
             //Act
-            await checklistService.DeleteChecklist(id);
-            var checklist = await checklistService.GetChecklistById(id);
-            var checklists = await checklistService.GetAllChecklists();
+            await checklistService.DeleteChecklistAsync(id);
+            var checklist = await checklistService.GetChecklistByIdAsync(id);
+            var checklists = await checklistService.GetAllChecklistsAsync();
 
             //Assert
             Assert.Equal(checklist.Status, "Inactive");
@@ -164,9 +164,9 @@ namespace turbin.sikker.core.Tests.Services
             var id = "Checklist 0";
 
             //Act
-            await checklistService.HardDeleteChecklist(id);
-            var checklist = await checklistService.GetChecklistById(id);
-            var checklists = await checklistService.GetAllChecklists();
+            await checklistService.HardDeleteChecklistAsync(id);
+            var checklist = await checklistService.GetChecklistByIdAsync(id);
+            var checklists = await checklistService.GetAllChecklistsAsync();
 
             //Assert
             Assert.Equal(checklist, null);

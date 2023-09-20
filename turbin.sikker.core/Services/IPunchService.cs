@@ -5,13 +5,13 @@ namespace turbin.sikker.core.Services
 {
     public interface IPunchService
     {
-        Task<IEnumerable<PunchResponseDto>> GetAllPunches();
-        Task<PunchResponseDto> GetPunchById(string id);
-        Task UpdatePunch(PunchUpdateDto punch);
-        Task<string> CreatePunch(PunchCreateDto punch);
-        Task DeletePunch(string id);
-        Task<IEnumerable<PunchResponseDto>> GetPunchesByWorkflowId(string checklistId);
-        Task<IEnumerable<PunchResponseDto>> GetPunchesByInspectorId(string id);
-        Task<IEnumerable<PunchResponseDto>> GetPunchesByLeaderId(string id);
+        Task<IEnumerable<PunchResponseDto>> GetAllPunchesAsync();
+        Task<PunchResponseDto> GetPunchByIdAsync(string id);
+        Task UpdatePunchAsync(PunchUpdateDto punch);
+        Task<string> CreatePunchAsync(PunchCreateDto punch);
+        Task DeletePunchAsync(string id);
+        Task<IEnumerable<PunchResponseDto>> GetPunchesByWorkflowIdAsync(string checklistId);
+        Task<IEnumerable<PunchResponseDto>> GetPunchesByInspectorIdAsync(string id);
+        Task<IEnumerable<PunchResponseDto>> GetPunchesByLeaderIdAsync(string id);
     }
 }
