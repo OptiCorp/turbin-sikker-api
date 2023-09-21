@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -22,14 +23,16 @@ namespace turbin.sikker.core.Controllers
         private readonly IChecklistService _checklistService;
         private readonly IPunchUtilities _punchUtilities;
         private readonly IWorkflowService _workflowService;
+        private readonly IUploadService _uploadService;
 
-        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities, IWorkflowService workflowService)
+        public PunchController(IPunchService punchService, IUserService userService, IChecklistService checklistService, IPunchUtilities punchUtilities, IWorkflowService workflowService, IUploadService uploadService)
         {
             _punchService = punchService;
             _userService = userService;
             _checklistService = checklistService;
             _punchUtilities = punchUtilities;
             _workflowService = workflowService;
+            _uploadService = uploadService;
         }
 
         [HttpGet("GetAllPunches")]
@@ -234,7 +237,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Punch deleted")]
         [SwaggerResponse(404, "Punch not found")]
         public async Task<IActionResult> DeletePunchAsync(string id)
-        {
+        {   
             var punch = await _punchService.GetPunchByIdAsync(id);
 
             if (punch == null)
@@ -242,6 +245,16 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Punch not found");
             }
 
+            var uploads = await _uploadService.GetUploadsByPunchIdAsync(id);
+            
+            if (uploads != null)
+            {
+                foreach(var upload in uploads)
+                {
+                    await _uploadService.DeleteUploadAsync(upload.Id);
+                }
+            }
+           
             await _punchService.DeletePunchAsync(id);
 
             return Ok("Punch deleted");

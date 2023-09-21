@@ -9,10 +9,10 @@ namespace turbin.sikker.core.Validation.PunchValidations
         {
             RuleFor(punch => punch.CreatorId).NotEmpty().WithMessage("You must specify a creator for this punch").NotNull().WithMessage("You must specify a creator for this punch");    
             
-            RuleFor(punch => punch.Description).NotEmpty().WithMessage("Description is required.")
-                .NotNull().WithMessage("Description cannot be null.")
-                .MinimumLength(5).WithMessage("Description must be at least 5 characters.")
-                .MaximumLength(500).WithMessage("Category name cannot exceed 500 characters.");
+            // RuleFor(punch => punch.Description).NotEmpty().WithMessage("Description is required.")
+            //     .NotNull().WithMessage("Description cannot be null.")
+            //     .MinimumLength(5).WithMessage("Description must be at least 5 characters.")
+            //     .MaximumLength(500).WithMessage("Category name cannot exceed 500 characters.");
 
             RuleFor(punch => punch.WorkflowId).NotEmpty().WithMessage("You must specify a workflow ID for this punch").NotNull().WithMessage("You must specify a workflow ID for this punch");    
 

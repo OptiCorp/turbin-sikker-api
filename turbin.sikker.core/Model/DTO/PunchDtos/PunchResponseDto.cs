@@ -21,6 +21,9 @@ namespace turbin.sikker.core.Model.DTO
 
         public Byte Active { get; set; }
 
+        public ICollection<Upload>? Uploads { get; set; }
+
+
     }
 }
 

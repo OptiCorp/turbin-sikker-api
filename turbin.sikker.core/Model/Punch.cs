@@ -48,8 +48,8 @@ namespace turbin.sikker.core.Model
 
         public User? Creator { get; }
 
-        [Required]
-        [StringLength(1500)]
+        // [Required]
+        // [StringLength(1500)]
         public string? Description { get; set; }
 
         [Required]
