@@ -244,12 +244,17 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("Punch not found");
             }
-            
-            foreach (Upload upload in punch.Uploads)
-            {
-                await _uploadService.DeleteUploadAsync(upload.Id);
-            }
 
+            var uploads = await _uploadService.GetUploadsByPunchIdAsync(id);
+            
+            if (uploads != null)
+            {
+                foreach(var upload in uploads)
+                {
+                    await _uploadService.DeleteUploadAsync(upload.Id);
+                }
+            }
+           
             await _punchService.DeletePunchAsync(id);
 
             return Ok("Punch deleted");
