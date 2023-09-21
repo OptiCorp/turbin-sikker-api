@@ -23,7 +23,6 @@ namespace turbin.sikker.core.Services
                             .Include(u => u.Uploads)
                             .Include(p => p.Creator)
                             .ThenInclude(u => u.UserRole)
-                            .Include(u => u.Uploads)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(p => _punchUtilities.PunchToResponseDto(p))
                             .ToListAsync();
@@ -36,7 +35,6 @@ namespace turbin.sikker.core.Services
                                 .Include(u => u.Uploads)
                                 .Include(p => p.Creator)
                                 .ThenInclude(u => u.UserRole)
-                                .Include(u => u.Uploads)
                                 .FirstOrDefaultAsync(p => p.Id == id);
 
             return _punchUtilities.PunchToResponseDto(punch);
@@ -54,7 +52,6 @@ namespace turbin.sikker.core.Services
                                     .Include(u => u.Uploads)
                                     .Include(p => p.Creator)
                                     .ThenInclude(u => u.UserRole)
-                                    .Include(u => u.Uploads)
                                     .OrderByDescending(c => c.CreatedDate)
                                     .Select(c => _punchUtilities.PunchToResponseDto(c))
                                     .ToListAsync();
@@ -72,7 +69,6 @@ namespace turbin.sikker.core.Services
                             .Include(p => p.Creator)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.CreatorId == id)
-                            .Include(u => u.Uploads)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(c => _punchUtilities.PunchToResponseDto(c))
                             .ToListAsync();
@@ -86,7 +82,6 @@ namespace turbin.sikker.core.Services
                             .Include(p => p.Creator)
                             .ThenInclude(u => u.UserRole)
                             .Where(c => c.WorkflowId == id)
-                            .Include(u => u.Uploads)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(c => _punchUtilities.PunchToResponseDto(c))
                             .ToListAsync();

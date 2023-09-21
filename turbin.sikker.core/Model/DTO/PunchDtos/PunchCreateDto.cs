@@ -7,7 +7,7 @@ namespace turbin.sikker.core.Model.DTO
         [Required]
         public string? CreatorId { get; set; }
 
-        [Required]
+        // [Required]
         public string? Description { get; set; }
 
         [Required]
