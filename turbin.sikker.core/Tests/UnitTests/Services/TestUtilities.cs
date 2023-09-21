@@ -92,6 +92,32 @@ namespace turbin.sikker.core.Tests.Services
                 }
             );
 
+            if (testType == "User")
+            {
+                if (await databaseContext.User.CountAsync() <= 0)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await databaseContext.User.AddAsync(
+                            new User
+                            {
+                                Id = string.Format("User {0}", i),
+                                AzureAdUserId = string.Format("AzureAD{0}@bouvet.no", i),
+                                UserRoleId = i%2 == 0 ? "Inspector" : "Leader",
+                                FirstName = "name",
+                                LastName = "nameson",
+                                Email = "some email",
+                                Username = string.Format("Username {0}", i),
+                                Status = i%5 == 0 ? UserStatus.Deleted : UserStatus.Active,
+                                CreatedDate = DateTime.Now
+                            }
+                        );
+                    }
+                    await databaseContext.SaveChangesAsync();
+                }
+                return databaseContext;
+            }
+
             await databaseContext.User.AddRangeAsync(
                 new User
                 {
