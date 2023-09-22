@@ -13,6 +13,8 @@ namespace turbin.sikker.core.Model.DTO
         public string? Severity { get; set; }
 
         public string? Status { get; set; }
+
+        public string? Message { get; set; }
     }
 }
 
