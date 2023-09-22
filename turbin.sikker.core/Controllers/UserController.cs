@@ -97,7 +97,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpPost("AddUser")]
         [SwaggerOperation(Summary = "Create a new user", Description = "Creates a new user.")]
-        [SwaggerResponse(201, "User created", typeof(UserCreateDto))]
+        [SwaggerResponse(201, "User created", typeof(UserDto))]
         [SwaggerResponse(400, "Invalid request")]
         public async Task<IActionResult> CreateUserAsync(UserCreateDto user, [FromServices] IValidator<UserCreateDto> validator)
         {
