@@ -102,7 +102,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpPost("UpdateCategory")]
         [SwaggerOperation(Summary = "Update category by ID", Description = "Updates an existing category by its ID.")]
-        [SwaggerResponse(200, "Category updated", typeof(Category))]
+        [SwaggerResponse(200, "Category updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Category not found")]
         public async Task<IActionResult> UpdateCategoryAsync(CategoryUpdateDto updatedCategory, [FromServices] IValidator<CategoryUpdateDto> validator)

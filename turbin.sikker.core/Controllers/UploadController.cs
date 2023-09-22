@@ -45,7 +45,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetUploadsByPunchId")]
         [SwaggerOperation(Summary = "Get uploads by punch ID", Description = "Retrieves all uploads by their punch ID.")]
-        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<UploadResponseDto>))]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> GetUploadsByPunchIdAsync(string punchId)
         {   
@@ -66,7 +66,7 @@ namespace turbin.sikker.core.Controllers
         // Edit specific upload based on given Id
         [HttpPost("AddUpload")]
         [SwaggerOperation(Summary = "Create a new upload", Description = "Creates a new upload.")]
-        [SwaggerResponse(201, "Upload created", typeof(User))]
+        [SwaggerResponse(201, "Upload created", typeof(Upload))]
         [SwaggerResponse(400, "Invalid request")]
         public async Task<IActionResult> CreateUploadAsync([FromForm] UploadCreateDto upload, [FromServices] IValidator<UploadCreateDto> validator)
         {
@@ -91,7 +91,8 @@ namespace turbin.sikker.core.Controllers
             }
 
             var newUploadId = await _uploadService.CreateUploadAsync(upload);
-            return CreatedAtAction(nameof(GetUploadByIdAsync), new { id = newUploadId }, upload);
+            var newUpload = await _uploadService.GetUploadByIdAsync(newUploadId);
+            return CreatedAtAction(nameof(GetUploadByIdAsync), new { id = newUploadId }, newUpload);
 
         }
 

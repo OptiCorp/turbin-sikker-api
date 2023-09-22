@@ -78,7 +78,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpGet("GetChecklistsByName")]
         [SwaggerOperation(Summary = "Search checklists by name", Description = "Retrieves all checklist which include search word.")]
-        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseNoUserDto>))]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseDto>))]
         [SwaggerResponse(404, "No checklists found")]
         public async Task<IActionResult> SearchChecklistByNameAsync(string searchString)
         {   
@@ -95,7 +95,7 @@ namespace turbin.sikker.core.Controllers
         // Creates a new Checklist
         [HttpPost("AddChecklist")]
         [SwaggerOperation(Summary = "Create a new checklist", Description = "Creates a new checklist.")]
-        [SwaggerResponse(201, "Checklist created", typeof(ChecklistResponseNoUserDto))]
+        [SwaggerResponse(201, "Checklist created", typeof(ChecklistResponseDto))]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> CreateChecklistAsync(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> validator)
@@ -140,7 +140,7 @@ namespace turbin.sikker.core.Controllers
         //Creates a checklist and adds tasks
         [HttpPost("AddChecklistWithTasks")]
         [SwaggerOperation(Summary = "Create a new checklist with tasks", Description = "Creates a new checklist.")]
-        [SwaggerResponse(201, "Checklist created", typeof(ChecklistResponseNoUserDto))]
+        [SwaggerResponse(201, "Checklist created")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> CreateChecklistWithTasksAsync(ChecklistCreateDto checklist, [FromServices] IValidator<ChecklistCreateDto> checklistValidator, [FromServices] IValidator<ChecklistTaskCreateDto> checklistTaskValidator)

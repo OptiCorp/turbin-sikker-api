@@ -92,7 +92,7 @@ namespace turbin.sikker.core.Controllers
         // Updates user role
         [HttpPost("UpdateUserRole")]
         [SwaggerOperation(Summary = "Update user role by ID", Description = "Updates an existing user role by its ID.")]
-        [SwaggerResponse(200, "User role updated", typeof(UserRoleUpdateDto))]
+        [SwaggerResponse(200, "User role updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "User role not found")]
         public async Task<IActionResult> UpdateUserRoleAsync(UserRoleUpdateDto updatedUserRole, [FromServices] IValidator<UserRoleUpdateDto> validator)

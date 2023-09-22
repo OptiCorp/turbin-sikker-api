@@ -141,7 +141,7 @@ namespace turbin.sikker.core.Controllers
 
         [HttpPost("AddPunch")]
         [SwaggerOperation(Summary = "Create a new punch", Description = "Creates a new punch.")]
-        [SwaggerResponse(201, "Punch created", typeof(PunchCreateDto))]
+        [SwaggerResponse(201, "Punch created", typeof(PunchResponseDto))]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> CreatePunchAsync(PunchCreateDto punch, [FromServices] IValidator<PunchCreateDto> validator)
         {   
