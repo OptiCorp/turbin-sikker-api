@@ -124,6 +124,11 @@ namespace turbin.sikker.core.Services
                     punch.Description = updatedPunch.Description;
                 }
 
+                if (updatedPunch.Message != null)
+                {
+                    punch.Message = updatedPunch.Message;
+                }
+
                 if (updatedPunch.Status != null)
                 {
                     string status = updatedPunch.Status.ToLower();

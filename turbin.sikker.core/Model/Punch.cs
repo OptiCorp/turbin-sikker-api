@@ -64,6 +64,8 @@ namespace turbin.sikker.core.Model
         public Byte Active { get; set; }
 
         public ICollection<Upload>? Uploads { get; }
+
+        public string? Message { get; set; }
     }
 }
 
