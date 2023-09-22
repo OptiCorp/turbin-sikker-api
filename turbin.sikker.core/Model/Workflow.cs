@@ -39,6 +39,8 @@ namespace turbin.sikker.core.Model
 
         public DateTime? UpdatedDate { get; set; }
 
+        public float HoursSpent { get; set; }
+
     }
 }
 

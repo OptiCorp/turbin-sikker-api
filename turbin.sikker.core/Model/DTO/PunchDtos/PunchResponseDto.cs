@@ -5,11 +5,15 @@ namespace turbin.sikker.core.Model.DTO
     {   
         public string? Id { get; set; }
 
+        public string? WorkflowId { get; set; }
+
         public ChecklistTask? ChecklistTask { get; set; }
 
         public User? User { get; set; }
 
         public string? Status { get; set; }
+
+        public string? Message { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 
@@ -22,7 +26,6 @@ namespace turbin.sikker.core.Model.DTO
         public Byte Active { get; set; }
 
         public ICollection<Upload>? Uploads { get; set; }
-
 
     }
 }
