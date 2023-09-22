@@ -35,6 +35,8 @@ namespace turbin.sikker.core.Model
         public User? Creator { get; }
         public ICollection<ChecklistTask>? ChecklistTasks { get; }
 
+        public float AvgHoursSpent { get; set; }
+
     }
 }
 

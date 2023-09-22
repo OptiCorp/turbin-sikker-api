@@ -46,8 +46,10 @@ public class PunchUtilities : IPunchUtilities
             return new PunchResponseDto
             {
                 Id = punch.Id,
+                WorkflowId = punch.WorkflowId,
                 ChecklistTask = punch.ChecklistTask,
                 Status = GetPunchStatus(punch.Status),
+                Message = punch.Message,
                 CreatedDate = punch.CreatedDate,
                 UpdatedDate = punch.UpdatedDate,
                 Description = punch.Description,
