@@ -43,4 +43,19 @@ namespace turbin.sikker.core
         }
 
     }
+
+    public class InvoiceDbContext : DbContext
+    {
+        public InvoiceDbContext(DbContextOptions<InvoiceDbContext> options) : base(options)
+        {
+
+        }
+
+        public DbSet<Invoice> Invoice { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
+    }
 }
