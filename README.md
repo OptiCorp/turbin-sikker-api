@@ -4,16 +4,16 @@
 
 ```mermaid
     erDiagram
-        CHECKLIST }o--|| BRIDGE : "..."
-        BRIDGE ||--o{ TASK : "..."
-        TASK }o--|| CATEGORY : "..."
-        TASK ||--o{ PUNCH : "..."
-        WORKFLOW ||--o{ PUNCH : "..."
-        USER ||--o{ PUNCH : "..."
-        PUNCH ||--o{ UPLOAD : "..."
-        ROLE ||--o{ USER : "..."
-        CHECKLIST ||--o{ WORKFLOW : "..."
-        USER ||--o{ WORKFLOW : "..."
+        CHECKLIST }o--|| BRIDGE : "is a part of"
+        BRIDGE ||--o{ TASK : "is a prerequisite for"
+        TASK }o--|| CATEGORY : "belongs to"
+        TASK ||--o{ PUNCH : "is started or completed by"
+        WORKFLOW ||--o{ PUNCH : "is associated with"
+        USER ||--o{ PUNCH : "creates"
+        PUNCH ||--o{ UPLOAD : "contains"
+        ROLE ||--o{ USER : "has"
+        CHECKLIST ||--o{ WORKFLOW : "is used in"
+        USER ||--o{ WORKFLOW : "is assigned to"
 ```
 
 ## db migration
