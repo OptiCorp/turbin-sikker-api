@@ -85,8 +85,7 @@ namespace turbin.sikker.core
 
 
             // Add DbContext
-            connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
-            connectionString = "Server=tcp:dbserverv2-turbinsikker-prod.database.windows.net,1433;Initial Catalog=sqldb-invoice;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication='Active Directory Default'";
+            connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretInvoice"]);
             services.AddDbContext<InvoiceDbContext>(options =>
                 options.UseSqlServer(connectionString
             ));
