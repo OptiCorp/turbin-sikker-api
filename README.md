@@ -4,8 +4,8 @@
 
 ```mermaid
     erDiagram
-        M:N ||--o{ CHECKLIST : "is a part of"
-        M:N ||--o{ TASK : "is a part of"
+        M-N ||--o{ CHECKLIST : "is a part of"
+        M-N ||--o{ TASK : "is a part of"
         CATEGORY ||--o{ TASK : "belongs to"
         TASK ||--o{ PUNCH : "is started or completed by"
         WORKFLOW ||--o{ PUNCH : "is associated with"
