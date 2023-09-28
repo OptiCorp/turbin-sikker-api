@@ -1,5 +1,21 @@
 # turbin-sikker-api
 
+## ER Diagram
+
+```mermaid
+    erDiagram
+        CHECKLIST }o--|| BRIDGE : "..."
+        BRIDGE ||--o{ TASK : "..."
+        TASK }o--|| CATEGORY : "..."
+        TASK ||--o{ PUNCH : "..."
+        WORKFLOW ||--o{ PUNCH : "..."
+        USER ||--o{ PUNCH : "..."
+        PUNCH ||--o{ UPLOAD : "..."
+        ROLE ||--o{ USER : "..."
+        CHECKLIST ||--o{ WORKFLOW : "..."
+        USER ||--o{ WORKFLOW : "..."
+```
+
 ## db migration
 After changing models, services, contollers or context
 run the following command
