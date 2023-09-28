@@ -6,7 +6,7 @@
     erDiagram
         CHECKLIST }o--o{ TASK : "is a part of"
         CATEGORY ||--o{ TASK : "belongs to"
-        TASK ||--o{ PUNCH : "is started or completed by"
+        TASK ||--o{ PUNCH : "can include"
         WORKFLOW ||--o{ PUNCH : "is associated with"
         USER ||--o{ PUNCH : "creates"
         PUNCH ||--o{ UPLOAD : "contains"
