@@ -4,15 +4,15 @@
 
 ```mermaid
     erDiagram
-        CHECKLIST }o--o{ TASK : "is a part of"
         CATEGORY ||--o{ TASK : "belongs to"
+        CHECKLIST }o--o{ TASK : "is a part of"
+        CHECKLIST ||--o{ WORKFLOW : "is used in"
         TASK ||--o{ PUNCH : "can include"
         WORKFLOW ||--o{ PUNCH : "is associated with"
         USER ||--o{ PUNCH : "creates"
+        USER ||--o{ WORKFLOW : "is assigned to"
         PUNCH ||--o{ UPLOAD : "contains"
         ROLE ||--o{ USER : "has"
-        CHECKLIST ||--o{ WORKFLOW : "is used in"
-        USER ||--o{ WORKFLOW : "is assigned to"
 ```
 
 ## db migration
