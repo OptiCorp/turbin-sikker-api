@@ -2,11 +2,10 @@
 
 ## Run API
 
-Run API Application (without building initial database migration):
+Clona and Run the API Application:
 
-```dotnet
-dotnet run --no-build
-```
+1. Clone repo: `gh repo clone OptiCorp/turbin-sikker-api`
+3. Run API: `cd turbin.sikker.core && dotnet run`
 
 ## ER Diagram
 
