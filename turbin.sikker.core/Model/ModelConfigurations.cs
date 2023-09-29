@@ -133,5 +133,15 @@ namespace turbin.sikker.core.Configuration
         }
     }
 
+    public static class InvoiceConfigurations
+    {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Invoice>()
+                .HasKey(c => c.Id);
+            
+        }
+    }
+
 
 }

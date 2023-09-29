@@ -28,6 +28,8 @@ namespace turbin.sikker.core
 
         public DbSet<Workflow> Workflow { get; set; }
 
+        public DbSet<Invoice> Invoice { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,6 +42,7 @@ namespace turbin.sikker.core
             PunchConfigurations.Configure(modelBuilder);
             WorkflowConfigurations.Configure(modelBuilder);
             UploadConfigurations.Configure(modelBuilder);
+            InvoiceConfigurations.Configure(modelBuilder);
         }
 
     }
