@@ -2,7 +2,7 @@
 
 ## Run API
 
-Run API Application without building and old database migration:
+Run API Application without building initial database migration:
 
 ```dotnet
 dotnet run --no-build
