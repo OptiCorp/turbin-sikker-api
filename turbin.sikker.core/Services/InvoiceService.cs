@@ -70,7 +70,6 @@ namespace turbin.sikker.core.Services
 
             if (invoice != null)
             {
-                //punch.Active = updatedPunch.Active;
                 if (updatedInvoice.Receiver != null)
                 {
                     invoice.Receiver = updatedInvoice.Receiver;

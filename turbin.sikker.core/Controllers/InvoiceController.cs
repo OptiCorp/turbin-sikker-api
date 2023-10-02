@@ -178,7 +178,7 @@ namespace turbin.sikker.core.Controllers
            
             await _invoiceService.DeleteInvoiceAsync(id);
 
-            return Ok("Punch deleted");
+            return Ok("Invoice deleted");
         }
        
     }
