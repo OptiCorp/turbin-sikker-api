@@ -6,12 +6,13 @@ using Azure;
 using Azure.Communication.Email;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using InvoiceApp.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace InvoiceApp
+namespace InvoiceApp.Functions
 {
     public class EmailSender
     {

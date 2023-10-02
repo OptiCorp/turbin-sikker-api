@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using InvoiceApp.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -12,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
 
-namespace InvoiceApp
+namespace InvoiceApp.Functions
 {
     public class PdfGenerator
     {

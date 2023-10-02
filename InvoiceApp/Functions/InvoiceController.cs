@@ -7,9 +7,10 @@ using Microsoft.Azure.Functions.Worker.Http;
 using System.Net.Http;
 using System.Net;
 using System;
+using InvoiceApp.Model;
 
 
-namespace InvoiceApp
+namespace InvoiceApp.Functions
 {
     public class InvoiceController
     {
