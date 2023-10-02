@@ -1,38 +1,46 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Azure.Communication.Email;
-using Azure;
 using System.Net.Mime;
-using Azure.Storage.Blobs;
+using System.Threading.Tasks;
+using Azure;
+using Azure.Communication.Email;
 using Azure.Identity;
+using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.EntityFrameworkCore;
 
-namespace TurbinSikker.EmailTrigger
+namespace InvoiceApp
 {
-    public static class EmailTrigger
+    public class EmailSender
     {
-        
-        
-        [FunctionName("EmailTrigger")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
+
+        private readonly InvoiceContext _context;
+        public EmailSender(InvoiceContext invoiceContext)
         {
-            string recipient = req.Query["recipient"];
-            string blobRef = req.Query["blobRef"];
+            _context = invoiceContext;
+        }
+
+
+        [Function("EmailSender")]
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequestData req)
+        {
+            var query = System.Web.HttpUtility.ParseQueryString(req.Url.Query);
+            var invoiceId = query["invoiceId"];
+
+            var invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == invoiceId);
 
             string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/pdf-container";
             BlobContainerClient containerClient = new BlobContainerClient(
                 new Uri(containerEndpoint), 
                 new DefaultAzureCredential(
-                    new DefaultAzureCredentialOptions { ManagedIdentityClientId = "7ba87be7-bb2b-4f09-b4d0-b47c27191947"}
+                    new DefaultAzureCredentialOptions {ManagedIdentityClientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID")}
                 ));
 
             Stream stream = new MemoryStream();
-            var blobClient = containerClient.GetBlobClient(blobRef);
+            var blobClient = containerClient.GetBlobClient(invoice.PdfBlobLink);
             await blobClient.DownloadToAsync(stream);
             stream.Position = 0;
 
@@ -47,13 +55,12 @@ namespace TurbinSikker.EmailTrigger
 
             var emailMessage = new EmailMessage(
                 senderAddress: "DoNotReply@74f652f3-add8-4eef-9e3b-f91509bb546d.azurecomm.net",
-                recipientAddress: recipient,
+                recipientAddress: invoice.Reciever,
                 content: emailContent
             );
 
             var emailAttachment = new EmailAttachment("Invoice.pdf", MediaTypeNames.Application.Pdf, await BinaryData.FromStreamAsync(stream));
-            
-
+        
             emailMessage.Attachments.Add(emailAttachment);
 
             try
@@ -62,7 +69,7 @@ namespace TurbinSikker.EmailTrigger
             }
             catch (Exception)
             {
-                throw;
+                return new BadRequestObjectResult("Email was not sent");
             }
 
             return new OkObjectResult("Email was sent successfully");
