@@ -47,9 +47,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    # - name: Restore dependencies InvoiceApp
-    #   run: dotnet restore
-    #   working-directory: ./InvoiceApp
     - name: Build InvoiceApp
       run: dotnet build --no-restore
       working-directory: ./InvoiceApp
