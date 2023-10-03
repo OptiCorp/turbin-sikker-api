@@ -39,9 +39,9 @@ jobs:
         path: turbin.sikker.core/website/**
         if-no-files-found: error
 
-    - name: Restore dependencies
+    - name: Restore dependencies invoice
       run: dotnet restore
       working-directory: ./InvoiceApp
-    - name: Build
+    - name: Build invoice
       run: dotnet build --no-restore
       working-directory: ./InvoiceApp
