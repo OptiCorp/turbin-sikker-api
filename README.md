@@ -18,6 +18,7 @@ Clone and Run the API Application:
         TASK ||--o{ PUNCH : "can include"
         WORKFLOW ||--o{ PUNCH : "is associated with"
         USER ||--o{ PUNCH : "creates"
+        USER ||--o{ CHECKLIST : "creates"
         USER ||--o{ WORKFLOW : "is assigned to"
         PUNCH ||--o{ UPLOAD : "contains"
         ROLE ||--o{ USER : "has"
