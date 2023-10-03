@@ -38,3 +38,16 @@ jobs:
         name: website
         path: turbin.sikker.core/website/**
         if-no-files-found: error
+
+  build-invoice:
+    runs-on: windows-latest
+    steps:
+    - name: Restore dependencies InvoiceApp
+      run: dotnet restore
+      working-directory: ./InvoiceApp
+    - name: Build InvoiceApp
+      run: dotnet build --no-restore
+      working-directory: ./InvoiceApp
+    - name: Publish InvoiceApp
+      run: dotnet publish InvoiceApp.csproj -c Release -o website
+      working-directory: ./InvoiceApp
