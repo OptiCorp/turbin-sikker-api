@@ -5,10 +5,10 @@ namespace turbin.sikker.core.Model
 {
     public enum InvoiceStatus
     {
-        [Display(Name = "Active")]
-        Active,
-        [Display(Name = "Inactive")]
-        Inactive
+        [Display(Name = "Paid")]
+        Paid,
+        [Display(Name = "Unpaid")]
+        Unpaid
     }
 
     public class Invoice
@@ -23,11 +23,20 @@ namespace turbin.sikker.core.Model
         [Required]
         public DateTime? CreatedDate { get; set; }
 
-        [Required]
         public DateTime? UpdatedDate { get; set; }
 
-        // public SentDate sentDate { get; set; }
+        [Required]
+        public string? ChecklistId { get; set; }
 
-        // public DueDate sentDate { get; set; }
+        public Checklist? Checklist { get; }
+
+        [Required]
+        public string? Receiver { get; set; }
+
+        [Required]
+        public string? ReceiverEmail { get; set; }
+
+        [Required]
+        public int? Amount { get; set; }
     }
 }
