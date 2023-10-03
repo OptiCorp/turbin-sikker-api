@@ -39,17 +39,9 @@ jobs:
         path: turbin.sikker.core/website/**
         if-no-files-found: error
 
-  build-invoice:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-    - name: Build InvoiceApp
-      run: dotnet build --no-restore
+    - name: Restore dependencies
+      run: dotnet restore
       working-directory: ./InvoiceApp
-    - name: Publish InvoiceApp
-      run: dotnet publish InvoiceApp.csproj -c Release -o website
+    - name: Build
+      run: dotnet build --no-restore
       working-directory: ./InvoiceApp
