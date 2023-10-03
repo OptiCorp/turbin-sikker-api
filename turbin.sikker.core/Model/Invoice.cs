@@ -25,16 +25,16 @@ namespace turbin.sikker.core.Model
 
         public DateTime? UpdatedDate { get; set; }
 
-        [Required]
-        public string? ChecklistId { get; set; }
+        // [Required]
+        // public string? ChecklistId { get; set; }
 
         public Checklist? Checklist { get; }
 
         [Required]
         public string? Receiver { get; set; }
 
-        [Required]
-        public string? ReceiverEmail { get; set; }
+        // [Required]
+        // public string? ReceiverEmail { get; set; }
 
         [Required]
         public int? Amount { get; set; }

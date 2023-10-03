@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Net;
 using System;
 using InvoiceApp.Model;
+using System.Text.Json;
+using Azure.Messaging.ServiceBus;
 
 
 namespace InvoiceApp.Functions
@@ -34,9 +36,9 @@ namespace InvoiceApp.Functions
             {
                 CreatedDate = DateTime.Now,
                 SentDate = DateTime.Now,
-                Status = InvoiceStatus.Active,
+                Status = InvoiceStatus.Unpaid,
                 Sender = invoiceDto.Sender,
-                Reciever = invoiceDto.Reciever,
+                Receiver = invoiceDto.Receiver,
                 Amount = invoiceDto.Amount,
                 PdfBlobLink = Guid.NewGuid().ToString()
             };
@@ -51,6 +53,16 @@ namespace InvoiceApp.Functions
             );
 
             if (response.StatusCode != HttpStatusCode.OK) return new BadRequestObjectResult("Pdf-generation failed");
+
+            var connectionString = "Endpoint=sb://servicebus-turbinsikker-prod.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=jsxc2wM5vV4rhtevLn921gUZCcs7eLEsg+ASbHwJEng=";
+            var sbClient = new ServiceBusClient(connectionString);
+            var sender = sbClient.CreateSender("invoice-added");
+
+            var body = JsonSerializer.Serialize(invoice);
+
+            var sbMessage = new ServiceBusMessage(body);
+            await sender.SendMessageAsync(sbMessage);
+
 
             return new OkObjectResult("Success");
         }

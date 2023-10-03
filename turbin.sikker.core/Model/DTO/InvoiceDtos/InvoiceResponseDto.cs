@@ -13,13 +13,13 @@ namespace turbin.sikker.core.Model.DTO
 
         public DateTime? UpdatedDate { get; set; }
 
-        public string? ChecklistId { get; set; }
+        // public string? ChecklistId { get; set; }
 
-        public Checklist? Checklist { get; set; }
+        // public Checklist? Checklist { get; set; }
 
         public string? Receiver { get; set; }
 
-        public string? ReceiverEmail { get; set; }
+        // public string? ReceiverEmail { get; set; }
 
         public int? Amount { get; set; }
 

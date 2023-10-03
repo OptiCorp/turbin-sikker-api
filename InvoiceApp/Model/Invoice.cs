@@ -6,10 +6,10 @@ namespace InvoiceApp.Model
 {
     public enum InvoiceStatus
     {
-        [Display(Name = "Active")]
-        Active,
-        [Display(Name = "Inactive")]
-        Inactive
+        [Display(Name = "Paid")]
+        Paid,
+        [Display(Name = "Unpaid")]
+        Unpaid
     }
 
     public class Invoice
@@ -28,7 +28,7 @@ namespace InvoiceApp.Model
 
         public string Sender { get; set; }
 
-        public string Reciever { get; set; }
+        public string Receiver { get; set; }
 
         public int Amount { get; set; }
 
