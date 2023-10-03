@@ -5,6 +5,7 @@
 Clone and Run the API Application:
 
 1. Clone repo: `gh repo clone OptiCorp/turbin-sikker-api`
+2. Navigate to project folder: `cd turbin-sikker-api/`
 3. Run API: `cd turbin.sikker.core && dotnet run`
 
 ## ER Diagram
