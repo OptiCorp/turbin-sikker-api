@@ -33,7 +33,7 @@ namespace InvoiceApp.Functions
 
             Invoice invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == invoiceId);
 
-            string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/pdf-container";
+            string containerEndpoint = Environment.GetEnvironmentVariable("PdfContainerEndpoint");
             BlobContainerClient containerClient = new BlobContainerClient(
                 new Uri(containerEndpoint), 
                 new DefaultAzureCredential(
