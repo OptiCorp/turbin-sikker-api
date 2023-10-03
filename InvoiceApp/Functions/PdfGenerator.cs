@@ -100,7 +100,6 @@ namespace InvoiceApp.Functions
 
             var response = await client.PostAsync(
                 string.Format("https://turbinsikker-fa-prod.azurewebsites.net/api/EmailSender?code={0}&invoiceId={1}", code, invoice.Id),
-                // string.Format("http://localhost:7071/api/EmailTrigger?recipient={0}&blobRef={1}", "henrik.laland@bouvet.no", invoice.Id),
                 null);
 
             if (response.StatusCode != HttpStatusCode.OK) return new BadRequestObjectResult("Email sender failed");
