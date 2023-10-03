@@ -33,7 +33,7 @@ namespace InvoiceApp.Functions
 
             var invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == invoiceId);
 
-            string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/pdf-container";
+            string containerEndpoint = Environment.GetEnvironmentVariable("PdfContainerEndpoint");
             BlobContainerClient containerClient = new BlobContainerClient(
                 new Uri(containerEndpoint), 
                 new DefaultAzureCredential(
@@ -45,7 +45,7 @@ namespace InvoiceApp.Functions
             await blobClient.DownloadToAsync(stream);
             stream.Position = 0;
 
-            string connectionString = "endpoint=https://turbinsikker-comms-prod.norway.communication.azure.com/;accesskey=Gd3Q7tfeFLa3zeylVJP/RH7QxvZ2Egp2qmTQCxzMTplLaoFuWgIqgRoaCwvUMhAJrc77rkNljwtJV7ye+fYLFQ==";
+            string connectionString = Environment.GetEnvironmentVariable("EmailConnectionString");
             var emailClient = new EmailClient(connectionString);
 
             var emailContent = new EmailContent("Invoice")

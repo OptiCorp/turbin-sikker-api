@@ -33,7 +33,7 @@ namespace InvoiceApp.Functions
 
             Invoice invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == invoiceId);
 
-            string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/pdf-container";
+            string containerEndpoint = Environment.GetEnvironmentVariable("PdfContainerEndpoint");
             BlobContainerClient containerClient = new BlobContainerClient(
                 new Uri(containerEndpoint), 
                 new DefaultAzureCredential(
@@ -100,7 +100,6 @@ namespace InvoiceApp.Functions
 
             var response = await client.PostAsync(
                 string.Format("https://turbinsikker-fa-prod.azurewebsites.net/api/EmailSender?code={0}&invoiceId={1}", code, invoice.Id),
-                // string.Format("http://localhost:7071/api/EmailTrigger?recipient={0}&blobRef={1}", "henrik.laland@bouvet.no", invoice.Id),
                 null);
 
             if (response.StatusCode != HttpStatusCode.OK) return new BadRequestObjectResult("Email sender failed");
