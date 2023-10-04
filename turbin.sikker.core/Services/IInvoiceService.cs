@@ -7,7 +7,7 @@ namespace turbin.sikker.core.Services
     {
         Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync();
         Task<InvoiceResponseDto> GetInvoiceByIdAsync(string id);
-        Task<InvoiceResponseDto> GetInvoiceByChecklistIdAsync(string checklistId);
+        // Task<InvoiceResponseDto> GetInvoiceByChecklistIdAsync(string checklistId);
         Task<string> CreateInvoiceAsync(InvoiceCreateDto invoice);
         Task UpdateInvoiceAsync(InvoiceUpdateDto invoice);
         Task DeleteInvoiceAsync(string id);

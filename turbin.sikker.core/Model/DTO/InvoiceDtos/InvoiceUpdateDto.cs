@@ -9,7 +9,7 @@ namespace turbin.sikker.core.Model.DTO
     
         public string? Receiver { get; set; }
 
-        public string? ReceiverEmail { get; set; }
+        // public string? ReceiverEmail { get; set; }
 
         public int? Amount { get; set; }
 

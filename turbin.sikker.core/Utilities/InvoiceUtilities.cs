@@ -32,10 +32,10 @@ public class InvoiceUtilities : IInvoiceUtilities
                 Status = invoice.Status.ToString(),
                 CreatedDate = invoice.CreatedDate,
                 UpdatedDate = invoice.UpdatedDate,
-                ChecklistId = invoice.ChecklistId,
-                Checklist = invoice.Checklist,
+                // ChecklistId = invoice.ChecklistId,
+                // Checklist = invoice.Checklist,
                 Receiver = invoice.Receiver,
-                ReceiverEmail = invoice.ReceiverEmail,
+                // ReceiverEmail = invoice.ReceiverEmail,
                 Amount = invoice.Amount
 
             };

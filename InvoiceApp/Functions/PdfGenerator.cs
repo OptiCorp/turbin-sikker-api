@@ -61,7 +61,7 @@ namespace InvoiceApp.Functions
                 new XRect(0, page.Height*1/6, page.Width, page.Height/6),
                 XStringFormats.Center);
 
-            gfx.DrawString(string.Format("Hello {0}, this is your invoice", invoice.Reciever), font, XBrushes.Black,
+            gfx.DrawString(string.Format("Hello {0}, this is your invoice", invoice.Receiver), font, XBrushes.Black,
                 new XRect(0, page.Height*2/6, page.Width, page.Height/6),
                 XStringFormats.Center);
 

@@ -20,7 +20,7 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync()
         {
             return await _context.Invoice
-                            .Include(p => p.Checklist)
+                            // .Include(p => p.Checklist)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(p => _invoiceUtilities.InvoiceToResponseDto(p))
                             .ToListAsync();
@@ -29,21 +29,23 @@ namespace turbin.sikker.core.Services
         public async Task<InvoiceResponseDto> GetInvoiceByIdAsync(string id)
         {
             var invoice = await _context.Invoice
-                                .Include(p => p.Checklist)
+                                // .Include(p => p.Checklist)
                                 .FirstOrDefaultAsync(p => p.Id == id);
+            
+            if (invoice == null) return null;
 
             return _invoiceUtilities.InvoiceToResponseDto(invoice);
         }
 
 
-        public async Task<InvoiceResponseDto> GetInvoiceByChecklistIdAsync(string id)
-        {
-            var invoice = await _context.Invoice
-                                .Include(p => p.Checklist)
-                                .FirstOrDefaultAsync(p => p.ChecklistId == id);
+        // public async Task<InvoiceResponseDto> GetInvoiceByChecklistIdAsync(string id)
+        // {
+        //     var invoice = await _context.Invoice
+        //                         .Include(p => p.Checklist)
+        //                         .FirstOrDefaultAsync(p => p.ChecklistId == id);
 
-            return _invoiceUtilities.InvoiceToResponseDto(invoice);
-        }
+        //     return _invoiceUtilities.InvoiceToResponseDto(invoice);
+        // }
 
         public async Task<string> CreateInvoiceAsync(InvoiceCreateDto invoiceDto)
         {
@@ -52,9 +54,9 @@ namespace turbin.sikker.core.Services
             {
                 Status = InvoiceStatus.Unpaid,
                 CreatedDate = DateTime.Now,
-                ChecklistId = invoiceDto.ChecklistId,
+                // ChecklistId = invoiceDto.ChecklistId,
                 Receiver = invoiceDto.Receiver,
-                ReceiverEmail = invoiceDto.ReceiverEmail,
+                // ReceiverEmail = invoiceDto.ReceiverEmail,
                 Amount = invoiceDto.Amount
             };
 
@@ -75,10 +77,10 @@ namespace turbin.sikker.core.Services
                     invoice.Receiver = updatedInvoice.Receiver;
                 }
 
-                if (updatedInvoice.ReceiverEmail != null)
-                {
-                    invoice.ReceiverEmail = updatedInvoice.ReceiverEmail;
-                }
+                // if (updatedInvoice.ReceiverEmail != null)
+                // {
+                //     invoice.ReceiverEmail = updatedInvoice.ReceiverEmail;
+                // }
 
                 if (updatedInvoice.Amount != null)
                 {
