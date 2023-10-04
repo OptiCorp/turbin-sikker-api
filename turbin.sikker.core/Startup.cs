@@ -57,6 +57,7 @@ namespace turbin.sikker.core
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IPunchService, PunchService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
 
             services.AddScoped<IUserUtilities, UserUtilities>();
             services.AddScoped<IUserRoleUtilities, UserRoleUtilities>();
@@ -66,6 +67,7 @@ namespace turbin.sikker.core
             services.AddScoped<IPunchUtilities, PunchUtilities>();
             services.AddScoped<IWorkflowUtilities, WorkflowUtilities>();
             services.AddScoped<IUploadUtilities, UploadUtilities>();
+            services.AddScoped<IInvoiceUtilities, InvoiceUtilities>();
 
             services.AddScoped<ValidationHelper>();
 
@@ -81,7 +83,14 @@ namespace turbin.sikker.core
 
             services.AddDbContext<TurbinSikkerDbContext>(options =>
                 options.UseSqlServer(connectionString
-                ));
+            ));
+
+
+            // Add DbContext
+            var connectionStringInvoice = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretInvoice"]);
+            services.AddDbContext<InvoiceDbContext>(options =>
+                options.UseSqlServer(connectionStringInvoice
+            ));
 
 
 
@@ -114,7 +123,7 @@ namespace turbin.sikker.core
 
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TurbinSikkerDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TurbinSikkerDbContext dbContext, InvoiceDbContext dbInvoiceContext)
         {
             if (env.IsDevelopment())
             {
@@ -140,6 +149,7 @@ namespace turbin.sikker.core
                 .CreateLogger();
 
             dbContext.Database.Migrate();
+            dbInvoiceContext.Database.Migrate();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
