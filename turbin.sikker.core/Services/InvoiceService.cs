@@ -82,10 +82,10 @@ namespace turbin.sikker.core.Services
                 //     invoice.ReceiverEmail = updatedInvoice.ReceiverEmail;
                 // }
 
-                if (updatedInvoice.Amount != null)
-                {
-                    invoice.Amount = updatedInvoice.Amount;
-                }
+                // if (updatedInvoice.Amount != null)
+                // {
+                //     invoice.Amount = updatedInvoice.Amount;
+                // }
 
                 if (updatedInvoice.Status != null)
                 {
