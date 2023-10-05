@@ -14,29 +14,23 @@ namespace turbin.sikker.core.Model
     public class Invoice
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
-        [Required]
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
+
+        public DateTime SentDate { get; set; }
+
         [EnumDataType(typeof(InvoiceStatus))]
         public InvoiceStatus Status { get; set; }
-        
-        [Required]
-        public DateTime? CreatedDate { get; set; }
 
-        public DateTime? UpdatedDate { get; set; }
+        public string Sender { get; set; }
 
-        // [Required]
-        // public string? ChecklistId { get; set; }
+        public string Receiver { get; set; }
 
-        public Checklist? Checklist { get; }
+        public int Amount { get; set; }
 
-        [Required]
-        public string? Receiver { get; set; }
-
-        // [Required]
-        // public string? ReceiverEmail { get; set; }
-
-        [Required]
-        public int? Amount { get; set; }
+        public string PdfBlobLink { get; set; }
     }
 }
