@@ -74,6 +74,9 @@ namespace turbin.sikker.core
             services.AddControllers();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
+            services.AddHostedService<CreateInvoiceHandler>();
+
+
 
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
@@ -84,14 +87,7 @@ namespace turbin.sikker.core
             services.AddDbContext<TurbinSikkerDbContext>(options =>
                 options.UseSqlServer(connectionString
             ));
-
-
-            // Add DbContext
-            var connectionStringInvoice = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretInvoice"]);
-            services.AddDbContext<InvoiceDbContext>(options =>
-                options.UseSqlServer(connectionStringInvoice
-            ));
-
+           
 
 
 
@@ -123,7 +119,7 @@ namespace turbin.sikker.core
 
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TurbinSikkerDbContext dbContext, InvoiceDbContext dbInvoiceContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TurbinSikkerDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -149,7 +145,6 @@ namespace turbin.sikker.core
                 .CreateLogger();
 
             dbContext.Database.Migrate();
-            dbInvoiceContext.Database.Migrate();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

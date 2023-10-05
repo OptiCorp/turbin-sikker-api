@@ -57,7 +57,7 @@ namespace turbin.sikker.core.Services
                 // ChecklistId = invoiceDto.ChecklistId,
                 Receiver = invoiceDto.Receiver,
                 // ReceiverEmail = invoiceDto.ReceiverEmail,
-                Amount = invoiceDto.Amount
+                Amount = int.Parse(invoiceDto.Amount)
             };
 
             _context.Invoice.Add(invoice);

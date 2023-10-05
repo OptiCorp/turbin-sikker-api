@@ -14,7 +14,7 @@ namespace turbin.sikker.core.Model.DTO
         // public string? ReceiverEmail { get; set; }
 
         [Required]
-        public int? Amount { get; set; }
+        public string? Amount { get; set; }
 
     }
 }
