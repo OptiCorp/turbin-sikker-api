@@ -88,23 +88,23 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Create a new invoice", Description = "Creates a new invoice.")]
         [SwaggerResponse(201, "Invoice created", typeof(InvoiceResponseDto))]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> CreateInvoiceAsync(InvoiceCreateDto invoice, [FromServices] IValidator<InvoiceCreateDto> validator)
+        public async Task<IActionResult> CreateInvoiceAsync(InvoiceCreateDto invoice)
         {   
-            ValidationResult validationResult = validator.Validate(invoice);
+            // ValidationResult validationResult = validator.Validate(invoice);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
+            // if (!validationResult.IsValid)
+            // {
+            //     var modelStateDictionary = new ModelStateDictionary();
 
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage
-                        );
-                }
-                return ValidationProblem(modelStateDictionary);
-            }
+            //     foreach (ValidationFailure failure in validationResult.Errors)
+            //     {
+            //         modelStateDictionary.AddModelError(
+            //             failure.PropertyName,
+            //             failure.ErrorMessage
+            //             );
+            //     }
+            //     return ValidationProblem(modelStateDictionary);
+            // }
 
             // var checklist = await _checklistService.GetChecklistByIdAsync(invoice.ChecklistId);
             // if (checklist == null)
