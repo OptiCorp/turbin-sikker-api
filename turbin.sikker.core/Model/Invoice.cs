@@ -32,7 +32,7 @@ namespace turbin.sikker.core.Model
         [Required]
         public string ReceiverEmail { get; set; }
         [Required]
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
         [Required]
         public string PdfBlobLink { get; set; }
         [Required]
