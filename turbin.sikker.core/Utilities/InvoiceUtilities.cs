@@ -29,15 +29,15 @@ public class InvoiceUtilities : IInvoiceUtilities
             return new InvoiceResponseDto
             {
                 Id = invoice.Id,
+                Sender = invoice.Sender,
+                Receiver = invoice.Receiver,
                 Status = invoice.Status.ToString(),
                 CreatedDate = invoice.CreatedDate,
+                SentDate = invoice.SentDate,
                 UpdatedDate = invoice.UpdatedDate,
-                // ChecklistId = invoice.ChecklistId,
-                // Checklist = invoice.Checklist,
-                Receiver = invoice.Receiver,
-                // ReceiverEmail = invoice.ReceiverEmail,
-                Amount = invoice.Amount
-
+                Amount = invoice.Amount,
+                PdfBlobLink = invoice.PdfBlobLink,
+                // WorkflowIds = invoice.WorkflowIds
             };
         }
     }
