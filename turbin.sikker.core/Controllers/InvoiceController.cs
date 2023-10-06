@@ -63,26 +63,6 @@ namespace turbin.sikker.core.Controllers
             return Ok(invoice);
         }
 
-        // [HttpGet("GetInvoiceByChecklistId")]
-        // [SwaggerOperation(Summary = "Get invoice by checklist ID", Description = "Retrieves an invoice by their checklist ID.")]
-        // [SwaggerResponse(200, "Success", typeof(IEnumerable<InvoiceResponseDto>))]
-        // [SwaggerResponse(404, "Not found")]
-        // public async Task<IActionResult> GetInvoiceByChecklistIdAsync(string checklistId)
-        // {   
-        //     // var checklist = await _checklistService.GetChecklistByIdAsync(checklistId);
-        //     // if (checklist == null)
-        //     // {
-        //     //     return NotFound("Checklist not found");
-        //     // }
-
-        //     var invoice = await _invoiceService.GetInvoiceByChecklistIdAsync(checklistId);
-        //     if (invoice == null)
-        //     {
-        //         return NotFound("Invoice not found");
-        //     }  
-
-        //     return Ok(invoice);
-        // }
 
         [HttpPost("AddInvoice")]
         [SwaggerOperation(Summary = "Create a new invoice", Description = "Creates a new invoice.")]
