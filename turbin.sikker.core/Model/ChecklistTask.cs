@@ -16,6 +16,8 @@ namespace turbin.sikker.core.Model
 
         public Category? Category { get; }
 
+        [Required]
+        public int? avgEstimationTimeMinutes { get; set; }
+
     }
 }
-
