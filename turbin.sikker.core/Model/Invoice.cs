@@ -18,7 +18,7 @@ namespace turbin.sikker.core.Model
 
         public DateTime CreatedDate { get; set; }
 
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public DateTime SentDate { get; set; }
 
