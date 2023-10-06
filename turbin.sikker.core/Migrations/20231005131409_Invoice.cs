@@ -3,36 +3,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace InvoiceApp.Migrations
+namespace turbin.sikker.core.Migrations
 {
-    public partial class InvoiceCompleted : Migration
+    /// <inheritdoc />
+    public partial class Invoice : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Amount",
-                table: "Invoice",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.AddColumn<string>(
                 name: "PdfBlobLink",
                 table: "Invoice",
                 type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Reciever",
-                table: "Invoice",
-                type: "nvarchar(max)",
-                nullable: true);
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "Sender",
                 table: "Invoice",
                 type: "nvarchar(max)",
-                nullable: true);
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "SentDate",
@@ -42,6 +33,7 @@ namespace InvoiceApp.Migrations
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
@@ -53,7 +45,7 @@ namespace InvoiceApp.Migrations
                 table: "Invoice");
 
             migrationBuilder.DropColumn(
-                name: "Reciever",
+                name: "Receiver",
                 table: "Invoice");
 
             migrationBuilder.DropColumn(

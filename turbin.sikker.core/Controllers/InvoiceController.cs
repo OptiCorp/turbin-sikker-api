@@ -63,48 +63,28 @@ namespace turbin.sikker.core.Controllers
             return Ok(invoice);
         }
 
-        // [HttpGet("GetInvoiceByChecklistId")]
-        // [SwaggerOperation(Summary = "Get invoice by checklist ID", Description = "Retrieves an invoice by their checklist ID.")]
-        // [SwaggerResponse(200, "Success", typeof(IEnumerable<InvoiceResponseDto>))]
-        // [SwaggerResponse(404, "Not found")]
-        // public async Task<IActionResult> GetInvoiceByChecklistIdAsync(string checklistId)
-        // {   
-        //     // var checklist = await _checklistService.GetChecklistByIdAsync(checklistId);
-        //     // if (checklist == null)
-        //     // {
-        //     //     return NotFound("Checklist not found");
-        //     // }
-
-        //     var invoice = await _invoiceService.GetInvoiceByChecklistIdAsync(checklistId);
-        //     if (invoice == null)
-        //     {
-        //         return NotFound("Invoice not found");
-        //     }  
-
-        //     return Ok(invoice);
-        // }
 
         [HttpPost("AddInvoice")]
         [SwaggerOperation(Summary = "Create a new invoice", Description = "Creates a new invoice.")]
         [SwaggerResponse(201, "Invoice created", typeof(InvoiceResponseDto))]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> CreateInvoiceAsync(InvoiceCreateDto invoice, [FromServices] IValidator<InvoiceCreateDto> validator)
+        public async Task<IActionResult> CreateInvoiceAsync(InvoiceCreateDto invoice)
         {   
-            ValidationResult validationResult = validator.Validate(invoice);
+            // ValidationResult validationResult = validator.Validate(invoice);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
+            // if (!validationResult.IsValid)
+            // {
+            //     var modelStateDictionary = new ModelStateDictionary();
 
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage
-                        );
-                }
-                return ValidationProblem(modelStateDictionary);
-            }
+            //     foreach (ValidationFailure failure in validationResult.Errors)
+            //     {
+            //         modelStateDictionary.AddModelError(
+            //             failure.PropertyName,
+            //             failure.ErrorMessage
+            //             );
+            //     }
+            //     return ValidationProblem(modelStateDictionary);
+            // }
 
             // var checklist = await _checklistService.GetChecklistByIdAsync(invoice.ChecklistId);
             // if (checklist == null)

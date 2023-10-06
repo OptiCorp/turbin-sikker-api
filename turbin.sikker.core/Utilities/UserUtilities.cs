@@ -41,6 +41,7 @@ public class UserUtilities : IUserUtilities
             return new UserDto
             {
                 Id = user.Id,
+                AzureAdUserId = user.AzureAdUserId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
