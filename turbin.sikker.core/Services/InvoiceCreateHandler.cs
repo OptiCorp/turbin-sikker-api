@@ -36,11 +36,8 @@ namespace turbin.sikker.core.Services
                 throw new ArgumentNullException(nameof(message));  
     
             var body = Encoding.UTF8.GetString(message.Body);  
-            Console.WriteLine($"Message: {body}");  
 
             InvoiceBusDto invoiceBody = JsonConvert.DeserializeObject<InvoiceBusDto>(body);
-
-                Console.WriteLine($"amount: {invoiceBody.Amount}");  
 
             Invoice invoice = new Invoice{
                 Sender = invoiceBody.Sender,
@@ -52,17 +49,12 @@ namespace turbin.sikker.core.Services
                 Status = invoiceBody.Status
             };
 
-            var workflows = System.Text.Json.JsonSerializer.Deserialize<List<WorkflowInfo>>(invoiceBody.Workflows);
-            
-            Console.WriteLine($"Invoice: {invoiceBody}");  
-            Console.WriteLine($"pdf: {invoice.Sender}");
-
             var scopedService = scope.ServiceProvider.GetRequiredService<TurbinSikkerDbContext>();
 
             await scopedService.Invoice.AddAsync(invoice);
             await scopedService.SaveChangesAsync();
 
-            foreach (var workflowInfo in workflows)
+            foreach (var workflowInfo in invoiceBody.Workflows)
             {
                 var workflow = await scopedService.Workflow.FirstOrDefaultAsync(p => p.Id == workflowInfo.Id);
                 workflow.InvoiceId = invoice.Id;
