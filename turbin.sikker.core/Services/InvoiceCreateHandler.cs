@@ -8,7 +8,6 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;  
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
 
@@ -37,7 +36,7 @@ namespace turbin.sikker.core.Services
     
             var body = Encoding.UTF8.GetString(message.Body);  
 
-            InvoiceBusDto invoiceBody = JsonConvert.DeserializeObject<InvoiceBusDto>(body);
+            InvoiceBusDto invoiceBody = JsonSerializer.Deserialize<InvoiceBusDto>(body);
 
             Invoice invoice = new Invoice{
                 Sender = invoiceBody.Sender,
