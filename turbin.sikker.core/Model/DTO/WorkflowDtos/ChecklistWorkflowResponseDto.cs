@@ -17,6 +17,8 @@ namespace turbin.sikker.core.Model.DTO.WorkflowDtos
 
         public DateTime? UpdatedDate { get; set; }
 
+        public int CompletionTimeMinutes { get; set; }
+
     }
 }
 

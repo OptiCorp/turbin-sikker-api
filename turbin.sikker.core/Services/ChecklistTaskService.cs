@@ -74,7 +74,8 @@ namespace turbin.sikker.core.Services
             var task = new ChecklistTask
             {
                 CategoryId = checklistTask.CategoryId,
-                Description = checklistTask.Description
+                Description = checklistTask.Description,
+                EstAvgCompletionTime = checklistTask.EstAvgCompletionTime
             };
 
             _context.Checklist_Task.Add(task);
@@ -99,6 +100,11 @@ namespace turbin.sikker.core.Services
                     checklistTask.Description = updatedChecklistTask.Description;
                 }
 
+                if (updatedChecklistTask.EstAvgCompletionTime != null)
+                {
+                    checklistTask.EstAvgCompletionTime = updatedChecklistTask.EstAvgCompletionTime;
+                }
+
                 await _context.SaveChangesAsync();
             }
         }
@@ -120,10 +126,14 @@ namespace turbin.sikker.core.Services
                     newChecklistTask.CategoryId = updatedChecklistTask.CategoryId;
                 }
 
-
                 if (updatedChecklistTask.Description != null)
                 {
                     newChecklistTask.Description = updatedChecklistTask.Description;
+                }
+
+                if (updatedChecklistTask.EstAvgCompletionTime != null)
+                {
+                    newChecklistTask.EstAvgCompletionTime = updatedChecklistTask.EstAvgCompletionTime;
                 }
 
                 await _context.Checklist_Task.AddAsync(newChecklistTask);
