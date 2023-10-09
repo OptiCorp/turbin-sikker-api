@@ -1,3 +1,7 @@
+using System.Text.Json;
+using Azure.Identity;
+using Azure.Messaging.ServiceBus;
+using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
@@ -22,7 +26,7 @@ namespace turbin.sikker.core.Services
             return await _context.Invoice
                             .Include(p => p.Workflows)
                             .OrderByDescending(c => c.CreatedDate)
-                            .Select(p => _invoiceUtilities.InvoiceToResponseDto(p))
+                            .Select(p => _invoiceUtilities.InvoiceToResponseDto(p, null))
                             .ToListAsync();
         }
 
@@ -34,28 +38,75 @@ namespace turbin.sikker.core.Services
             
             if (invoice == null) return null;
 
-            return _invoiceUtilities.InvoiceToResponseDto(invoice);
+            return _invoiceUtilities.InvoiceToResponseDto(invoice, null);
         }
 
 
-        public async Task<string> CreateInvoiceAsync(InvoiceCreateDto invoiceDto)
+        public async Task<InvoiceResponseDto> GetInvoicePdfByInvoiceIdAsync(string id)
         {
+            var invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == id);
 
-            var invoice = new Invoice
+            string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/pdf-container";
+
+            BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
+
+            var stream = new MemoryStream();
+            var blobClient = containerClient.GetBlobClient("0044b2fa-a14b-4afa-9517-f1cfc27cac7e");
+
+            await blobClient.DownloadToAsync(stream);
+            stream.Position = 0;
+
+            Stream file = File.Create("test.pdf");
+            await stream.CopyToAsync(file);
+
+
+            // var invoiceResponse = _invoiceUtilities.InvoiceToResponseDto(invoice, stream.ToArray());
+
+            var invoiceResponse = new InvoiceResponseDto
+                                    {
+                                        Id = invoice.Id,
+                                        Status = _invoiceUtilities.GetInvoiceStatus(invoice.Status),
+                                        CreatedDate = invoice.CreatedDate,
+                                        Receiver = invoice.Receiver,
+                                        Amount = invoice.Amount,
+                                        Pdf = stream.ToArray()
+                                    };
+
+            return invoiceResponse;
+        }
+
+
+        public async Task CreateInvoiceAsync(InvoiceCreateDto invoiceDto)
+        {
+            ICollection<WorkflowInfo> workflowInfos = new List<WorkflowInfo>();
+            int totalAmount = 0;
+            for (int i = 0; i < invoiceDto.WorkflowIds.Count; i++)
             {
-                CreatedDate = invoiceDto.CreatedDate,
-                SentDate = invoiceDto.SentDate,
-                Status = InvoiceStatus.Unpaid,
-                Sender = invoiceDto.Sender,
+                var workflow = await _context.Workflow.Include(c => c.Checklist).FirstOrDefaultAsync(w => w.Id == invoiceDto.WorkflowIds.ElementAt(i));
+                var workflowInfo = new WorkflowInfo
+                {
+                    Id = workflow.Id,
+                    Name = workflow.Checklist.Title,
+                    CompletionTime = workflow.CompletionTimeMinutes.Value,
+                    HourlyRate = invoiceDto.HourlyRate
+                };
+                totalAmount += workflowInfo.HourlyRate*workflowInfo.CompletionTime;
+                workflowInfos.Add(workflowInfo);
+            }
+
+            var invoice = new InvoiceSendDto
+            {
                 Receiver = invoiceDto.Receiver,
-                Amount = invoiceDto.Amount,
-                PdfBlobLink = invoiceDto.PdfBlobLink,
+                Amount = totalAmount,
+                Workflows = workflowInfos
             };
 
-            await _context.Invoice.AddAsync(invoice);
-            await _context.SaveChangesAsync();
-
-            return invoice.Id;
+            var connectionsString = "Endpoint=sb://servicebus-turbinsikker-prod.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=jsxc2wM5vV4rhtevLn921gUZCcs7eLEsg+ASbHwJEng=";
+            var sbClient = new ServiceBusClient(connectionsString);
+            var sender = sbClient.CreateSender("generate-invoice");
+            var body = JsonSerializer.Serialize(invoice);
+            var sbMessage = new ServiceBusMessage(body);
+            await sender.SendMessageAsync(sbMessage);
         }
 
         public async Task UpdateInvoiceAsync(InvoiceUpdateDto updatedInvoice)

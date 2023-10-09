@@ -9,6 +9,6 @@ public interface IInvoiceUtilities
         bool IsValidStatus(string value);
         string GetInvoiceStatus(InvoiceStatus status);
 
-        public InvoiceResponseDto InvoiceToResponseDto(Invoice? punch);
+        public InvoiceResponseDto InvoiceToResponseDto(Invoice? invoice, byte[]? bytes);
     }
 }

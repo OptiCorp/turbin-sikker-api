@@ -20,6 +20,8 @@ namespace turbin.sikker.core.Model.DTO
 
         public int? Amount { get; set; }
 
+        public byte[]? Pdf { get; set; }
+
         public string PdfBlobLink { get; set; }
 
         public ICollection<Workflow>? Workflows { get; set; }
