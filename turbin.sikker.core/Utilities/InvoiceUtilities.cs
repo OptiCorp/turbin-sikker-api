@@ -31,13 +31,12 @@ public class InvoiceUtilities : IInvoiceUtilities
                 return new InvoiceResponseDto
                 {
                     Id = invoice.Id,
-                    Status = invoice.Status.ToString(),
-                    CreatedDate = invoice.CreatedDate,
-                    UpdatedDate = invoice.UpdatedDate,
-                    // ChecklistId = invoice.ChecklistId,
-                    // Checklist = invoice.Checklist,
+                    Sender = invoice.Sender,
                     Receiver = invoice.Receiver,
-                    // ReceiverEmail = invoice.ReceiverEmail,
+                    Status = GetInvoiceStatus(invoice.Status),
+                    CreatedDate = invoice.CreatedDate,
+                    SentDate = invoice.SentDate,
+                    UpdatedDate = invoice.UpdatedDate,
                     Amount = invoice.Amount,
                     PdfBlobLink = invoice.PdfBlobLink,
                     Workflows = invoice.Workflows
@@ -52,13 +51,10 @@ public class InvoiceUtilities : IInvoiceUtilities
                 CreatedDate = invoice.CreatedDate,
                 SentDate = invoice.SentDate,
                 UpdatedDate = invoice.UpdatedDate,
-                // ChecklistId = invoice.ChecklistId,
-                // Checklist = invoice.Checklist,
-                // ReceiverEmail = invoice.ReceiverEmail,
                 Amount = invoice.Amount,
+                Pdf = bytes,
                 PdfBlobLink = invoice.PdfBlobLink,
                 Workflows = invoice.Workflows
-
             };
         }
     }
