@@ -103,23 +103,23 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Invoice updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> UpdateInvoiceAsync(InvoiceUpdateDto updatedInvoice, [FromServices] IValidator<InvoiceUpdateDto> validator)
+        public async Task<IActionResult> UpdateInvoiceAsync(InvoiceUpdateDto updatedInvoice)
         {   
-            ValidationResult validationResult = validator.Validate(updatedInvoice);
+        //     ValidationResult validationResult = validator.Validate(updatedInvoice);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
+        //     if (!validationResult.IsValid)
+        //     {
+        //         var modelStateDictionary = new ModelStateDictionary();
 
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage
-                        );
-                }
-                return ValidationProblem(modelStateDictionary);
-           }
+        //         foreach (ValidationFailure failure in validationResult.Errors)
+        //         {
+        //             modelStateDictionary.AddModelError(
+        //                 failure.PropertyName,
+        //                 failure.ErrorMessage
+        //                 );
+        //         }
+        //         return ValidationProblem(modelStateDictionary);
+        //    }
 
             var invoice = await _invoiceService.GetInvoiceByIdAsync(updatedInvoice.Id);
             if (invoice == null)

@@ -37,7 +37,7 @@ public class InvoiceUtilities : IInvoiceUtilities
                 UpdatedDate = invoice.UpdatedDate,
                 Amount = invoice.Amount,
                 PdfBlobLink = invoice.PdfBlobLink,
-                // WorkflowIds = invoice.WorkflowIds
+                Workflows = invoice.Workflows
             };
         }
     }

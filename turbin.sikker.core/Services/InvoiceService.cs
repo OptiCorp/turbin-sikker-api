@@ -20,7 +20,7 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync()
         {
             return await _context.Invoice
-                            // .Include(p => p.WorkflowIds)
+                            .Include(p => p.Workflows)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(p => _invoiceUtilities.InvoiceToResponseDto(p))
                             .ToListAsync();
@@ -29,7 +29,7 @@ namespace turbin.sikker.core.Services
         public async Task<InvoiceResponseDto> GetInvoiceByIdAsync(string id)
         {
             var invoice = await _context.Invoice
-                                // .Include(p => p.WorkflowIds)
+                                .Include(p => p.Workflows)
                                 .FirstOrDefaultAsync(p => p.Id == id);
             
             if (invoice == null) return null;
@@ -50,7 +50,6 @@ namespace turbin.sikker.core.Services
                 Receiver = invoiceDto.Receiver,
                 Amount = invoiceDto.Amount,
                 PdfBlobLink = invoiceDto.PdfBlobLink,
-                // WorkflowIds = invoiceDto.WorkflowIds
             };
 
             await _context.Invoice.AddAsync(invoice);
