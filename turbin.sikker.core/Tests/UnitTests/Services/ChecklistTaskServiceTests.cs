@@ -124,7 +124,8 @@ namespace turbin.sikker.core.Tests.Services
             var newChecklistTask = new ChecklistTaskCreateDto
             {
                 CategoryId = "Category 1",
-                Description = "New task"
+                Description = "New task",
+                EstAvgCompletionTime = 1
             };
 
             //Act
@@ -176,7 +177,8 @@ namespace turbin.sikker.core.Tests.Services
                 CategoryId = "Category 1",
                 Description = "Updated task",
                 Id = "Task 0",
-                ChecklistId = "Checklist 1"
+                ChecklistId = "Checklist 1",
+                EstAvgCompletionTime = 1
             };
 
             //Act

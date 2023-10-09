@@ -32,5 +32,7 @@ namespace turbin.sikker.core.Model
         public int Amount { get; set; }
 
         public string PdfBlobLink { get; set; }
+
+        public ICollection<Workflow>? Workflows { get;}
     }
 }

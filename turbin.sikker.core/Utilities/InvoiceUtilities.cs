@@ -24,20 +24,41 @@ public class InvoiceUtilities : IInvoiceUtilities
             }
         }
 
-        public InvoiceResponseDto InvoiceToResponseDto(Invoice? invoice)
+        public InvoiceResponseDto InvoiceToResponseDto(Invoice? invoice, byte[]? bytes)
         {
+            if (bytes == null)
+            {
+                return new InvoiceResponseDto
+                {
+                    Id = invoice.Id,
+                    Status = invoice.Status.ToString(),
+                    CreatedDate = invoice.CreatedDate,
+                    UpdatedDate = invoice.UpdatedDate,
+                    // ChecklistId = invoice.ChecklistId,
+                    // Checklist = invoice.Checklist,
+                    Receiver = invoice.Receiver,
+                    // ReceiverEmail = invoice.ReceiverEmail,
+                    Amount = invoice.Amount,
+                    PdfBlobLink = invoice.PdfBlobLink,
+                    Workflows = invoice.Workflows
+                };
+            }
             return new InvoiceResponseDto
             {
                 Id = invoice.Id,
                 Sender = invoice.Sender,
                 Receiver = invoice.Receiver,
-                Status = invoice.Status.ToString(),
+                Status = GetInvoiceStatus(invoice.Status),
                 CreatedDate = invoice.CreatedDate,
                 SentDate = invoice.SentDate,
                 UpdatedDate = invoice.UpdatedDate,
+                // ChecklistId = invoice.ChecklistId,
+                // Checklist = invoice.Checklist,
+                // ReceiverEmail = invoice.ReceiverEmail,
                 Amount = invoice.Amount,
                 PdfBlobLink = invoice.PdfBlobLink,
-                // WorkflowIds = invoice.WorkflowIds
+                Workflows = invoice.Workflows
+
             };
         }
     }

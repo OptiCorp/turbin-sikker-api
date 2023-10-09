@@ -4,14 +4,15 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;  
 using System.Threading.Tasks;  
-using Microsoft.Azure.ServiceBus;  
+using Microsoft.Azure.ServiceBus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;  
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using turbin.sikker.core.Model;
-    
+using turbin.sikker.core.Model.DTO;
 
-      
+
+
 namespace turbin.sikker.core.Services 
 {  
     public class CreateInvoiceHandler : BackgroundService  
@@ -34,11 +35,8 @@ namespace turbin.sikker.core.Services
                 throw new ArgumentNullException(nameof(message));  
     
             var body = Encoding.UTF8.GetString(message.Body);  
-            Console.WriteLine($"Message: {body}");  
 
-            Invoice invoiceBody = JsonConvert.DeserializeObject<Invoice>(body);
-
-                Console.WriteLine($"amount: {invoiceBody.Amount}");  
+            InvoiceBusDto invoiceBody = JsonSerializer.Deserialize<InvoiceBusDto>(body);
 
             Invoice invoice = new Invoice{
                 Sender = invoiceBody.Sender,
@@ -49,14 +47,18 @@ namespace turbin.sikker.core.Services
                 PdfBlobLink = invoiceBody.PdfBlobLink,
                 Status = invoiceBody.Status
             };
-            
-            Console.WriteLine($"Invoice: {invoiceBody}");  
-            Console.WriteLine($"pdf: {invoice.Sender}");
 
             var scopedService = scope.ServiceProvider.GetRequiredService<TurbinSikkerDbContext>();
 
-            scopedService.Invoice.AddAsync(invoiceBody);
-            scopedService.SaveChangesAsync();
+            await scopedService.Invoice.AddAsync(invoice);
+            await scopedService.SaveChangesAsync();
+
+            foreach (var workflowInfo in invoiceBody.Workflows)
+            {
+                var workflow = await scopedService.Workflow.FirstOrDefaultAsync(p => p.Id == workflowInfo.Id);
+                workflow.InvoiceId = invoice.Id;
+            }
+            await scopedService.SaveChangesAsync();
 
             await _orderQueueClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);  
             }

@@ -239,7 +239,8 @@ namespace turbin.sikker.core.Tests.Services
                             {
                                 Id = string.Format("Task {0}", i),
                                 CategoryId = categoryId,
-                                Description = string.Format("Task {0}", i)
+                                Description = string.Format("Task {0}", i),
+                                EstAvgCompletionTime = i
                             }
                         );
                     }
@@ -253,13 +254,15 @@ namespace turbin.sikker.core.Tests.Services
                 {
                     Id = "Task 1",
                     CategoryId = "Category 1",
-                    Description = "Task 1"
+                    Description = "Task 1",
+                    EstAvgCompletionTime = 1
                 },
                 new ChecklistTask
                 {
                     Id = "Task 2",
                     CategoryId = "Category 1",
-                    Description = "Task 2"
+                    Description = "Task 2",
+                    EstAvgCompletionTime = 2
                 }
             );
 

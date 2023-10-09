@@ -10,6 +10,8 @@ using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Duende.IdentityServer.Extensions;
+using Azure.Messaging.ServiceBus;
+using System.Text.Json;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -63,6 +65,35 @@ namespace turbin.sikker.core.Controllers
             return Ok(invoice);
         }
 
+        [HttpGet("GetInvoicePdfByInvoiceId")]
+        [SwaggerOperation(Summary = "Get PDF of invoice by ID", Description = "Retrieves a PDF of an invoice by their ID.")]
+        [SwaggerResponse(200, "Success", typeof(InvoiceResponseDto))]
+        [SwaggerResponse(404, "Invoice not found")]
+        public async Task<IActionResult> GetInvoicePdfByInvoiceIdAsync(string id)
+        {
+            return Ok(await _invoiceService.GetInvoicePdfByInvoiceIdAsync(id));
+        }
+
+        // [HttpGet("GetInvoiceByChecklistId")]
+        // [SwaggerOperation(Summary = "Get invoice by checklist ID", Description = "Retrieves an invoice by their checklist ID.")]
+        // [SwaggerResponse(200, "Success", typeof(IEnumerable<InvoiceResponseDto>))]
+        // [SwaggerResponse(404, "Not found")]
+        // public async Task<IActionResult> GetInvoiceByChecklistIdAsync(string checklistId)
+        // {   
+        //     // var checklist = await _checklistService.GetChecklistByIdAsync(checklistId);
+        //     // if (checklist == null)
+        //     // {
+        //     //     return NotFound("Checklist not found");
+        //     // }
+
+        //     var invoice = await _invoiceService.GetInvoiceByChecklistIdAsync(checklistId);
+        //     if (invoice == null)
+        //     {
+        //         return NotFound("Invoice not found");
+        //     }  
+
+        //     return Ok(invoice);
+        // }
 
         [HttpPost("AddInvoice")]
         [SwaggerOperation(Summary = "Create a new invoice", Description = "Creates a new invoice.")]
@@ -92,10 +123,12 @@ namespace turbin.sikker.core.Controllers
             //     return NotFound("Checklist not found");
             // }
 
-            var invoiceId = await _invoiceService.CreateInvoiceAsync(invoice);
-            var newInvoice = await _invoiceService.GetInvoiceByIdAsync(invoiceId);
+            // var invoiceId = await _invoiceService.CreateInvoiceAsync(invoice);
+            // var newInvoice = await _invoiceService.GetInvoiceByIdAsync(invoiceId);
 
-            return CreatedAtAction(nameof(GetInvoiceByIdAsync), new { id = invoiceId }, newInvoice);
+            await _invoiceService.CreateInvoiceAsync(invoice);
+
+            return Ok();
         }
 
         [HttpPost("UpdateInvoice")]
@@ -103,23 +136,23 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Invoice updated")]
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> UpdateInvoiceAsync(InvoiceUpdateDto updatedInvoice, [FromServices] IValidator<InvoiceUpdateDto> validator)
+        public async Task<IActionResult> UpdateInvoiceAsync(InvoiceUpdateDto updatedInvoice)
         {   
-            ValidationResult validationResult = validator.Validate(updatedInvoice);
+        //     ValidationResult validationResult = validator.Validate(updatedInvoice);
 
-            if (!validationResult.IsValid)
-            {
-                var modelStateDictionary = new ModelStateDictionary();
+        //     if (!validationResult.IsValid)
+        //     {
+        //         var modelStateDictionary = new ModelStateDictionary();
 
-                foreach (ValidationFailure failure in validationResult.Errors)
-                {
-                    modelStateDictionary.AddModelError(
-                        failure.PropertyName,
-                        failure.ErrorMessage
-                        );
-                }
-                return ValidationProblem(modelStateDictionary);
-           }
+        //         foreach (ValidationFailure failure in validationResult.Errors)
+        //         {
+        //             modelStateDictionary.AddModelError(
+        //                 failure.PropertyName,
+        //                 failure.ErrorMessage
+        //                 );
+        //         }
+        //         return ValidationProblem(modelStateDictionary);
+        //    }
 
             var invoice = await _invoiceService.GetInvoiceByIdAsync(updatedInvoice.Id);
             if (invoice == null)

@@ -8,5 +8,7 @@ namespace turbin.sikker.core.Model.DTO.TaskDtos
         public string? Description { get; set; }
 
         public Category? Category { get; set; }
+
+        public int? EstAvgCompletionTime { get; set; }
     }
 }
