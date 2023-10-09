@@ -41,6 +41,8 @@ namespace turbin.sikker.core.Model
 
         public float? HoursSpent { get; set; }
 
+        public string? InvoiceId { get; set; }
+
     }
 }
 
