@@ -16,7 +16,8 @@ public class ChecklistTaskUtilities : IChecklistTaskUtilities
             {
                 Id = checklistTask.Id,
                 Description = checklistTask.Description,
-                Category = checklistTask.Category
+                Category = checklistTask.Category,
+                EstAvgCompletionTime = checklistTask.EstAvgCompletionTime
             };
         }
 
@@ -26,6 +27,7 @@ public class ChecklistTaskUtilities : IChecklistTaskUtilities
             {
                 Id = checklistTask.Id,
                 Description = checklistTask.Description,
+                EstAvgCompletionTime = checklistTask.EstAvgCompletionTime
             };
         }
     }
