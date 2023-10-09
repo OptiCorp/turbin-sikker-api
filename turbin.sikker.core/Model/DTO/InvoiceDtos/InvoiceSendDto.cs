@@ -2,16 +2,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace turbin.sikker.core.Model.DTO
 {
-    public class InvoiceCreateDto
+    public class InvoiceSendDto
     {   
         [Required]
         public string Receiver { get; set; }
 
         [Required]
-        public ICollection<string> WorkflowIds { get; set; }
+        public int Amount { get; set; }
 
         [Required]
-        public int HourlyRate { get; set; }
+        public ICollection<WorkflowInfo> Workflows { get; set; }
 
         // [Required]
         // public List<string> WorkflowIds { get; set; }

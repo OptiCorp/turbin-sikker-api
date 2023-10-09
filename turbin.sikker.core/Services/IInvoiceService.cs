@@ -1,4 +1,3 @@
-
 using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
@@ -7,8 +6,9 @@ namespace turbin.sikker.core.Services
     {
         Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync();
         Task<InvoiceResponseDto> GetInvoiceByIdAsync(string id);
+        Task<InvoiceResponseDto> GetInvoicePdfByInvoiceIdAsync(string id);
         // Task<InvoiceResponseDto> GetInvoiceByChecklistIdAsync(string checklistId);
-        Task<string> CreateInvoiceAsync(InvoiceCreateDto invoice);
+        Task CreateInvoiceAsync(InvoiceCreateDto invoice);
         Task UpdateInvoiceAsync(InvoiceUpdateDto invoice);
         Task DeleteInvoiceAsync(string id);
     }
