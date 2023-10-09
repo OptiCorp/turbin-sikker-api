@@ -21,9 +21,6 @@ namespace turbin.sikker.core.Model.DTO
 
         [Required]
         public string PdfBlobLink { get; set; }
-
-        // [Required]
-        // public List<string> WorkflowIds { get; set; }
     }
 }
 
