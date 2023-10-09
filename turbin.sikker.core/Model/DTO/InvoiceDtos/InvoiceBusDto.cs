@@ -33,7 +33,7 @@ namespace turbin.sikker.core.Model.DTO
         public InvoiceStatus Status { get; set; }
 
         [Required]
-        public string Workflows { get; set; }
+        public ICollection<WorkflowInfo> Workflows { get; set; }
 
 
     }
