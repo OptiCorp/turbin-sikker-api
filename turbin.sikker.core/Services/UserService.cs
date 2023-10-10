@@ -61,6 +61,8 @@ namespace turbin.sikker.core.Services
                             .Include(u => u.UserRole)
                             .FirstOrDefaultAsync(u => u.Username == username);
 
+            if (user == null) return null;
+
             return _userUtilities.UserToDto(user);                
         }
 
