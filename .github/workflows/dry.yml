@@ -1,0 +1,2 @@
+- name: dry-code-action
+  uses: Pposong-Hantaihe/dry-code@v1.0.2
