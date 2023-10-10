@@ -1,6 +1,9 @@
 name: 🏜️ Dry Code Action
 
-on: [pull_request]
+on:
+  workflow_dispatch:
+  [pull_request]:
+    branches: [ "develop", "master", "main" ]
 
 jobs:
   dry-code-action:
