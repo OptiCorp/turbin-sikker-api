@@ -45,13 +45,14 @@ namespace turbin.sikker.core.Services
         public async Task<InvoiceResponseDto> GetInvoicePdfByInvoiceIdAsync(string id)
         {
             var invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == id);
+            if (invoice == null) return null;
 
             string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/pdf-container";
 
             BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
 
             var stream = new MemoryStream();
-            var blobClient = containerClient.GetBlobClient(Environment.GetEnvironmentVariable("BlobClientId"));
+            var blobClient = containerClient.GetBlobClient(invoice.PdfBlobLink);
 
             await blobClient.DownloadToAsync(stream);
             stream.Position = 0;
