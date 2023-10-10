@@ -38,8 +38,6 @@ namespace turbin.sikker.core
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllHeaders",
-
-                    // builder => builder.WithOrigins("https://turbinsikker-app-win-prod.azurewebsites.net").WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Origin").AllowAnyMethod());
                 builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
                
             });
@@ -80,9 +78,7 @@ namespace turbin.sikker.core
 
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
-            // var connectionString = "Data Source=localhost;Initial Catalog=TurbinsikkerDb;User Id=sa; Password=Turbinsikker101;TrustServerCertificate=true;";
             
-
 
             services.AddDbContext<TurbinSikkerDbContext>(options =>
                 options.UseSqlServer(connectionString

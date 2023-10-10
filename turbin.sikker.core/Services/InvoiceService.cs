@@ -51,7 +51,7 @@ namespace turbin.sikker.core.Services
             BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
 
             var stream = new MemoryStream();
-            var blobClient = containerClient.GetBlobClient("0044b2fa-a14b-4afa-9517-f1cfc27cac7e");
+            var blobClient = containerClient.GetBlobClient(Environment.GetEnvironmentVariable("BlobClientId"));
 
             await blobClient.DownloadToAsync(stream);
             stream.Position = 0;
@@ -60,17 +60,7 @@ namespace turbin.sikker.core.Services
             await stream.CopyToAsync(file);
 
 
-            // var invoiceResponse = _invoiceUtilities.InvoiceToResponseDto(invoice, stream.ToArray());
-
-            var invoiceResponse = new InvoiceResponseDto
-                                    {
-                                        Id = invoice.Id,
-                                        Status = _invoiceUtilities.GetInvoiceStatus(invoice.Status),
-                                        CreatedDate = invoice.CreatedDate,
-                                        Receiver = invoice.Receiver,
-                                        Amount = invoice.Amount,
-                                        Pdf = stream.ToArray()
-                                    };
+            var invoiceResponse = _invoiceUtilities.InvoiceToResponseDto(invoice, stream.ToArray());
 
             return invoiceResponse;
         }
@@ -101,7 +91,7 @@ namespace turbin.sikker.core.Services
                 Workflows = workflowInfos
             };
 
-            var connectionsString = "Endpoint=sb://servicebus-turbinsikker-prod.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=jsxc2wM5vV4rhtevLn921gUZCcs7eLEsg+ASbHwJEng=";
+            var connectionsString = Environment.GetEnvironmentVariable("SbConnectionString");
             var sbClient = new ServiceBusClient(connectionsString);
             var sender = sbClient.CreateSender("generate-invoice");
             var body = JsonSerializer.Serialize(invoice);

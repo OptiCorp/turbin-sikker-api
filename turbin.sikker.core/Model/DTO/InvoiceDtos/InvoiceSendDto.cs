@@ -12,9 +12,6 @@ namespace turbin.sikker.core.Model.DTO
 
         [Required]
         public ICollection<WorkflowInfo> Workflows { get; set; }
-
-        // [Required]
-        // public List<string> WorkflowIds { get; set; }
     }
 }
 

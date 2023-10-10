@@ -1,12 +1,7 @@
-
-using System;  
 using System.Text;
-using System.Text.Json;
-using System.Threading;  
-using System.Threading.Tasks;  
+using System.Text.Json; 
 using Microsoft.Azure.ServiceBus;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;  
+using Microsoft.EntityFrameworkCore; 
 using Microsoft.Extensions.Options;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;

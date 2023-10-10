@@ -13,8 +13,6 @@ namespace turbin.sikker.core.Model.DTO
         [Required]
         public int HourlyRate { get; set; }
 
-        // [Required]
-        // public List<string> WorkflowIds { get; set; }
     }
 }
 
