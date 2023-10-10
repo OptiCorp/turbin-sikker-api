@@ -5,6 +5,7 @@ namespace turbin.sikker.core.Model.DTO
     public class InvoiceCreateDto
     {   
         [Required]
+        [EmailAddress]
         public string Receiver { get; set; }
 
         [Required]

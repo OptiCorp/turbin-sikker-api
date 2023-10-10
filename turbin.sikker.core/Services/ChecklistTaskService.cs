@@ -30,10 +30,7 @@ namespace turbin.sikker.core.Services
                             .Include(ct => ct.Category)
                             .FirstOrDefaultAsync(ct => ct.Id == id);
 
-            if (checklist == null)
-            {
-                return null;
-            }
+            if (checklist == null) return null;
 
             return _checklistTaskUtilities.TaskToResponseDto(checklist);
         }
@@ -112,35 +109,38 @@ namespace turbin.sikker.core.Services
         public async Task UpdateChecklistTaskInChecklistAsync(ChecklistTaskUpdateDto updatedChecklistTask)
         {
             var checklistTask = await _context.Checklist_Task.FirstOrDefaultAsync(checklistTask => checklistTask.Id == updatedChecklistTask.Id);
-            var newChecklistTask = new ChecklistTask
-            {
-                CategoryId = checklistTask.CategoryId,
-                Description = checklistTask.Description
-            };
-            var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == updatedChecklistTask.ChecklistId);
-
             if (checklistTask != null)
             {
-                if (updatedChecklistTask.CategoryId != null)
+                var newChecklistTask = new ChecklistTask
                 {
-                    newChecklistTask.CategoryId = updatedChecklistTask.CategoryId;
-                }
+                    CategoryId = checklistTask.CategoryId,
+                    Description = checklistTask.Description
+                };
+                var checklist = await _context.Checklist.FirstOrDefaultAsync(c => c.Id == updatedChecklistTask.ChecklistId);
 
-                if (updatedChecklistTask.Description != null)
+                if (checklistTask != null)
                 {
-                    newChecklistTask.Description = updatedChecklistTask.Description;
+                    if (updatedChecklistTask.CategoryId != null)
+                    {
+                        newChecklistTask.CategoryId = updatedChecklistTask.CategoryId;
+                    }
+
+                    if (updatedChecklistTask.Description != null)
+                    {
+                        newChecklistTask.Description = updatedChecklistTask.Description;
+                    }
+
+                    if (updatedChecklistTask.EstAvgCompletionTime != null)
+                    {
+                        newChecklistTask.EstAvgCompletionTime = updatedChecklistTask.EstAvgCompletionTime;
+                    }
+
+                    await _context.Checklist_Task.AddAsync(newChecklistTask);
+                    checklist.ChecklistTasks.Add(newChecklistTask);
+                    checklist.ChecklistTasks.Remove(checklistTask);
+
+                    await _context.SaveChangesAsync();
                 }
-
-                if (updatedChecklistTask.EstAvgCompletionTime != null)
-                {
-                    newChecklistTask.EstAvgCompletionTime = updatedChecklistTask.EstAvgCompletionTime;
-                }
-
-                await _context.Checklist_Task.AddAsync(newChecklistTask);
-                checklist.ChecklistTasks.Add(newChecklistTask);
-                checklist.ChecklistTasks.Remove(checklistTask);
-
-                await _context.SaveChangesAsync();
             }
         }
 
