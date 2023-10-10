@@ -27,6 +27,7 @@ namespace turbin.sikker.core.Model
 
         public string Sender { get; set; }
 
+        [EmailAddress]
         public string Receiver { get; set; }
 
         public int Amount { get; set; }
