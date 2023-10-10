@@ -37,6 +37,8 @@ namespace turbin.sikker.core.Services
                                 .ThenInclude(u => u.UserRole)
                                 .FirstOrDefaultAsync(p => p.Id == id);
 
+            if (punch == null) return null;
+
             return _punchUtilities.PunchToResponseDto(punch);
         }
 

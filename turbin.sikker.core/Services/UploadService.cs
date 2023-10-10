@@ -23,6 +23,8 @@ namespace turbin.sikker.core.Services
         {
             var upload = await _context.Upload.FirstOrDefaultAsync(u => u.Id == id);
 
+            if (upload == null) return null;
+
             string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/container-turbinsikker-test";
 
             BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
