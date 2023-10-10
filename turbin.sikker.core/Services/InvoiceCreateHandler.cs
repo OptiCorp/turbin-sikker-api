@@ -73,7 +73,8 @@ namespace turbin.sikker.core.Services
                 AutoComplete = false,  
                 MaxAutoRenewDuration = TimeSpan.FromMinutes(10)  
             };  
-            _orderQueueClient = new QueueClient(_appSettings.QueueConnectionString, _appSettings.QueueName);  
+            var connectionString = Environment.GetEnvironmentVariable("SbConnectionString");
+            _orderQueueClient = new QueueClient(connectionString, _appSettings.QueueName);  
             _orderQueueClient.RegisterMessageHandler(Handle, messageHandlerOptions);  
             Console.WriteLine($"{nameof(CreateInvoiceHandler)} service has started.");  
             return Task.CompletedTask;  
