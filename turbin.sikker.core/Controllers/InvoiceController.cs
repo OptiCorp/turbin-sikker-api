@@ -61,7 +61,13 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(404, "Invoice not found")]
         public async Task<IActionResult> GetInvoicePdfByInvoiceIdAsync(string id)
         {
-            return Ok(await _invoiceService.GetInvoicePdfByInvoiceIdAsync(id));
+            var pdf = await _invoiceService.GetInvoicePdfByInvoiceIdAsync(id);
+            if (pdf == null)
+            {
+                return NotFound("Invoice Pdf not found.");
+            }
+            
+            return Ok(pdf);
         }
 
 
