@@ -1,12 +1,7 @@
-
-using System;  
 using System.Text;
-using System.Text.Json;
-using System.Threading;  
-using System.Threading.Tasks;  
+using System.Text.Json; 
 using Microsoft.Azure.ServiceBus;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;  
+using Microsoft.EntityFrameworkCore; 
 using Microsoft.Extensions.Options;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
@@ -78,7 +73,8 @@ namespace turbin.sikker.core.Services
                 AutoComplete = false,  
                 MaxAutoRenewDuration = TimeSpan.FromMinutes(10)  
             };  
-            _orderQueueClient = new QueueClient(_appSettings.QueueConnectionString, _appSettings.QueueName);  
+            var connectionString = Environment.GetEnvironmentVariable("SbConnectionString");
+            _orderQueueClient = new QueueClient(connectionString, _appSettings.QueueName);  
             _orderQueueClient.RegisterMessageHandler(Handle, messageHandlerOptions);  
             Console.WriteLine($"{nameof(CreateInvoiceHandler)} service has started.");  
             return Task.CompletedTask;  

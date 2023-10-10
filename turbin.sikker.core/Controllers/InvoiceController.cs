@@ -1,17 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using turbin.sikker.core.Model;
 using Swashbuckle.AspNetCore.Annotations;
 using turbin.sikker.core.Services;
 using turbin.sikker.core.Model.DTO;
-using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Duende.IdentityServer.Extensions;
-using Azure.Messaging.ServiceBus;
-using System.Text.Json;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -23,14 +16,11 @@ namespace turbin.sikker.core.Controllers
     {
         private readonly IInvoiceService _invoiceService;
 
-        private readonly IChecklistService _checklistService;
-
         private readonly IInvoiceUtilities _invoiceUtilities;
         
-        public InvoiceController(IInvoiceService invoiceService, IChecklistService checklistService, IInvoiceUtilities invoiceUtilities)
+        public InvoiceController(IInvoiceService invoiceService, IInvoiceUtilities invoiceUtilities)
         {
             _invoiceService = invoiceService;
-            _checklistService = checklistService;
             _invoiceUtilities = invoiceUtilities;
         }
 
@@ -74,26 +64,6 @@ namespace turbin.sikker.core.Controllers
             return Ok(await _invoiceService.GetInvoicePdfByInvoiceIdAsync(id));
         }
 
-        // [HttpGet("GetInvoiceByChecklistId")]
-        // [SwaggerOperation(Summary = "Get invoice by checklist ID", Description = "Retrieves an invoice by their checklist ID.")]
-        // [SwaggerResponse(200, "Success", typeof(IEnumerable<InvoiceResponseDto>))]
-        // [SwaggerResponse(404, "Not found")]
-        // public async Task<IActionResult> GetInvoiceByChecklistIdAsync(string checklistId)
-        // {   
-        //     // var checklist = await _checklistService.GetChecklistByIdAsync(checklistId);
-        //     // if (checklist == null)
-        //     // {
-        //     //     return NotFound("Checklist not found");
-        //     // }
-
-        //     var invoice = await _invoiceService.GetInvoiceByChecklistIdAsync(checklistId);
-        //     if (invoice == null)
-        //     {
-        //         return NotFound("Invoice not found");
-        //     }  
-
-        //     return Ok(invoice);
-        // }
 
         [HttpPost("AddInvoice")]
         [SwaggerOperation(Summary = "Create a new invoice", Description = "Creates a new invoice.")]
