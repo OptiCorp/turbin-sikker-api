@@ -17,5 +17,7 @@ namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 
         public User? User { get; set; }
         public ICollection<ChecklistTask>? ChecklistTasks { get; set; }
+
+        public int? EstCompletionTimeMinutes { get; set; }
     }
 }
