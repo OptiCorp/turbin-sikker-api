@@ -13,4 +13,4 @@ jobs:
         uses: platisd/duplicate-code-detection-tool@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          directories: "src/, test/ut"
+          directories: "turbin.sikker.core"
