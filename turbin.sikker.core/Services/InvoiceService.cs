@@ -14,11 +14,13 @@ namespace turbin.sikker.core.Services
         private readonly TurbinSikkerDbContext _context;
 
         private readonly IInvoiceUtilities _invoiceUtilities;
+        private readonly IChecklistService _checklistService;
 
-        public InvoiceService(TurbinSikkerDbContext context, IInvoiceUtilities invoiceUtilities)
+        public InvoiceService(TurbinSikkerDbContext context, IInvoiceUtilities invoiceUtilities, IChecklistService checklistService)
         {
             _context = context;
             _invoiceUtilities = invoiceUtilities;
+            _checklistService = checklistService;
         }
 
         public async Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync()
@@ -73,16 +75,21 @@ namespace turbin.sikker.core.Services
             int totalAmount = 0;
             for (int i = 0; i < invoiceDto.WorkflowIds.Count; i++)
             {
-                var workflow = await _context.Workflow.Include(c => c.Checklist).FirstOrDefaultAsync(w => w.Id == invoiceDto.WorkflowIds.ElementAt(i));
-                var workflowInfo = new WorkflowInfo
+                var workflow = await _context.Workflow.FirstOrDefaultAsync(w => w.Id == invoiceDto.WorkflowIds.ElementAt(i));
+                var checklist = await _checklistService.GetChecklistByIdAsync(workflow.ChecklistId);
+                if (workflow.Status == WorkflowStatus.Done)
                 {
-                    Id = workflow.Id,
-                    Name = workflow.Checklist.Title,
-                    CompletionTime = workflow.CompletionTimeMinutes.Value,
-                    HourlyRate = invoiceDto.HourlyRate
-                };
-                totalAmount += workflowInfo.HourlyRate*workflowInfo.CompletionTime;
-                workflowInfos.Add(workflowInfo);
+                    var workflowInfo = new WorkflowInfo
+                    {
+                        Id = workflow.Id,
+                        Name = checklist.Title,
+                        CompletionTime = workflow.CompletionTimeMinutes.Value,
+                        HourlyRate = invoiceDto.HourlyRate,
+                        EstimatedCompletionTime = checklist.EstCompletionTimeMinutes.Value
+                    };
+                    totalAmount += workflowInfo.HourlyRate*workflowInfo.CompletionTime;
+                    workflowInfos.Add(workflowInfo);
+                }
             }
 
             var invoice = new InvoiceSendDto
