@@ -12,6 +12,22 @@ namespace turbin.sikker.core.Model
         [Display(Name = "Done")]
         Done
     }
+
+    public enum TaskStatus
+    {
+        [Display(Name = "Unfinished")]
+        Unfinished,
+        [Display(Name = "Finished")]
+        Finished,
+        [Display(Name = "Not applicable")]
+        NotApplicable
+    }
+
+    public class TaskInfo
+    {
+        public string TaskId { get; set; }
+        public TaskStatus Status { get; set; }
+    }
     public class Workflow
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -42,6 +58,8 @@ namespace turbin.sikker.core.Model
         public int? CompletionTimeMinutes { get; set; }
 
         public string? InvoiceId { get; set; }
+
+        public ICollection<TaskInfo> TaskInfos { get; set; }
 
     }
 }

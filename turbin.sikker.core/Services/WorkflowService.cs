@@ -93,6 +93,10 @@ namespace turbin.sikker.core.Services
                 {
                     workflow.CompletionTimeMinutes = updatedWorkflow.CompletionTimeMinutes;
                 }
+                if (updatedWorkflow.TaskInfos != null)
+                {  
+                    workflow.TaskInfos = updatedWorkflow.TaskInfos;
+                }
             }
             workflow.UpdatedDate = DateTime.Now;
             await _context.SaveChangesAsync();
