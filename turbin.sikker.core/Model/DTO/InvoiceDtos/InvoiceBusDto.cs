@@ -8,6 +8,7 @@ namespace turbin.sikker.core.Model.DTO
         public string Name { get; set; }
         public int CompletionTime { get; set; }
         public int HourlyRate { get; set; }
+        public int EstimatedCompletionTime { get; set; }
     }
     public class InvoiceBusDto
     {   
