@@ -21,7 +21,7 @@ namespace turbin.sikker.core.Model.DTO.WorkflowDtos
 
         public string? InvoiceId { get; set; }
 
-        public Dictionary<string, string> TaskInfos { get; set; }
+        public Dictionary<string, string>? TaskInfos { get; set; }
     }
 }
 
