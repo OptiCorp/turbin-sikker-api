@@ -21,4 +21,3 @@ namespace turbin.sikker.core.Model
         public TaskStatus Status { get; set; }
     }
 }
-
