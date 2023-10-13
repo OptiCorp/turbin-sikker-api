@@ -15,7 +15,9 @@ public class WorkflowUtilities : IWorkflowUtilities
                 Creator = workflow.Creator,
                 Status = workflow.Status.ToString(),
                 CreatedDate = workflow.CreatedDate,
-                UpdatedDate = workflow.UpdatedDate
+                UpdatedDate = workflow.UpdatedDate,
+                InvoiceId = workflow.InvoiceId,
+                CompletionTimeMinutes = workflow.CompletionTimeMinutes
             };
         }
     }
