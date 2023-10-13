@@ -11,7 +11,13 @@ public class ChecklistUtilities : IChecklistUtilities
         }
 
         public ChecklistResponseDto ChecklistToResponseDto(Checklist checklist)
-        {
+        {    
+            int? completionTime = 0;
+            foreach(var task in checklist.ChecklistTasks)
+            {
+                completionTime += task.EstAvgCompletionTime;
+            }
+            
             return new ChecklistResponseDto
             {
                 Id = checklist.Id,
@@ -20,12 +26,19 @@ public class ChecklistUtilities : IChecklistUtilities
                 Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                 CreatedDate = checklist.CreatedDate,
                 UpdatedDate = checklist.UpdatedDate,
-                ChecklistTasks = checklist.ChecklistTasks
+                ChecklistTasks = checklist.ChecklistTasks,
+                EstCompletionTimeMinutes = completionTime
             };
         }
 
         public ChecklistResponseNoUserDto ChecklistToNoUserDto(Checklist checklist)
-        {
+        {   
+            int? completionTime = 0;
+            foreach(var task in checklist.ChecklistTasks)
+            {
+                completionTime += task.EstAvgCompletionTime;
+            }
+
             return new ChecklistResponseNoUserDto
             {
                 Id = checklist.Id,
@@ -33,7 +46,8 @@ public class ChecklistUtilities : IChecklistUtilities
                 Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
                 CreatedDate = checklist.CreatedDate,
                 UpdatedDate = checklist.UpdatedDate,
-                ChecklistTasks = checklist.ChecklistTasks
+                ChecklistTasks = checklist.ChecklistTasks,
+                EstCompletionTimeMinutes = completionTime
             };
         }
     }

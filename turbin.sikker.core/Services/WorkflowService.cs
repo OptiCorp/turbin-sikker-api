@@ -93,6 +93,10 @@ namespace turbin.sikker.core.Services
                 {
                     workflow.CompletionTimeMinutes = updatedWorkflow.CompletionTimeMinutes;
                 }
+                if (updatedWorkflow.TaskInfos != null)
+                {  
+                    workflow.TaskInfos = updatedWorkflow.TaskInfos;
+                }
             }
             workflow.UpdatedDate = DateTime.Now;
             await _context.SaveChangesAsync();
@@ -100,6 +104,10 @@ namespace turbin.sikker.core.Services
 
         public async Task CreateWorkflowAsync(WorkflowCreateDto workflow)
         {
+            var checklist = await _context.Checklist
+                                            .Include(c => c.ChecklistTasks)
+                                            .FirstOrDefaultAsync(checklist => checklist.Id == workflow.ChecklistId);
+                                            
             foreach (string userId in workflow.UserIds)
             {
                 Workflow newWorkflow = new Workflow
@@ -111,6 +119,18 @@ namespace turbin.sikker.core.Services
                     CreatedDate = DateTime.Now
                 };
 
+            var taskInfos = new List<TaskInfo>();
+
+            foreach (var task in checklist.ChecklistTasks)
+            {
+                taskInfos.Append(
+                    new TaskInfo{
+                        TaskId = task.Id,
+                        Status = TaskInfoStatus.Unfinished
+                    }
+                );
+            }
+                newWorkflow.TaskInfos = taskInfos;
                 _context.Workflow.Add(newWorkflow);
                 newWorkflow.UpdatedDate = DateTime.Now;
             };

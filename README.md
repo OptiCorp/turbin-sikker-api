@@ -8,6 +8,17 @@ Clone and Run the API Application:
 2. Navigate to project folder: `cd turbin-sikker-api/`
 3. Run API: `cd turbin.sikker.core && dotnet run`
 
+## Branch name convention 
+1. type (feat, fix, chore, refactor)
+2. issue number
+3. Descriptive text.
+
+### Example:
+
+```
+feat/#1/users-endpoint
+```
+
 ## ER Diagram
 
 ```mermaid

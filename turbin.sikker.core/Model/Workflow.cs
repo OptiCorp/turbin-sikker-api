@@ -12,6 +12,7 @@ namespace turbin.sikker.core.Model
         [Display(Name = "Done")]
         Done
     }
+
     public class Workflow
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -42,6 +43,8 @@ namespace turbin.sikker.core.Model
         public int? CompletionTimeMinutes { get; set; }
 
         public string? InvoiceId { get; set; }
+
+        public ICollection<TaskInfo>? TaskInfos { get; set; }
 
     }
 }
