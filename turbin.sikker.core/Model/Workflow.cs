@@ -24,7 +24,9 @@ namespace turbin.sikker.core.Model
     }
 
     public class TaskInfo
-    {
+    {   
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string? Id { get; set; }
         public string TaskId { get; set; }
         public TaskStatus Status { get; set; }
     }
@@ -59,7 +61,7 @@ namespace turbin.sikker.core.Model
 
         public string? InvoiceId { get; set; }
 
-        public ICollection<TaskInfo> TaskInfos { get; set; }
+        public ICollection<TaskInfo>? TaskInfos { get; set; }
 
     }
 }

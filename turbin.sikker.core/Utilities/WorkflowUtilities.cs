@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.WorkflowDtos;
 
@@ -7,10 +8,14 @@ public class WorkflowUtilities : IWorkflowUtilities
 	{
         public WorkflowResponseDto WorkflowToResponseDto(Workflow? workflow)
         {   
-            var taskInfos = new Dictionary<string, string>();
-            foreach(var info in workflow.TaskInfos)
+            Dictionary<string, string>? taskInfos = null;
+            if (workflow.TaskInfos != null)
+            {   
+                taskInfos = new Dictionary<string, string>();
+                foreach(var info in workflow.TaskInfos)
             {
                 taskInfos.Add(info.TaskId, info.Status.ToString());
+            }
             }
             return new WorkflowResponseDto
             {
