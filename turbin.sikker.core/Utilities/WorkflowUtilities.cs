@@ -8,10 +8,9 @@ public class WorkflowUtilities : IWorkflowUtilities
 	{
         public WorkflowResponseDto WorkflowToResponseDto(Workflow? workflow)
         {   
-            Dictionary<string, string>? taskInfos = null;
+            var taskInfos = new Dictionary<string, string>();
             if (workflow.TaskInfos != null)
             {   
-                taskInfos = new Dictionary<string, string>();
                 foreach(var info in workflow.TaskInfos)
             {
                 taskInfos.Add(info.TaskId, info.Status.ToString());

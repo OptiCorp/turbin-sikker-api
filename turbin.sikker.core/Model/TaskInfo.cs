@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace turbin.sikker.core.Model
 {
-    public enum TaskStatus
+    public enum TaskInfoStatus
     {
         [Display(Name = "Unfinished")]
         Unfinished,
@@ -18,6 +18,6 @@ namespace turbin.sikker.core.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
         public string TaskId { get; set; }
-        public TaskStatus Status { get; set; }
+        public TaskInfoStatus Status { get; set; }
     }
 }
