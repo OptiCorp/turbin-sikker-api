@@ -70,6 +70,21 @@ namespace turbin.sikker.core.Controllers
             return Ok(pdf);
         }
 
+        [HttpGet("GetAllInvoicePdfs")]
+        [SwaggerOperation(Summary = "Get all invoice PDFs", Description = "Retrieves all invoice PDFs.")]
+        [SwaggerResponse(200, "Success", typeof(InvoiceResponseDto))]
+        [SwaggerResponse(404, "Invoices not found")]
+        public async Task<IActionResult> GetAllInvoicePdfsAsync()
+        {
+            var pdfs = await _invoiceService.GetAllInvoicePdfsAsync();
+            if (pdfs == null)
+            {
+                return NotFound("Invoice Pdfs not found.");
+            }
+            
+            return Ok(pdfs);
+        }
+
 
         [HttpPost("AddInvoice")]
         [SwaggerOperation(Summary = "Create a new invoice", Description = "Creates a new invoice.")]
