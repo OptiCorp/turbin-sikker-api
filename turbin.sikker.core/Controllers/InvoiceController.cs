@@ -17,7 +17,7 @@ namespace turbin.sikker.core.Controllers
         private readonly IInvoiceService _invoiceService;
 
         private readonly IInvoiceUtilities _invoiceUtilities;
-        
+
         public InvoiceController(IInvoiceService invoiceService, IInvoiceUtilities invoiceUtilities)
         {
             _invoiceService = invoiceService;
@@ -66,7 +66,7 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("Invoice Pdf not found.");
             }
-            
+
             return Ok(pdf);
         }
 
@@ -76,7 +76,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "Invoice created", typeof(InvoiceResponseDto))]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> CreateInvoiceAsync(InvoiceCreateDto invoice)
-        {   
+        {
             // ValidationResult validationResult = validator.Validate(invoice);
 
             // if (!validationResult.IsValid)
@@ -113,22 +113,22 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> UpdateInvoiceAsync(InvoiceUpdateDto updatedInvoice)
-        {   
-        //     ValidationResult validationResult = validator.Validate(updatedInvoice);
+        {
+            //     ValidationResult validationResult = validator.Validate(updatedInvoice);
 
-        //     if (!validationResult.IsValid)
-        //     {
-        //         var modelStateDictionary = new ModelStateDictionary();
+            //     if (!validationResult.IsValid)
+            //     {
+            //         var modelStateDictionary = new ModelStateDictionary();
 
-        //         foreach (ValidationFailure failure in validationResult.Errors)
-        //         {
-        //             modelStateDictionary.AddModelError(
-        //                 failure.PropertyName,
-        //                 failure.ErrorMessage
-        //                 );
-        //         }
-        //         return ValidationProblem(modelStateDictionary);
-        //    }
+            //         foreach (ValidationFailure failure in validationResult.Errors)
+            //         {
+            //             modelStateDictionary.AddModelError(
+            //                 failure.PropertyName,
+            //                 failure.ErrorMessage
+            //                 );
+            //         }
+            //         return ValidationProblem(modelStateDictionary);
+            //    }
 
             var invoice = await _invoiceService.GetInvoiceByIdAsync(updatedInvoice.Id);
             if (invoice == null)
@@ -157,18 +157,18 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Invoice deleted")]
         [SwaggerResponse(404, "Invoice not found")]
         public async Task<IActionResult> DeleteInvoiceAsync(string id)
-        {   
+        {
             var invoice = await _invoiceService.GetInvoiceByIdAsync(id);
 
             if (invoice == null)
             {
                 return NotFound("Invoice not found");
             }
-           
+
             await _invoiceService.DeleteInvoiceAsync(id);
 
             return Ok("Invoice deleted");
         }
-       
+
     }
 }

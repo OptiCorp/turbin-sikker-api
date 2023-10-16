@@ -1,12 +1,12 @@
 namespace turbin.sikker.core.Model.DTO
 {
     public class NotificationResponseDto
-    {   
+    {
         public string Id { get; set; }
-        public string Title { get; set; }
-        public string Status { get; set; }
+        public string Message { get; set; }
+        public NotificationStatus NotificationStatus { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public DateTime SentDate { get; set; }
+        public NotificationType NotificationType { get; set; }
     }
 }

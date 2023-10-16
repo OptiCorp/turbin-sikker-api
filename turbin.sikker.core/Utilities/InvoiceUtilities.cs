@@ -3,15 +3,15 @@ using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Utilities
 {
-public class InvoiceUtilities : IInvoiceUtilities
-	{
-       public bool IsValidStatus(string value)
+    public class InvoiceUtilities : IInvoiceUtilities
+    {
+        public bool IsValidStatus(string value)
         {
             string lowerCaseValue = value.ToLower();
             return lowerCaseValue == "Paid" || lowerCaseValue == "Unpaid";
         }
 
-         public string GetInvoiceStatus(InvoiceStatus status)
+        public string GetInvoiceStatus(InvoiceStatus status)
         {
             switch (status)
             {

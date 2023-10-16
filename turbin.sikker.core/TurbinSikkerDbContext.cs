@@ -30,10 +30,11 @@ namespace turbin.sikker.core
 
         public DbSet<Invoice> Invoice { get; set; }
 
+        public DbSet<Notification> Notification { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
 
             // Call the Configure method from ModelConfigurations class
             UserConfigurations.Configure(modelBuilder);
@@ -43,6 +44,7 @@ namespace turbin.sikker.core
             WorkflowConfigurations.Configure(modelBuilder);
             UploadConfigurations.Configure(modelBuilder);
             InvoiceConfigurations.Configure(modelBuilder);
+            NotificationConfigurations.Configure(modelBuilder);
         }
 
     }

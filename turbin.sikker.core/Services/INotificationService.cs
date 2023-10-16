@@ -2,7 +2,7 @@ using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Services
 {
-    public interface INotificationService : BackgroundService
+    public interface INotificationService
     {
         // Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync();
         Task<IEnumerable<NotificationResponseDto>> GetAllNotificationsAsync();

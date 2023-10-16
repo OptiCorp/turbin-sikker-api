@@ -84,9 +84,9 @@ namespace turbin.sikker.core.Configuration
                 .HasForeignKey(c => c.ChecklistTaskId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-                modelBuilder.Entity<Punch>()
-                .HasMany(e => e.Uploads)
-                .WithOne(e => e.Punch);
+            modelBuilder.Entity<Punch>()
+            .HasMany(e => e.Uploads)
+            .WithOne(e => e.Punch);
         }
     }
 
@@ -129,7 +129,7 @@ namespace turbin.sikker.core.Configuration
                 .WithMany(c => c.Uploads)
                 .HasForeignKey(c => c.PunchId)
                 .OnDelete(DeleteBehavior.NoAction);
-            
+
         }
     }
 
@@ -139,9 +139,17 @@ namespace turbin.sikker.core.Configuration
         {
             modelBuilder.Entity<Invoice>()
                 .HasKey(c => c.Id);
-            
+
         }
     }
 
+    public static class NotificationConfigurations
+    {
+        public static void Configure(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Notification>()
+                .HasKey(c => c.Id);
 
+        }
+    }
 }
