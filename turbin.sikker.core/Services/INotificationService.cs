@@ -4,13 +4,13 @@ namespace turbin.sikker.core.Services
 {
     public interface INotificationService
     {
-        // Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync();
+        // Task<IEnumerable<NotificationResponseDto>> GetAllNotificationsAsync();
         Task<IEnumerable<NotificationResponseDto>> GetAllNotificationsAsync();
 
-        // Task<InvoiceResponseDto> GetInvoiceByIdAsync(string id);
-        // Task<InvoiceResponseDto> GetInvoicePdfByInvoiceIdAsync(string id);
-        // Task CreateInvoiceAsync(InvoiceCreateDto invoice);
-        // Task UpdateInvoiceAsync(InvoiceUpdateDto invoice);
-        // Task DeleteInvoiceAsync(string id);
+        // Task<NotificationResponseDto> GetNotificationByIdAsync(string id);
+        // Task<NotificationResponseDto> GetNotificationPdfByNotificationIdAsync(string id);
+        // Task CreateNotificationAsync(NotificationCreateDto notification);
+        // Task UpdateNotificationAsync(NotificationUpdateDto notification);
+        // Task DeleteNotificationAsync(string id);
     }
 }
