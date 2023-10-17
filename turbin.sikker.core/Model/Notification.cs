@@ -28,7 +28,7 @@ namespace turbin.sikker.core.Model
         [EnumDataType(typeof(NotificationStatus))]
         public NotificationStatus NotificationStatus { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
         [EnumDataType(typeof(NotificationType))]
         public NotificationType NotificationType { get; set; }
     }

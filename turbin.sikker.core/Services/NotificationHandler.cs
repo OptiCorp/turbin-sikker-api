@@ -31,29 +31,21 @@ namespace turbin.sikker.core.Services
 
                 var body = Encoding.UTF8.GetString(message.Body);
 
-                InvoiceBusDto invoiceBody = JsonSerializer.Deserialize<InvoiceBusDto>(body);
+                NotificationBusDto notificationBody = JsonSerializer.Deserialize<NotificationBusDto>(body);
 
-                Invoice invoice = new Invoice
+                Notification notification = new Notification
                 {
-                    Sender = invoiceBody.Sender,
-                    Receiver = invoiceBody.Receiver,
-                    CreatedDate = invoiceBody.CreatedDate,
-                    SentDate = invoiceBody.SentDate,
-                    Amount = invoiceBody.Amount,
-                    PdfBlobLink = invoiceBody.PdfBlobLink,
-                    Status = invoiceBody.Status
+                    Id = notificationBody.Id,
+                    Message = notificationBody.Message,
+                    NotificationStatus = notificationBody.NotificationStatus,
+                    CreatedDate = notificationBody.CreatedDate,
+                    UpdatedDate = notificationBody.UpdatedDate,
+                    NotificationType = notificationBody.NotificationType
                 };
 
                 var scopedService = scope.ServiceProvider.GetRequiredService<TurbinSikkerDbContext>();
 
-                await scopedService.Invoice.AddAsync(invoice);
-                await scopedService.SaveChangesAsync();
-
-                foreach (var workflowInfo in invoiceBody.Workflows)
-                {
-                    var workflow = await scopedService.Workflow.FirstOrDefaultAsync(p => p.Id == workflowInfo.Id);
-                    workflow.InvoiceId = invoice.Id;
-                }
+                await scopedService.Notification.AddAsync(notification);
                 await scopedService.SaveChangesAsync();
 
                 await _orderQueueClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
@@ -85,6 +77,5 @@ namespace turbin.sikker.core.Services
             Console.WriteLine($"{nameof(NotificationHandler)} service has stopped.");
             await _orderQueueClient.CloseAsync().ConfigureAwait(false);
         }
-
     }
 }
