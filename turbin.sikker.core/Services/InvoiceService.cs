@@ -68,7 +68,6 @@ namespace turbin.sikker.core.Services
             return invoiceResponse;
         }
 
-
         public async Task CreateInvoiceAsync(InvoiceCreateDto invoiceDto)
         {
             ICollection<WorkflowInfo> workflowInfos = new List<WorkflowInfo>();
