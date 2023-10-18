@@ -75,6 +75,25 @@ namespace turbin.sikker.core.Services
             return workflows;
         }
 
+        public async Task<IEnumerable<WorkflowResponseDto>> GetAllCompletedWorkflowsAsync()
+        {
+            var workflows = await _context.Workflow
+            .Include(c => c.User)
+            .ThenInclude(c => c.UserRole)
+            .Include(c => c.Creator)
+            .ThenInclude(c => c.UserRole)
+            .Include(p => p.Checklist)
+            .ThenInclude(c => c.ChecklistTasks)
+            .ThenInclude(c => c.Category)
+            .Where(cw => cw.Status == WorkflowStatus.Done)
+            .Where( cw => cw.InvoiceId == null)
+            .OrderByDescending(c => c.CreatedDate)
+            .Select(c => _workflowUtilities.WorkflowToResponseDto(c))
+            .ToListAsync();
+            
+            return workflows;
+        }
+
         public async Task UpdateWorkflowAsync(WorkflowUpdateDto updatedWorkflow)
         {
             var workflow = await _context.Workflow.FirstOrDefaultAsync(workflow => workflow.Id == updatedWorkflow.Id);

@@ -8,6 +8,7 @@ namespace turbin.sikker.core.Services
         Task<IEnumerable<WorkflowResponseDto>> GetAllWorkflowsAsync();
         Task<WorkflowResponseDto> GetWorkflowByIdAsync(string id);
         Task<IEnumerable<WorkflowResponseDto>> GetAllWorkflowsByUserIdAsync(string userId);
+        Task<IEnumerable<WorkflowResponseDto>> GetAllCompletedWorkflowsAsync();
         Task UpdateWorkflowAsync(WorkflowUpdateDto updatedWorkflow);
         Task CreateWorkflowAsync(WorkflowCreateDto workflow);
         Task DeleteWorkflowAsync(string id);
