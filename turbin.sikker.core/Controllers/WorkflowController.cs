@@ -67,6 +67,14 @@ namespace turbin.sikker.core.Controllers
             return Ok(await _workflowService.GetAllWorkflowsByUserIdAsync(userId));
         }
 
+        [HttpGet("GetAllCompletedWorkflows")]
+        [SwaggerOperation(Summary = "Get all completed workflows", Description = "Retrieves a list of all completed workflows.")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<WorkflowResponseDto>))]
+        public async Task<IActionResult> GetAllCompletedWorkflows()
+        {   
+            return Ok(await _workflowService.GetAllCompletedWorkflowsAsync());
+        }
+
         [HttpPost("CreateWorkflow")]
         [SwaggerOperation(Summary = "Create a new workflow", Description = "Creates a new workflow.")]
         [SwaggerResponse(200, "Workflow(s) created")]
