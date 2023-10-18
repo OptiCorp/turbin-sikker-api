@@ -25,7 +25,7 @@ namespace turbin.sikker.core.Model.DTO
         public DateTime SentDate { get; set; }
 
         [Required]
-        public int Amount { get; set; }
+        public float Amount { get; set; }
 
         [Required]
         public string PdfBlobLink { get; set; }

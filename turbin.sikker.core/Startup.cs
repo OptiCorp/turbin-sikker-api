@@ -56,6 +56,7 @@ namespace turbin.sikker.core
             services.AddScoped<IPunchService, PunchService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<ISocketService, SocketService>();
 
             services.AddScoped<IUserUtilities, UserUtilities>();
             services.AddScoped<IUserRoleUtilities, UserRoleUtilities>();

@@ -29,7 +29,7 @@ namespace turbin.sikker.core.Model
 
         public string Receiver { get; set; }
 
-        public int Amount { get; set; }
+        public float Amount { get; set; }
 
         public string PdfBlobLink { get; set; }
 
