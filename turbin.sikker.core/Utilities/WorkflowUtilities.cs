@@ -8,6 +8,10 @@ public class WorkflowUtilities : IWorkflowUtilities
 	{
         public WorkflowResponseDto WorkflowToResponseDto(Workflow? workflow)
         {   
+            if (workflow == null)
+            {
+                return null;
+            }
             var taskInfos = new Dictionary<string, string>();
             if (workflow.TaskInfos != null)
             {   

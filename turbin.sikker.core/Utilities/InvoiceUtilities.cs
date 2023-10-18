@@ -26,6 +26,10 @@ public class InvoiceUtilities : IInvoiceUtilities
 
         public InvoiceResponseDto InvoiceToResponseDto(Invoice? invoice, byte[]? bytes)
         {
+            if (invoice == null)
+            {
+                return null;
+            }
             if (bytes == null)
             {
                 return new InvoiceResponseDto
