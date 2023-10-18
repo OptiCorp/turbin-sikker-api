@@ -17,7 +17,7 @@ namespace turbin.sikker.core.Model.DTO
 
         public DateTime? UpdatedDate { get; set; }
 
-        public int? Amount { get; set; }
+        public float? Amount { get; set; }
 
         public byte[]? Pdf { get; set; }
 

@@ -8,7 +8,7 @@ namespace turbin.sikker.core.Model.DTO
         public string Receiver { get; set; }
 
         [Required]
-        public int Amount { get; set; }
+        public float Amount { get; set; }
 
         [Required]
         public ICollection<WorkflowInfo> Workflows { get; set; }

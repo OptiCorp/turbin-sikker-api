@@ -72,7 +72,7 @@ namespace turbin.sikker.core.Services
         public async Task CreateInvoiceAsync(InvoiceCreateDto invoiceDto)
         {
             ICollection<WorkflowInfo> workflowInfos = new List<WorkflowInfo>();
-            int totalAmount = 0;
+            float totalAmount = 0;
             for (int i = 0; i < invoiceDto.WorkflowIds.Count; i++)
             {
                 var workflow = await _context.Workflow.FirstOrDefaultAsync(w => w.Id == invoiceDto.WorkflowIds.ElementAt(i));
@@ -87,7 +87,7 @@ namespace turbin.sikker.core.Services
                         HourlyRate = invoiceDto.HourlyRate,
                         EstimatedCompletionTime = checklist.EstCompletionTimeMinutes.Value
                     };
-                    totalAmount += workflowInfo.HourlyRate*workflowInfo.CompletionTime;
+                    totalAmount += (float)Math.Round(workflowInfo.HourlyRate/60f*workflowInfo.CompletionTime, 2);
                     workflowInfos.Add(workflowInfo);
                 }
             }
