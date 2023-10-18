@@ -112,7 +112,7 @@ namespace turbin.sikker.core.Services
                         HourlyRate = invoiceDto.HourlyRate,
                         EstimatedCompletionTime = checklist.EstCompletionTimeMinutes.Value
                     };
-                    totalAmount += (float)Math.Round(workflowInfo.HourlyRate/60f*workflowInfo.CompletionTime, 2);
+                    totalAmount += workflowInfo.HourlyRate/60f*workflowInfo.CompletionTime;
                     workflowInfos.Add(workflowInfo);
                 }
             }
@@ -120,7 +120,7 @@ namespace turbin.sikker.core.Services
             var invoice = new InvoiceSendDto
             {
                 Receiver = invoiceDto.Receiver,
-                Amount = totalAmount,
+                Amount = (float)Math.Round(totalAmount, 2),
                 Workflows = workflowInfos
             };
 
