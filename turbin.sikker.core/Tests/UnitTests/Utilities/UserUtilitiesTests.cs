@@ -51,7 +51,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email1",
                 Username = "username1",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user2 = new UserDto {
                 Id = "2",
@@ -61,7 +61,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email2",
                 Username = "username2",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user3 = new UserDto {
                 Id = "3",
@@ -71,7 +71,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email3",
                 Username = "username3",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             users.Add(user1);
@@ -86,7 +86,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email4",
                 Username = "username1",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             Assert.True(_userUtilities.IsUsernameTaken(users, user4.Username));
@@ -104,7 +104,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email1",
                 Username = "username1",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user2 = new UserDto {
                 Id = "2",
@@ -114,7 +114,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email2",
                 Username = "username2",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user3 = new UserDto {
                 Id = "3",
@@ -124,7 +124,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email3",
                 Username = "username3",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             users.Add(user1);
@@ -139,7 +139,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email4",
                 Username = "username4",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             Assert.False(_userUtilities.IsUsernameTaken(users, user4.Username));
@@ -157,7 +157,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email1",
                 Username = "username1",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user2 = new UserDto {
                 Id = "2",
@@ -167,7 +167,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email2",
                 Username = "username2",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user3 = new UserDto {
                 Id = "3",
@@ -177,7 +177,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email3",
                 Username = "username3",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             users.Add(user1);
@@ -192,7 +192,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email1",
                 Username = "username4",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             Assert.True(_userUtilities.IsEmailTaken(users, user4.Email));
@@ -210,7 +210,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email1",
                 Username = "username1",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user2 = new UserDto {
                 Id = "2",
@@ -220,7 +220,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email2",
                 Username = "username2",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
             var user3 = new UserDto {
                 Id = "3",
@@ -230,7 +230,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email3",
                 Username = "username3",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             users.Add(user1);
@@ -245,7 +245,7 @@ namespace turbin.sikker.core.Tests
                 Email = "email4",
                 Username = "username4",
                 Status = "active",
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             Assert.False(_userUtilities.IsEmailTaken(users, user4.Email));

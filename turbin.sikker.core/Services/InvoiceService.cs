@@ -169,7 +169,7 @@ namespace turbin.sikker.core.Services
                     }
                 }
 
-                invoice.UpdatedDate = DateTime.Now;
+                invoice.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
                 await _context.SaveChangesAsync();
             }
         }

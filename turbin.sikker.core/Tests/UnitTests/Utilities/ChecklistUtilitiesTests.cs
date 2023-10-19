@@ -21,26 +21,26 @@ namespace turbin.sikker.core.Tests
 
             var user = new User{
                 Id = "userID",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 Status = UserStatus.Active
             };
 
             var list1 = new ChecklistResponseDto{
                 Title = "Checklist 1",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
             var list2 = new ChecklistResponseDto{
                 Title = "Checklist 2",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
             var list3 = new ChecklistResponseDto{
                 Title = "Checklist 3",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
             
@@ -51,7 +51,7 @@ namespace turbin.sikker.core.Tests
             var list4 = new ChecklistResponseDto{
                 Title = "Checklist 3",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
 
@@ -65,26 +65,26 @@ namespace turbin.sikker.core.Tests
 
             var user = new User{
                 Id = "userID",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 Status = UserStatus.Active
             };
 
             var list1 = new ChecklistResponseDto{
                 Title = "Checklist 1",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
             var list2 = new ChecklistResponseDto{
                 Title = "Checklist 2",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
             var list3 = new ChecklistResponseDto{
                 Title = "Checklist 3",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
             
@@ -95,7 +95,7 @@ namespace turbin.sikker.core.Tests
             var list4 = new ChecklistResponseDto{
                 Title = "Checklist 4",
                 Status = "Active",
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 User = user
             };
 

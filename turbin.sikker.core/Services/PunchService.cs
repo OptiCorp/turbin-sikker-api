@@ -98,7 +98,7 @@ namespace turbin.sikker.core.Services
                 CreatorId = punchDto.CreatorId,
                 WorkflowId = punchDto.WorkflowId,
                 ChecklistTaskId = punchDto.ChecklistTaskId,
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 Severity = Enum.Parse<PunchSeverity>(punchDto.Severity),
                 Status = PunchStatus.Pending
             };
@@ -170,7 +170,7 @@ namespace turbin.sikker.core.Services
                     }
                 }
 
-                punch.UpdatedDate = DateTime.Now;
+                punch.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
                 await _context.SaveChangesAsync();
             }
         }
