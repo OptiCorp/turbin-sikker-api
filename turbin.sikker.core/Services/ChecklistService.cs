@@ -67,7 +67,7 @@ namespace turbin.sikker.core.Services
             {
                 Title = checklistDto.Title,
                 CreatorId = checklistDto.CreatorId,
-                CreatedDate = DateTime.Now
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
             };
 
             _context.Checklist.Add(checklist);
@@ -94,7 +94,7 @@ namespace turbin.sikker.core.Services
                         checklist.Status = ChecklistStatus.Active;
                 }
 
-                checklist.UpdatedDate = DateTime.Now;
+                checklist.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
 
                 await _context.SaveChangesAsync();
             }

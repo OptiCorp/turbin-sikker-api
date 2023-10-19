@@ -71,7 +71,7 @@ namespace turbin.sikker.core.Tests.Services
                             Email = "some email",
                             Username = "username1",
                             Status = UserStatus.Active,
-                            CreatedDate = DateTime.Now
+                            CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                         }
                     );
                     await databaseContext.SaveChangesAsync();
@@ -109,7 +109,7 @@ namespace turbin.sikker.core.Tests.Services
                                 Email = "some email",
                                 Username = string.Format("Username {0}", i),
                                 Status = i%5 == 0 ? UserStatus.Deleted : UserStatus.Active,
-                                CreatedDate = DateTime.Now
+                                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                             }
                         );
                     }
@@ -129,7 +129,7 @@ namespace turbin.sikker.core.Tests.Services
                     Email = "some email",
                     Username = "username1",
                     Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                 },
                 new User
                 {
@@ -141,7 +141,7 @@ namespace turbin.sikker.core.Tests.Services
                     Email = "some email",
                     Username = "username2",
                     Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                 },
                 new User
                 {
@@ -153,7 +153,7 @@ namespace turbin.sikker.core.Tests.Services
                     Email = "some email",
                     Username = "username3",
                     Status = UserStatus.Active,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                 }
             );
 
@@ -172,7 +172,7 @@ namespace turbin.sikker.core.Tests.Services
                                 Id = string.Format("Checklist {0}", i),
                                 Title = string.Format("Checklist {0}", i),
                                 Status = ChecklistStatus.Active,
-                                CreatedDate = DateTime.Now,
+                                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                                 CreatorId = createdById
                             }
                         );
@@ -188,7 +188,7 @@ namespace turbin.sikker.core.Tests.Services
                     Id = "Checklist 1",
                     Title = "Checklist 1",
                     Status = ChecklistStatus.Active,
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                     CreatorId = "User 2"
                 },
                 new Checklist
@@ -196,7 +196,7 @@ namespace turbin.sikker.core.Tests.Services
                     Id = "Checklist 2",
                     Title = "Checklist 2",
                     Status = ChecklistStatus.Active,
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                     CreatorId = "User 2"
                 }
             );
@@ -216,7 +216,7 @@ namespace turbin.sikker.core.Tests.Services
                                 UserId = "User 1",
                                 CreatorId = "User 2",
                                 Status = WorkflowStatus.Sent,
-                                CreatedDate = DateTime.Now
+                                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                             }
                         );
                     }
@@ -274,7 +274,7 @@ namespace turbin.sikker.core.Tests.Services
                         UserId = "User 1",
                         CreatorId = "User 2",
                         Status = WorkflowStatus.Sent,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                     },
                     new Workflow
                     {
@@ -283,7 +283,7 @@ namespace turbin.sikker.core.Tests.Services
                         UserId = "User 3",
                         CreatorId = "User 2",
                         Status = WorkflowStatus.Sent,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                     }
             );
 
@@ -299,7 +299,7 @@ namespace turbin.sikker.core.Tests.Services
                                 Id = string.Format("Punch {0}", i),
                                 WorkflowId = string.Format("Workflow {0}", (i%2)+1),
                                 ChecklistTaskId = string.Format("Task {0}", (i%2)+1),
-                                CreatedDate = DateTime.Now,
+                                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                                 CreatorId = i%2==0 ? "User 1" : "User 3",
                                 Description = string.Format("Punch {0}", i),
                                 Severity = PunchSeverity.Minor,
@@ -319,7 +319,7 @@ namespace turbin.sikker.core.Tests.Services
                     Id = "Punch 1",
                     WorkflowId = "Workflow 1",
                     ChecklistTaskId = "Task 1",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                     CreatorId = "User 1",
                     Description = "Punch 1",
                     Severity = PunchSeverity.Minor,
@@ -331,7 +331,7 @@ namespace turbin.sikker.core.Tests.Services
                     Id = "Punch 2",
                     WorkflowId = "Workflow 2",
                     ChecklistTaskId = "Task 2",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                     CreatorId = "User 1",
                     Description = "Punch 2",
                     Severity = PunchSeverity.Minor,
