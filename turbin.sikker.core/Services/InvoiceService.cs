@@ -43,7 +43,6 @@ namespace turbin.sikker.core.Services
             return _invoiceUtilities.InvoiceToResponseDto(invoice, null);
         }
 
-
         public async Task<InvoiceResponseDto> GetInvoicePdfByInvoiceIdAsync(string id)
         {
             var invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == id);
