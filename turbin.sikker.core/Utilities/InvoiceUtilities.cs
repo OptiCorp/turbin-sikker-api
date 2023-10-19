@@ -8,7 +8,7 @@ public class InvoiceUtilities : IInvoiceUtilities
        public bool IsValidStatus(string value)
         {
             string lowerCaseValue = value.ToLower();
-            return lowerCaseValue == "Paid" || lowerCaseValue == "Unpaid";
+            return lowerCaseValue == "paid" || lowerCaseValue == "unpaid";
         }
 
          public string GetInvoiceStatus(InvoiceStatus status)
@@ -26,6 +26,10 @@ public class InvoiceUtilities : IInvoiceUtilities
 
         public InvoiceResponseDto InvoiceToResponseDto(Invoice? invoice, byte[]? bytes)
         {
+            if (invoice == null)
+            {
+                return null;
+            }
             if (bytes == null)
             {
                 return new InvoiceResponseDto
