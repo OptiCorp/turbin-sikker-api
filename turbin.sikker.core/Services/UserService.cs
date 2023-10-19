@@ -76,7 +76,7 @@ namespace turbin.sikker.core.Services
                 LastName = userDto.LastName,
                 Email = userDto.Email,
                 UserRoleId = userDto.UserRoleId,
-                CreatedDate = DateTime.Now,
+                CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
                 Status = UserStatus.Active
             };
             _context.User.Add(user);
@@ -117,7 +117,7 @@ namespace turbin.sikker.core.Services
                             break;
                     }
                 }
-                user.UpdatedDate = DateTime.Now;
+                user.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
                 await _context.SaveChangesAsync();
             }
         }

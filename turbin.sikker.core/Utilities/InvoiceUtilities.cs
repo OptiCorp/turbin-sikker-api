@@ -35,6 +35,7 @@ public class InvoiceUtilities : IInvoiceUtilities
                 return new InvoiceResponseDto
                 {
                     Id = invoice.Id,
+                    Number = invoice.Number,
                     Sender = invoice.Sender,
                     Receiver = invoice.Receiver,
                     Status = GetInvoiceStatus(invoice.Status),
@@ -49,6 +50,7 @@ public class InvoiceUtilities : IInvoiceUtilities
             return new InvoiceResponseDto
             {
                 Id = invoice.Id,
+                Number = invoice.Number,
                 Sender = invoice.Sender,
                 Receiver = invoice.Receiver,
                 Status = GetInvoiceStatus(invoice.Status),

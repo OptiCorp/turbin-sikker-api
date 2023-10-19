@@ -117,7 +117,7 @@ namespace turbin.sikker.core.Services
                     workflow.TaskInfos = updatedWorkflow.TaskInfos;
                 }
             }
-            workflow.UpdatedDate = DateTime.Now;
+            workflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
             await _context.SaveChangesAsync();
         }
 
@@ -135,7 +135,7 @@ namespace turbin.sikker.core.Services
                     UserId = userId,
                     CreatorId = workflow.CreatorId,
                     Status = Enum.Parse<WorkflowStatus>("Sent"),
-                    CreatedDate = DateTime.Now
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                 };
 
             var taskInfos = new List<TaskInfo>();
@@ -151,7 +151,7 @@ namespace turbin.sikker.core.Services
             }
                 newWorkflow.TaskInfos = taskInfos;
                 _context.Workflow.Add(newWorkflow);
-                newWorkflow.UpdatedDate = DateTime.Now;
+                newWorkflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
             };
                                                                 
             await _context.SaveChangesAsync();

@@ -15,6 +15,8 @@ namespace turbin.sikker.core.Model
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
+        
+        public int Number { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
