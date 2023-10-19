@@ -35,6 +35,7 @@ namespace turbin.sikker.core.Services
 
             Invoice invoice = new Invoice{
                 Sender = invoiceBody.Sender,
+                Number = invoiceBody.Number,
                 Receiver = invoiceBody.Receiver,
                 CreatedDate = invoiceBody.CreatedDate,
                 SentDate = invoiceBody.SentDate,
