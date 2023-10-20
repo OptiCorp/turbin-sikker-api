@@ -1,5 +1,6 @@
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO.ChecklistDtos;
+using turbin.sikker.core.Model.DTO.WorkflowDtos;
 
 namespace turbin.sikker.core.Utilities
 {
@@ -27,6 +28,7 @@ public class ChecklistUtilities : IChecklistUtilities
                 CreatedDate = checklist.CreatedDate,
                 UpdatedDate = checklist.UpdatedDate,
                 ChecklistTasks = checklist.ChecklistTasks,
+                Workflows = new List<WorkflowResponseDto>(),
                 EstCompletionTimeMinutes = completionTime
             };
         }
@@ -47,6 +49,7 @@ public class ChecklistUtilities : IChecklistUtilities
                 CreatedDate = checklist.CreatedDate,
                 UpdatedDate = checklist.UpdatedDate,
                 ChecklistTasks = checklist.ChecklistTasks,
+                Workflows = new List<WorkflowResponseDto>(),
                 EstCompletionTimeMinutes = completionTime
             };
         }
