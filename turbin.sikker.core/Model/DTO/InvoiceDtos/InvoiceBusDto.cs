@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations;
 namespace turbin.sikker.core.Model.DTO
 {
 
-    public class WorkflowInfo{
+    public class WorkflowInfo
+    {
         public string Id { get; set; }
         public string Name { get; set; }
         public int CompletionTime { get; set; }
@@ -11,9 +12,11 @@ namespace turbin.sikker.core.Model.DTO
         public int EstimatedCompletionTime { get; set; }
     }
     public class InvoiceBusDto
-    {   
+    {
         [Required]
         public string Sender { get; set; }
+
+        public string? Title { get; set; }
 
         [Required]
         public int Number { get; set; }
@@ -38,7 +41,6 @@ namespace turbin.sikker.core.Model.DTO
 
         [Required]
         public ICollection<WorkflowInfo> Workflows { get; set; }
-
 
     }
 }

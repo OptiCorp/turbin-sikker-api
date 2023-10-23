@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace turbin.sikker.core.Model.DTO
 {
     public class InvoiceCreateDto
-    {   
+    {
         [Required]
         [EmailAddress]
         public string Receiver { get; set; }
@@ -13,6 +13,9 @@ namespace turbin.sikker.core.Model.DTO
 
         [Required]
         public int HourlyRate { get; set; }
+
+        [Required]
+        public string Title { get; set; }
 
     }
 }

@@ -15,8 +15,10 @@ namespace turbin.sikker.core.Model
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
-        
+
         public int Number { get; set; }
+
+        public string? Title { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -35,6 +37,8 @@ namespace turbin.sikker.core.Model
 
         public string PdfBlobLink { get; set; }
 
-        public ICollection<Workflow>? Workflows { get;}
+        public ICollection<Workflow>? Workflows { get; }
+
+        public string? Message { get; set; }
     }
 }
