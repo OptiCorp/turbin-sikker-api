@@ -15,6 +15,8 @@ namespace turbin.sikker.core.Model
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
+        
+        public int Number { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -29,7 +31,7 @@ namespace turbin.sikker.core.Model
 
         public string Receiver { get; set; }
 
-        public int Amount { get; set; }
+        public float Amount { get; set; }
 
         public string PdfBlobLink { get; set; }
 

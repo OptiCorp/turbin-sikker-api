@@ -10,6 +10,7 @@ using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
 using Duende.IdentityServer.Extensions;
+using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -23,14 +24,16 @@ namespace turbin.sikker.core.Controllers
         private readonly IUserService _userService;
         private readonly IChecklistTaskService _checklistTaskService;
         private readonly ICategoryService _categoryService;
+        private readonly IWorkflowService _workflowService;
         private readonly IChecklistUtilities _checklistUtilities;
         private readonly IChecklistTaskUtilities _checklistTaskUtilities;
-        public ChecklistController(IChecklistService context, IUserService userService, IChecklistTaskService checklistTaskService, ICategoryService categoryService, IChecklistUtilities checklistUtilities, IChecklistTaskUtilities checklistTaskUtilities)
+        public ChecklistController(IChecklistService context, IUserService userService, IChecklistTaskService checklistTaskService, ICategoryService categoryService, IWorkflowService workflowService, IChecklistUtilities checklistUtilities, IChecklistTaskUtilities checklistTaskUtilities)
         {
             _checklistService = context;
             _userService = userService;
             _checklistTaskService = checklistTaskService;
             _categoryService = categoryService;
+            _workflowService = workflowService;
             _checklistUtilities = checklistUtilities;
             _checklistTaskUtilities = checklistTaskUtilities;
         }
@@ -41,7 +44,25 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseDto>))]
         public async Task<IActionResult> GetAllChecklistsAsync()
         {   
-            return Ok(await _checklistService.GetAllChecklistsAsync());
+            var checklists = await _checklistService.GetAllChecklistsAsync();
+            var workflows = await _workflowService.GetAllWorkflowsAsync();
+
+            if (workflows.Count() > 0)
+            {
+                foreach (var workflow in workflows)
+            {
+                foreach (var checklist in checklists)
+            {
+                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                {   
+                    checklist.Workflows.Add(workflow);
+                    break;
+                }
+            }
+            }
+            }
+            
+            return Ok(checklists);
         }
 
         // Get specific Checklist based on given Id
@@ -56,6 +77,21 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("Checklist not found");
             }
+
+            var workflows = await _workflowService.GetAllWorkflowsAsync();
+
+            if (workflows.Count() > 0)
+            {
+                foreach (var workflow in workflows)
+            {
+                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                {   
+                    checklist.Workflows.Add(workflow);
+                    break;
+                }
+            }
+            }
+
 
             return Ok(checklist);
         }
@@ -72,7 +108,26 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("User not found");
             }
-            return Ok(await _checklistService.GetAllChecklistsByUserIdAsync(id));
+
+            var checklists = await _checklistService.GetAllChecklistsByUserIdAsync(id);
+            var workflows = await _workflowService.GetAllWorkflowsAsync();
+
+            if (workflows.Count() > 0)
+            {
+                foreach (var workflow in workflows)
+            {
+                foreach (var checklist in checklists)
+            {
+                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                {   
+                    checklist.Workflows.Add(workflow);
+                    break;
+                }
+            }
+            }
+            }
+            
+            return Ok(checklists);
         }
 
 

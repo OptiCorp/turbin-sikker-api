@@ -75,6 +75,25 @@ namespace turbin.sikker.core.Services
             return workflows;
         }
 
+        public async Task<IEnumerable<WorkflowResponseDto>> GetAllCompletedWorkflowsAsync()
+        {
+            var workflows = await _context.Workflow
+            .Include(c => c.User)
+            .ThenInclude(c => c.UserRole)
+            .Include(c => c.Creator)
+            .ThenInclude(c => c.UserRole)
+            .Include(p => p.Checklist)
+            .ThenInclude(c => c.ChecklistTasks)
+            .ThenInclude(c => c.Category)
+            .Where(cw => cw.Status == WorkflowStatus.Done)
+            .Where( cw => cw.InvoiceId == null)
+            .OrderByDescending(c => c.CreatedDate)
+            .Select(c => _workflowUtilities.WorkflowToResponseDto(c))
+            .ToListAsync();
+            
+            return workflows;
+        }
+
         public async Task UpdateWorkflowAsync(WorkflowUpdateDto updatedWorkflow)
         {
             var workflow = await _context.Workflow.FirstOrDefaultAsync(workflow => workflow.Id == updatedWorkflow.Id);
@@ -93,13 +112,21 @@ namespace turbin.sikker.core.Services
                 {
                     workflow.CompletionTimeMinutes = updatedWorkflow.CompletionTimeMinutes;
                 }
+                if (updatedWorkflow.TaskInfos != null)
+                {  
+                    workflow.TaskInfos = updatedWorkflow.TaskInfos;
+                }
             }
-            workflow.UpdatedDate = DateTime.Now;
+            workflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
             await _context.SaveChangesAsync();
         }
 
         public async Task CreateWorkflowAsync(WorkflowCreateDto workflow)
         {
+            var checklist = await _context.Checklist
+                                            .Include(c => c.ChecklistTasks)
+                                            .FirstOrDefaultAsync(checklist => checklist.Id == workflow.ChecklistId);
+                                            
             foreach (string userId in workflow.UserIds)
             {
                 Workflow newWorkflow = new Workflow
@@ -108,11 +135,23 @@ namespace turbin.sikker.core.Services
                     UserId = userId,
                     CreatorId = workflow.CreatorId,
                     Status = Enum.Parse<WorkflowStatus>("Sent"),
-                    CreatedDate = DateTime.Now
+                    CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                 };
 
+            var taskInfos = new List<TaskInfo>();
+
+            foreach (var task in checklist.ChecklistTasks)
+            {
+                taskInfos.Append(
+                    new TaskInfo{
+                        TaskId = task.Id,
+                        Status = TaskInfoStatus.Unfinished
+                    }
+                );
+            }
+                newWorkflow.TaskInfos = taskInfos;
                 _context.Workflow.Add(newWorkflow);
-                newWorkflow.UpdatedDate = DateTime.Now;
+                newWorkflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
             };
                                                                 
             await _context.SaveChangesAsync();

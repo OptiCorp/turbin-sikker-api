@@ -43,6 +43,35 @@ namespace turbin.sikker.core.Services
             return _invoiceUtilities.InvoiceToResponseDto(invoice, null);
         }
 
+        // public async Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicePdfsAsync()
+        // {
+        //     var invoices = await _context.Invoice
+        //                         .Select(p => _invoiceUtilities.InvoiceToResponseDto(p, null))
+        //                         .ToListAsync();
+        //     if (invoices == null) return null;
+
+        //     string containerEndpoint = "https://bsinvoiceprod.blob.core.windows.net/pdf-container";
+        //     BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
+
+        //     var counter = 0;
+        //     foreach(var invoice in invoices)
+        //     {   if (invoice.PdfBlobLink != null)
+        //         {
+        //         var stream = new MemoryStream();
+        //         var blobClient = containerClient.GetBlobClient(invoice.PdfBlobLink);
+
+        //         await blobClient.DownloadToAsync(stream);
+        //         stream.Position = 0;
+
+        //         Stream file = File.Create("test.pdf" + counter.ToString());
+        //         await stream.CopyToAsync(file);
+        //         invoice.Pdf = stream.ToArray();
+        //         counter++;
+        //         }
+        //     }
+
+        //     return invoices;
+        // }
 
         public async Task<InvoiceResponseDto> GetInvoicePdfByInvoiceIdAsync(string id)
         {
@@ -59,20 +88,16 @@ namespace turbin.sikker.core.Services
             await blobClient.DownloadToAsync(stream);
             stream.Position = 0;
 
-            Stream file = File.Create("test.pdf");
-            await stream.CopyToAsync(file);
-
 
             var invoiceResponse = _invoiceUtilities.InvoiceToResponseDto(invoice, stream.ToArray());
 
             return invoiceResponse;
         }
 
-
         public async Task CreateInvoiceAsync(InvoiceCreateDto invoiceDto)
         {
             ICollection<WorkflowInfo> workflowInfos = new List<WorkflowInfo>();
-            int totalAmount = 0;
+            float totalAmount = 0;
             for (int i = 0; i < invoiceDto.WorkflowIds.Count; i++)
             {
                 var workflow = await _context.Workflow.FirstOrDefaultAsync(w => w.Id == invoiceDto.WorkflowIds.ElementAt(i));
@@ -87,7 +112,7 @@ namespace turbin.sikker.core.Services
                         HourlyRate = invoiceDto.HourlyRate,
                         EstimatedCompletionTime = checklist.EstCompletionTimeMinutes.Value
                     };
-                    totalAmount += workflowInfo.HourlyRate*workflowInfo.CompletionTime;
+                    totalAmount += workflowInfo.HourlyRate/60f*workflowInfo.CompletionTime;
                     workflowInfos.Add(workflowInfo);
                 }
             }
@@ -95,7 +120,7 @@ namespace turbin.sikker.core.Services
             var invoice = new InvoiceSendDto
             {
                 Receiver = invoiceDto.Receiver,
-                Amount = totalAmount,
+                Amount = (float)Math.Round(totalAmount, 2),
                 Workflows = workflowInfos
             };
 
@@ -144,7 +169,7 @@ namespace turbin.sikker.core.Services
                     }
                 }
 
-                invoice.UpdatedDate = DateTime.Now;
+                invoice.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
                 await _context.SaveChangesAsync();
             }
         }

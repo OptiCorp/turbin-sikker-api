@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231019130415_invoiceNumber")]
+    partial class invoiceNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,33 +152,6 @@ namespace turbin.sikker.core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Invoice");
-                });
-
-            modelBuilder.Entity("turbin.sikker.core.Model.Notification", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NotificationStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NotificationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>

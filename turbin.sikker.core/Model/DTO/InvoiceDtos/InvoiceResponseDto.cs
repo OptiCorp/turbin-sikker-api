@@ -5,6 +5,8 @@ namespace turbin.sikker.core.Model.DTO
     {   
         public string Id { get; set; }
 
+        public int Number { get; set; }
+
         public string Sender { get; set; }
 
         public string Receiver { get; set; }
@@ -17,7 +19,7 @@ namespace turbin.sikker.core.Model.DTO
 
         public DateTime? UpdatedDate { get; set; }
 
-        public int? Amount { get; set; }
+        public float? Amount { get; set; }
 
         public byte[]? Pdf { get; set; }
 

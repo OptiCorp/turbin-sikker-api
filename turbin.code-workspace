@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../TurbinSikker-App"
+		},
+		{
+			"path": "../invoice-function-app"
+		}
+	],
+	"settings": {}
+}

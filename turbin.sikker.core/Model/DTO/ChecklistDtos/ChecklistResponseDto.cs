@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using turbin.sikker.core.Model.DTO.WorkflowDtos;
 
 namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
@@ -17,6 +18,8 @@ namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 
         public User? User { get; set; }
         public ICollection<ChecklistTask>? ChecklistTasks { get; set; }
+
+        public ICollection<WorkflowResponseDto>? Workflows { get; set; }
 
         public int? EstCompletionTimeMinutes { get; set; }
     }

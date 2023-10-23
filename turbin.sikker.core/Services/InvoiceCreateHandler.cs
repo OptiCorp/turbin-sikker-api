@@ -32,10 +32,10 @@ namespace turbin.sikker.core.Services
                 var body = Encoding.UTF8.GetString(message.Body);
 
                 InvoiceBusDto invoiceBody = JsonSerializer.Deserialize<InvoiceBusDto>(body);
-
-                Invoice invoice = new Invoice
-                {
+                
+                Invoice invoice = new Invoice {
                     Sender = invoiceBody.Sender,
+                    Number = invoiceBody.Number,
                     Receiver = invoiceBody.Receiver,
                     CreatedDate = invoiceBody.CreatedDate,
                     SentDate = invoiceBody.SentDate,

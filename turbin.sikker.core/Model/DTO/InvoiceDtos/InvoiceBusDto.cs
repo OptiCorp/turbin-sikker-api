@@ -16,6 +16,9 @@ namespace turbin.sikker.core.Model.DTO
         public string Sender { get; set; }
 
         [Required]
+        public int Number { get; set; }
+
+        [Required]
         public string Receiver { get; set; }
 
         [Required]
@@ -25,7 +28,7 @@ namespace turbin.sikker.core.Model.DTO
         public DateTime SentDate { get; set; }
 
         [Required]
-        public int Amount { get; set; }
+        public float Amount { get; set; }
 
         [Required]
         public string PdfBlobLink { get; set; }

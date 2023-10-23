@@ -1,4 +1,6 @@
 ﻿
+using turbin.sikker.core.Model.DTO.WorkflowDtos;
+
 namespace turbin.sikker.core.Model.DTO.ChecklistDtos
 {
     public class ChecklistResponseNoUserDto
@@ -14,6 +16,8 @@ namespace turbin.sikker.core.Model.DTO.ChecklistDtos
         public DateTime? UpdatedDate { get; set; }
 
         public ICollection<ChecklistTask>? ChecklistTasks { get; set; }
+
+        public ICollection<WorkflowResponseDto>? Workflows { get; set; }
 
         public int? EstCompletionTimeMinutes { get; set; }
     }
