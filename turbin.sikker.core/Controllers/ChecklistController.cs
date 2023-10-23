@@ -52,11 +52,13 @@ namespace turbin.sikker.core.Controllers
                 foreach (var workflow in workflows)
             {
                 foreach (var checklist in checklists)
+            {
                 if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
                 {   
                     checklist.Workflows.Add(workflow);
                     break;
                 }
+            }
             }
             }
             
@@ -76,6 +78,21 @@ namespace turbin.sikker.core.Controllers
                 return NotFound("Checklist not found");
             }
 
+            var workflows = await _workflowService.GetAllWorkflowsAsync();
+
+            if (workflows.Count() > 0)
+            {
+                foreach (var workflow in workflows)
+            {
+                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                {   
+                    checklist.Workflows.Add(workflow);
+                    break;
+                }
+            }
+            }
+
+
             return Ok(checklist);
         }
 
@@ -91,7 +108,26 @@ namespace turbin.sikker.core.Controllers
             {
                 return NotFound("User not found");
             }
-            return Ok(await _checklistService.GetAllChecklistsByUserIdAsync(id));
+
+            var checklists = await _checklistService.GetAllChecklistsByUserIdAsync(id);
+            var workflows = await _workflowService.GetAllWorkflowsAsync();
+
+            if (workflows.Count() > 0)
+            {
+                foreach (var workflow in workflows)
+            {
+                foreach (var checklist in checklists)
+            {
+                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                {   
+                    checklist.Workflows.Add(workflow);
+                    break;
+                }
+            }
+            }
+            }
+            
+            return Ok(checklists);
         }
 
 
