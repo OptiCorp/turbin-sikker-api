@@ -24,29 +24,30 @@ namespace turbin.sikker.core.Services
 
         public async Task Handle(Message message, CancellationToken cancelToken)
         {
+            Console.WriteLine("Received message");
             using (var scope = _serviceProdiver.CreateScope())
             {
                 if (message == null)
                     throw new ArgumentNullException(nameof(message));
 
-                var body = Encoding.UTF8.GetString(message.Body);
+                // var body = Encoding.UTF8.GetString(message.Body);
 
-                NotificationBusDto notificationBody = JsonSerializer.Deserialize<NotificationBusDto>(body);
+                // NotificationBusDto notificationBody = JsonSerializer.Deserialize<NotificationBusDto>(body);
 
-                Notification notification = new Notification
-                {
-                    Id = notificationBody.Id,
-                    Message = notificationBody.Message,
-                    NotificationStatus = notificationBody.NotificationStatus,
-                    CreatedDate = notificationBody.CreatedDate,
-                    UpdatedDate = notificationBody.UpdatedDate,
-                    NotificationType = notificationBody.NotificationType
-                };
+                // Notification notification = new Notification
+                // {
+                //     Id = notificationBody.Id,
+                //     Message = notificationBody.Message,
+                //     NotificationStatus = notificationBody.NotificationStatus,
+                //     CreatedDate = notificationBody.CreatedDate,
+                //     UpdatedDate = notificationBody.UpdatedDate,
+                //     NotificationType = notificationBody.NotificationType
+                // };
 
-                var scopedService = scope.ServiceProvider.GetRequiredService<TurbinSikkerDbContext>();
+                // var scopedService = scope.ServiceProvider.GetRequiredService<TurbinSikkerDbContext>();
 
-                await scopedService.Notification.AddAsync(notification);
-                await scopedService.SaveChangesAsync();
+                // await scopedService.Notification.AddAsync(notification);
+                // await scopedService.SaveChangesAsync();
 
                 await _orderQueueClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
             }
@@ -66,7 +67,7 @@ namespace turbin.sikker.core.Services
                 AutoComplete = false,
                 MaxAutoRenewDuration = TimeSpan.FromMinutes(10)
             };
-            _orderQueueClient = new QueueClient(_appSettings.QueueConnectionString, _appSettings.QueueName);
+            _orderQueueClient = new QueueClient(_appSettings.QueueConnectionString, _appSettings.QueueNameNotification);
             _orderQueueClient.RegisterMessageHandler(Handle, messageHandlerOptions);
             Console.WriteLine($"{nameof(NotificationHandler)} service has started.");
             return Task.CompletedTask;
