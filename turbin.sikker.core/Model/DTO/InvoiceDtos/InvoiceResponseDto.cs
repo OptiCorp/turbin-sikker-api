@@ -2,10 +2,12 @@
 namespace turbin.sikker.core.Model.DTO
 {
     public class InvoiceResponseDto
-    {   
+    {
         public string Id { get; set; }
 
         public int Number { get; set; }
+
+        public string? Title { get; set; }
 
         public string Sender { get; set; }
 
@@ -26,6 +28,8 @@ namespace turbin.sikker.core.Model.DTO
         public string PdfBlobLink { get; set; }
 
         public ICollection<Workflow>? Workflows { get; set; }
+
+        public string? Message { get; set; }
     }
 }
 
