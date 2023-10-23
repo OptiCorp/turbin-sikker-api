@@ -3,15 +3,15 @@ using turbin.sikker.core.Model.DTO;
 
 namespace turbin.sikker.core.Utilities
 {
-public class InvoiceUtilities : IInvoiceUtilities
-	{
-       public bool IsValidStatus(string value)
+    public class InvoiceUtilities : IInvoiceUtilities
+    {
+        public bool IsValidStatus(string value)
         {
             string lowerCaseValue = value.ToLower();
             return lowerCaseValue == "paid" || lowerCaseValue == "unpaid";
         }
 
-         public string GetInvoiceStatus(InvoiceStatus status)
+        public string GetInvoiceStatus(InvoiceStatus status)
         {
             switch (status)
             {
@@ -36,6 +36,7 @@ public class InvoiceUtilities : IInvoiceUtilities
                 {
                     Id = invoice.Id,
                     Number = invoice.Number,
+                    Title = invoice.Title,
                     Sender = invoice.Sender,
                     Receiver = invoice.Receiver,
                     Status = GetInvoiceStatus(invoice.Status),
@@ -44,13 +45,15 @@ public class InvoiceUtilities : IInvoiceUtilities
                     UpdatedDate = invoice.UpdatedDate,
                     Amount = invoice.Amount,
                     PdfBlobLink = invoice.PdfBlobLink,
-                    Workflows = invoice.Workflows
+                    Workflows = invoice.Workflows,
+                    Message = invoice.Message
                 };
             }
             return new InvoiceResponseDto
             {
                 Id = invoice.Id,
                 Number = invoice.Number,
+                Title = invoice.Title,
                 Sender = invoice.Sender,
                 Receiver = invoice.Receiver,
                 Status = GetInvoiceStatus(invoice.Status),
@@ -60,7 +63,8 @@ public class InvoiceUtilities : IInvoiceUtilities
                 Amount = invoice.Amount,
                 Pdf = bytes,
                 PdfBlobLink = invoice.PdfBlobLink,
-                Workflows = invoice.Workflows
+                Workflows = invoice.Workflows,
+                Message = invoice.Message
             };
         }
     }
