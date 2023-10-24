@@ -28,6 +28,7 @@ namespace turbin.sikker.core.Services
             return await _context.Invoice
                             .Include(p => p.Workflows)
                             .OrderByDescending(c => c.CreatedDate)
+                            .OrderByDescending(c => c.Status)
                             .Select(p => _invoiceUtilities.InvoiceToResponseDto(p, null))
                             .ToListAsync();
         }
@@ -37,7 +38,7 @@ namespace turbin.sikker.core.Services
             var invoice = await _context.Invoice
                                 .Include(p => p.Workflows)
                                 .FirstOrDefaultAsync(p => p.Id == id);
-            
+
             if (invoice == null) return null;
 
             return _invoiceUtilities.InvoiceToResponseDto(invoice, null);
@@ -112,7 +113,7 @@ namespace turbin.sikker.core.Services
                         HourlyRate = invoiceDto.HourlyRate,
                         EstimatedCompletionTime = checklist.EstCompletionTimeMinutes.Value
                     };
-                    totalAmount += workflowInfo.HourlyRate/60f*workflowInfo.CompletionTime;
+                    totalAmount += workflowInfo.HourlyRate / 60f * workflowInfo.CompletionTime;
                     workflowInfos.Add(workflowInfo);
                 }
             }
@@ -121,7 +122,8 @@ namespace turbin.sikker.core.Services
             {
                 Receiver = invoiceDto.Receiver,
                 Amount = (float)Math.Round(totalAmount, 2),
-                Workflows = workflowInfos
+                Workflows = workflowInfos,
+                Title = invoiceDto.Title
             };
 
             var connectionsString = Environment.GetEnvironmentVariable("SbConnectionString");
@@ -167,6 +169,11 @@ namespace turbin.sikker.core.Services
                         default:
                             break;
                     }
+                }
+
+                if (updatedInvoice.Message != null)
+                {
+                    invoice.Message = updatedInvoice.Message;
                 }
 
                 invoice.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
