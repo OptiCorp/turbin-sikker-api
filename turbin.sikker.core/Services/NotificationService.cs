@@ -30,5 +30,20 @@ namespace turbin.sikker.core.Services
                             .Select(p => _notificationUtilities.NotificationToResponseDto(p, null))
                             .ToListAsync();
         }
+
+        public async Task AddNotification(string errorMessage)
+        {
+            Notification notification = new Notification
+            {
+                Message = errorMessage,
+                NotificationStatus = NotificationStatus.Active, // TODO: change to read and unread
+                CreatedDate = DateTime.Now,
+                NotificationType = NotificationType.Error
+            };
+
+            await _context.Notification.AddAsync(notification);
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

@@ -24,30 +24,25 @@ namespace turbin.sikker.core.Services
 
         public async Task Handle(Message message, CancellationToken cancelToken)
         {
-            Console.WriteLine("Received message");
+            var errorMessage = Encoding.UTF8.GetString(message.Body);
+
             using (var scope = _serviceProdiver.CreateScope())
             {
                 if (message == null)
                     throw new ArgumentNullException(nameof(message));
 
-                // var body = Encoding.UTF8.GetString(message.Body);
+                Notification notification = new Notification
+                {
+                    Message = errorMessage,
+                    NotificationStatus = NotificationStatus.Active, // TODO: change to read and unread
+                    CreatedDate = DateTime.Now,
+                    NotificationType = NotificationType.Error
+                };
 
-                // NotificationBusDto notificationBody = JsonSerializer.Deserialize<NotificationBusDto>(body);
+                var scopedService = scope.ServiceProvider.GetRequiredService<TurbinSikkerDbContext>();
 
-                // Notification notification = new Notification
-                // {
-                //     Id = notificationBody.Id,
-                //     Message = notificationBody.Message,
-                //     NotificationStatus = notificationBody.NotificationStatus,
-                //     CreatedDate = notificationBody.CreatedDate,
-                //     UpdatedDate = notificationBody.UpdatedDate,
-                //     NotificationType = notificationBody.NotificationType
-                // };
-
-                // var scopedService = scope.ServiceProvider.GetRequiredService<TurbinSikkerDbContext>();
-
-                // await scopedService.Notification.AddAsync(notification);
-                // await scopedService.SaveChangesAsync();
+                await scopedService.Notification.AddAsync(notification);
+                await scopedService.SaveChangesAsync();
 
                 await _orderQueueClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
             }

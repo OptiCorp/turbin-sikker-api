@@ -6,7 +6,7 @@ namespace turbin.sikker.core.Services
     {
         // Task<IEnumerable<NotificationResponseDto>> GetAllNotificationsAsync();
         Task<IEnumerable<NotificationResponseDto>> GetAllNotificationsAsync();
-
+        Task AddNotification(string errorMessage);
         // Task<NotificationResponseDto> GetNotificationByIdAsync(string id);
         // Task<NotificationResponseDto> GetNotificationPdfByNotificationIdAsync(string id);
         // Task CreateNotificationAsync(NotificationCreateDto notification);
