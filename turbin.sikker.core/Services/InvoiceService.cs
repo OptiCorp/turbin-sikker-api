@@ -27,8 +27,8 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Invoice
                             .Include(p => p.Workflows)
-                            .OrderByDescending(c => c.Status)
                             .OrderByDescending(c => c.CreatedDate)
+                            .OrderByDescending(c => c.Status)
                             .Select(p => _invoiceUtilities.InvoiceToResponseDto(p, null))
                             .ToListAsync();
         }
