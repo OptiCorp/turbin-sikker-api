@@ -36,6 +36,7 @@ namespace turbin.sikker.core.Utilities
                 {
                     Id = invoice.Id,
                     Number = invoice.Number,
+                    Title = invoice.Title,
                     Sender = invoice.Sender,
                     Receiver = invoice.Receiver,
                     Status = GetInvoiceStatus(invoice.Status),
@@ -44,13 +45,15 @@ namespace turbin.sikker.core.Utilities
                     UpdatedDate = invoice.UpdatedDate,
                     Amount = invoice.Amount,
                     PdfBlobLink = invoice.PdfBlobLink,
-                    Workflows = invoice.Workflows
+                    Workflows = invoice.Workflows,
+                    Message = invoice.Message
                 };
             }
             return new InvoiceResponseDto
             {
                 Id = invoice.Id,
                 Number = invoice.Number,
+                Title = invoice.Title,
                 Sender = invoice.Sender,
                 Receiver = invoice.Receiver,
                 Status = GetInvoiceStatus(invoice.Status),
@@ -60,7 +63,8 @@ namespace turbin.sikker.core.Utilities
                 Amount = invoice.Amount,
                 Pdf = bytes,
                 PdfBlobLink = invoice.PdfBlobLink,
-                Workflows = invoice.Workflows
+                Workflows = invoice.Workflows,
+                Message = invoice.Message
             };
         }
     }
