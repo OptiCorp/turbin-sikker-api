@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../invoice-function-app"
+		},
+		{
+			"path": "../inventory-api"
 		}
 	],
 	"settings": {}
