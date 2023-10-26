@@ -41,7 +41,6 @@ namespace turbin.sikker.core.Utilities
 
         public NotificationResponseDto NotificationToResponseDto(Notification? notification)
         {
-
             return new NotificationResponseDto
             {
                 Id = notification.Id,

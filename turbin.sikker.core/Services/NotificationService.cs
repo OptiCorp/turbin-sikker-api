@@ -44,7 +44,6 @@ namespace turbin.sikker.core.Services
 
             await _context.Notification.AddAsync(newNotification);
             await _context.SaveChangesAsync();
-
         }
     }
 }
