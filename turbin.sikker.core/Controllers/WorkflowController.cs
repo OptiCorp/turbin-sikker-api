@@ -68,17 +68,13 @@ namespace turbin.sikker.core.Controllers
         }
 
         [HttpGet("GetAllCompletedWorkflows")]
-        [SwaggerOperation(Summary = "Get all completed workflows by creator Id", Description = "Retrieves a list of all completed workflows by creator Id.")]
+        [SwaggerOperation(Summary = "Get all completed workflows", Description = "Retrieves a list of all completed workflows.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<WorkflowResponseDto>))]
         [SwaggerResponse(404, "User not found")]
-        public async Task<IActionResult> GetAllCompletedWorkflows(string creatorId)
+        public async Task<IActionResult> GetAllCompletedWorkflows()
         {
-            var creator = _userService.GetUserByIdAsync(creatorId);
-            if (creator == null)
-            {
-                return NotFound("User not found");
-            }
-            return Ok(await _workflowService.GetAllCompletedWorkflowsByCreatorIdAsync(creatorId));
+
+            return Ok(await _workflowService.GetAllCompletedWorkflowsAsync());
         }
 
         [HttpPost("CreateWorkflow")]
