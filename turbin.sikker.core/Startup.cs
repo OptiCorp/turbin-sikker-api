@@ -24,7 +24,7 @@ namespace turbin.sikker.core
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddMvc(options => 
+            services.AddMvc(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
             });
@@ -39,7 +39,7 @@ namespace turbin.sikker.core
             {
                 options.AddPolicy("AllowAllHeaders",
                 builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-               
+
             });
 
             services.AddSwaggerGen(c =>
@@ -56,6 +56,7 @@ namespace turbin.sikker.core
             services.AddScoped<IPunchService, PunchService>();
             services.AddScoped<IWorkflowService, WorkflowService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISocketService, SocketService>();
 
             services.AddScoped<IUserUtilities, UserUtilities>();
@@ -67,6 +68,7 @@ namespace turbin.sikker.core
             services.AddScoped<IWorkflowUtilities, WorkflowUtilities>();
             services.AddScoped<IUploadUtilities, UploadUtilities>();
             services.AddScoped<IInvoiceUtilities, InvoiceUtilities>();
+            services.AddScoped<INotificationUtilities, NotificationUtilities>();
 
             services.AddScoped<ValidationHelper>();
 
@@ -74,17 +76,18 @@ namespace turbin.sikker.core
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
             services.AddHostedService<CreateInvoiceHandler>();
+            services.AddHostedService<NotificationHandler>();
 
 
 
             // Add DbContext
             var connectionString = GetSecretValueFromKeyVault(Configuration["AzureKeyVault:ConnectionStringSecretName"]);
-            
+
 
             services.AddDbContext<TurbinSikkerDbContext>(options =>
                 options.UseSqlServer(connectionString
             ));
-           
+
 
 
 
@@ -97,19 +100,19 @@ namespace turbin.sikker.core
         {
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                        .AddMicrosoftIdentityWebApi(options => 
+                        .AddMicrosoftIdentityWebApi(options =>
                         {
                             Configuration.Bind("AzureAd", options);
                             options.TokenValidationParameters.NameClaimType = "name";
-                        }, options => {Configuration.Bind("AzureAd", options);});
+                        }, options => { Configuration.Bind("AzureAd", options); });
 
-            
-            services.AddAuthorization(config => 
+
+            services.AddAuthorization(config =>
             {
-                config.AddPolicy("AuthZPolicy", policyBuilder => 
-                policyBuilder.Requirements.Add(new ScopeAuthorizationRequirement() { RequiredScopesConfigurationKey = $"AzureAd.Scopes"}));
+                config.AddPolicy("AuthZPolicy", policyBuilder =>
+                policyBuilder.Requirements.Add(new ScopeAuthorizationRequirement() { RequiredScopesConfigurationKey = $"AzureAd.Scopes" }));
             });
-        
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -129,7 +132,7 @@ namespace turbin.sikker.core
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-            
+
             app.UseSerilogRequestLogging();
 
             app.UseSwagger();

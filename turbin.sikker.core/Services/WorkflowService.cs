@@ -53,7 +53,7 @@ namespace turbin.sikker.core.Services
                 .OrderByDescending(c => c.CreatedDate)
                 .Select(c => _workflowUtilities.WorkflowToResponseDto(c))
                 .ToListAsync();
-            
+
             return workflows;
         }
 
@@ -71,7 +71,7 @@ namespace turbin.sikker.core.Services
             .OrderByDescending(c => c.CreatedDate)
             .Select(c => _workflowUtilities.WorkflowToResponseDto(c))
             .ToListAsync();
-            
+
             return workflows;
         }
 
@@ -86,11 +86,11 @@ namespace turbin.sikker.core.Services
             .ThenInclude(c => c.ChecklistTasks)
             .ThenInclude(c => c.Category)
             .Where(cw => cw.Status == WorkflowStatus.Done)
-            .Where( cw => cw.InvoiceId == null)
+            .Where(cw => cw.InvoiceId == null)
             .OrderByDescending(c => c.CreatedDate)
             .Select(c => _workflowUtilities.WorkflowToResponseDto(c))
             .ToListAsync();
-            
+
             return workflows;
         }
 
@@ -113,7 +113,7 @@ namespace turbin.sikker.core.Services
                     workflow.CompletionTimeMinutes = updatedWorkflow.CompletionTimeMinutes;
                 }
                 if (updatedWorkflow.TaskInfos != null)
-                {  
+                {
                     workflow.TaskInfos = updatedWorkflow.TaskInfos;
                 }
             }
@@ -126,7 +126,7 @@ namespace turbin.sikker.core.Services
             var checklist = await _context.Checklist
                                             .Include(c => c.ChecklistTasks)
                                             .FirstOrDefaultAsync(checklist => checklist.Id == workflow.ChecklistId);
-                                            
+
             foreach (string userId in workflow.UserIds)
             {
                 Workflow newWorkflow = new Workflow
@@ -138,22 +138,23 @@ namespace turbin.sikker.core.Services
                     CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                 };
 
-            var taskInfos = new List<TaskInfo>();
+                var taskInfos = new List<TaskInfo>();
 
-            foreach (var task in checklist.ChecklistTasks)
-            {
-                taskInfos.Append(
-                    new TaskInfo{
+                foreach (var task in checklist.ChecklistTasks)
+                {
+                    taskInfos.Append(
+                    new TaskInfo
+                    {
                         TaskId = task.Id,
                         Status = TaskInfoStatus.Unfinished
                     }
-                );
-            }
+                    );
+                }
                 newWorkflow.TaskInfos = taskInfos;
                 _context.Workflow.Add(newWorkflow);
                 newWorkflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
             };
-                                                                
+
             await _context.SaveChangesAsync();
         }
 

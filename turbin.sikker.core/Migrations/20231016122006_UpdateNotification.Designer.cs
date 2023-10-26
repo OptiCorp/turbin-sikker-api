@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231016122006_UpdateNotification")]
+    partial class UpdateNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,17 +119,11 @@ namespace turbin.sikker.core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<float>("Amount")
-                        .HasColumnType("real");
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
 
                     b.Property<string>("PdfBlobLink")
                         .IsRequired()
@@ -145,9 +142,6 @@ namespace turbin.sikker.core.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -233,29 +227,6 @@ namespace turbin.sikker.core.Migrations
                     b.HasIndex("WorkflowId");
 
                     b.ToTable("Punch");
-                });
-
-            modelBuilder.Entity("turbin.sikker.core.Model.TaskInfo", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TaskId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WorkflowId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkflowId");
-
-                    b.ToTable("TaskInfo");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Upload", b =>
@@ -461,13 +432,6 @@ namespace turbin.sikker.core.Migrations
                     b.Navigation("Workflow");
                 });
 
-            modelBuilder.Entity("turbin.sikker.core.Model.TaskInfo", b =>
-                {
-                    b.HasOne("turbin.sikker.core.Model.Workflow", null)
-                        .WithMany("TaskInfos")
-                        .HasForeignKey("WorkflowId");
-                });
-
             modelBuilder.Entity("turbin.sikker.core.Model.Upload", b =>
                 {
                     b.HasOne("turbin.sikker.core.Model.Punch", "Punch")
@@ -529,11 +493,6 @@ namespace turbin.sikker.core.Migrations
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
                 {
                     b.Navigation("Uploads");
-                });
-
-            modelBuilder.Entity("turbin.sikker.core.Model.Workflow", b =>
-                {
-                    b.Navigation("TaskInfos");
                 });
 #pragma warning restore 612, 618
         }
