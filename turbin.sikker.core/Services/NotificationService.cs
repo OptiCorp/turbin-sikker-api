@@ -5,6 +5,7 @@ using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 using turbin.sikker.core.Model;
 using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Model.DTO.NotificationDtos;
 using turbin.sikker.core.Utilities;
 
 namespace turbin.sikker.core.Services
@@ -27,21 +28,21 @@ namespace turbin.sikker.core.Services
         {
             return await _context.Notification
                             .OrderByDescending(c => c.CreatedDate)
-                            .Select(p => _notificationUtilities.NotificationToResponseDto(p, null))
+                            .Select(p => _notificationUtilities.NotificationToResponseDto(p))
                             .ToListAsync();
         }
 
-        public async Task AddNotification(string errorMessage)
+        public async Task CreateNotificationAsync(NotificationCreateDto notification)
         {
-            Notification notification = new Notification
+            Notification newNotification = new Notification
             {
-                Message = errorMessage,
+                Message = notification.Message,
                 NotificationStatus = NotificationStatus.Active, // TODO: change to read and unread
                 CreatedDate = DateTime.Now,
-                NotificationType = NotificationType.Error
+                NotificationType = Enum.Parse<NotificationType>(notification.NotificationType)
             };
 
-            await _context.Notification.AddAsync(notification);
+            await _context.Notification.AddAsync(newNotification);
             await _context.SaveChangesAsync();
 
         }

@@ -4,9 +4,9 @@ namespace turbin.sikker.core.Model.DTO
     {
         public string Id { get; set; }
         public string Message { get; set; }
-        public NotificationStatus NotificationStatus { get; set; }
+        public string NotificationStatus { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public NotificationType NotificationType { get; set; }
+        public string NotificationType { get; set; }
     }
 }
