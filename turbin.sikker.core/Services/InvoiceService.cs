@@ -79,7 +79,7 @@ namespace turbin.sikker.core.Services
             var invoice = await _context.Invoice.FirstOrDefaultAsync(i => i.Id == id);
             if (invoice == null) return null;
 
-            string containerEndpoint = "https://bsturbinsikkertest.blob.core.windows.net/pdf-container";
+            string containerEndpoint = "https://bsinvoiceprod.blob.core.windows.net/pdf-container";
 
             BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
 
