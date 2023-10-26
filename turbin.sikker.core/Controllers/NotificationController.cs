@@ -5,6 +5,7 @@ using turbin.sikker.core.Model.DTO;
 using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using turbin.sikker.core.Model.DTO.NotificationDtos;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -38,6 +39,16 @@ namespace turbin.sikker.core.Controllers
             }
 
             return Ok(notifications);
+        }
+
+        [HttpPost("AddNotification")]
+        [SwaggerOperation(Summary = "Create new notification", Description = "Creates a new notification")]
+        [SwaggerResponse(201, "Notification created")]
+        public async Task<IActionResult> CreateNotificationAsync(NotificationCreateDto notification)
+        {
+            await _notificationService.CreateNotificationAsync(notification);
+
+            return Ok();
         }
     }
 }
