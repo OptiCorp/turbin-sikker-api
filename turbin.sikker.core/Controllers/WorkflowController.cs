@@ -59,7 +59,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<WorkflowResponseDto>))]
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> GetAllWorkflowsByUserIdAsync(string userId)
-        {   
+        {
             if (userId == null)
             {
                 return NotFound("User not found");
@@ -68,11 +68,17 @@ namespace turbin.sikker.core.Controllers
         }
 
         [HttpGet("GetAllCompletedWorkflows")]
-        [SwaggerOperation(Summary = "Get all completed workflows", Description = "Retrieves a list of all completed workflows.")]
+        [SwaggerOperation(Summary = "Get all completed workflows by creator Id", Description = "Retrieves a list of all completed workflows by creator Id.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<WorkflowResponseDto>))]
-        public async Task<IActionResult> GetAllCompletedWorkflows()
-        {   
-            return Ok(await _workflowService.GetAllCompletedWorkflowsAsync());
+        [SwaggerResponse(404, "User not found")]
+        public async Task<IActionResult> GetAllCompletedWorkflows(string creatorId)
+        {
+            var creator = _userService.GetUserByIdAsync(creatorId);
+            if (creator == null)
+            {
+                return NotFound("User not found");
+            }
+            return Ok(await _workflowService.GetAllCompletedWorkflowsByCreatorIdAsync(creatorId));
         }
 
         [HttpPost("CreateWorkflow")]
@@ -114,7 +120,7 @@ namespace turbin.sikker.core.Controllers
                 var user = await _userService.GetUserByIdAsync(userId);
 
                 if (user == null) return BadRequest("The given user does not exist");
-                
+
                 bool userHasChecklist = await _workflowService.DoesUserHaveChecklistAsync(userId, workflow.ChecklistId);
 
                 if (userHasChecklist) return Conflict($"User already has that checklist");
@@ -130,7 +136,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Workflow updated")]
         [SwaggerResponse(404, "Workflow not found")]
         public async Task<IActionResult> UpdateWorkflowAsync(WorkflowUpdateDto updatedWorkflow, [FromServices] IValidator<WorkflowUpdateDto> validator)
-        {   
+        {
             ValidationResult validationResult = validator.Validate(updatedWorkflow);
 
             if (!validationResult.IsValid)
