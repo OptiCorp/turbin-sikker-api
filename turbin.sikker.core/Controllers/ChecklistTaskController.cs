@@ -38,7 +38,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistTaskResponseDto>))]
         [SwaggerResponse(404, "No checklist tasks found")]
         public async Task<IActionResult> GetAllTasksAsync()
-        {   
+        {
             return Ok(await _checklistTaskService.GetAllTasksAsync());
         }
 
@@ -169,7 +169,7 @@ namespace turbin.sikker.core.Controllers
                 }
             }
 
-            if (contains == false) 
+            if (contains == false)
             {
                 return NotFound("This task does not exist in this checklist");
             }
@@ -217,14 +217,24 @@ namespace turbin.sikker.core.Controllers
         [HttpPost("AddTaskToChecklist")]
         [SwaggerOperation(Summary = "Add task to checklist", Description = "Adds a task to a checklist.")]
         [SwaggerResponse(200, "Task added to checklist")]
+        [SwaggerResponse(400, "Task already exists in this checklist")]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> AddTaskToChecklistAsync(ChecklistTaskAddTaskToChecklistDto addTaskToChecklist)
         {
             var checklist = await _checklistService.GetChecklistByIdAsync(addTaskToChecklist.ChecklistId);
-            if (checklist == null) {
+            if (checklist == null)
+            {
                 return NotFound("Checklist not found");
             }
-            
+
+            foreach (var checklistTask in checklist.ChecklistTasks)
+            {
+                if (addTaskToChecklist.Id == checklistTask.Id)
+                {
+                    return BadRequest("Task already exists in this checklist.");
+                }
+            }
+
             var task = await _checklistTaskService.GetChecklistTaskByIdAsync(addTaskToChecklist.Id);
 
             if (task == null)
