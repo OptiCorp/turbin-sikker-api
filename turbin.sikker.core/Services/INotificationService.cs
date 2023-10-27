@@ -1,4 +1,5 @@
 using turbin.sikker.core.Model.DTO;
+using turbin.sikker.core.Model.DTO.NotificationDtos;
 
 namespace turbin.sikker.core.Services
 {
@@ -6,7 +7,7 @@ namespace turbin.sikker.core.Services
     {
         // Task<IEnumerable<NotificationResponseDto>> GetAllNotificationsAsync();
         Task<IEnumerable<NotificationResponseDto>> GetAllNotificationsAsync();
-        Task AddNotification(string errorMessage);
+        Task CreateNotificationAsync(NotificationCreateDto notification);
         // Task<NotificationResponseDto> GetNotificationByIdAsync(string id);
         // Task<NotificationResponseDto> GetNotificationPdfByNotificationIdAsync(string id);
         // Task CreateNotificationAsync(NotificationCreateDto notification);
