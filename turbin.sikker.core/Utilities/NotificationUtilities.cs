@@ -15,10 +15,10 @@ namespace turbin.sikker.core.Utilities
         {
             switch (status)
             {
-                case NotificationStatus.Active:
-                    return "Active";
-                case NotificationStatus.Inactive:
-                    return "Inactive";
+                case NotificationStatus.Unread:
+                    return "Unread";
+                case NotificationStatus.Read:
+                    return "Read";
                 default:
                     return "";
             }
