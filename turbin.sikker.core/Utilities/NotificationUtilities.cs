@@ -48,7 +48,8 @@ namespace turbin.sikker.core.Utilities
                 NotificationStatus = GetNotificationStatus(notification.NotificationStatus),
                 CreatedDate = notification.CreatedDate,
                 UpdatedDate = notification.UpdatedDate,
-                NotificationType = GetNotificationType(notification.NotificationType)
+                NotificationType = GetNotificationType(notification.NotificationType),
+                ReceiverId = notification.ReceiverId
             };
         }
     }
