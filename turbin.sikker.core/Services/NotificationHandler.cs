@@ -49,7 +49,7 @@ namespace turbin.sikker.core.Services
                 await scopedService.SaveChangesAsync();
 
                 var serviceClient = new WebPubSubServiceClient("Endpoint=https://pub-sub-test.webpubsub.azure.com;AccessKey=QZWtGVoO7OFHum7s53t5ZiukRagDDbtHR9s+DP7WvkI=;Version=1.0;", "hub");
-                await serviceClient.SendToAllAsync(notificationBus.Message);
+                await serviceClient.SendToAllAsync(notification.ReceiverId);
 
                 await _orderQueueClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
             }
