@@ -123,7 +123,8 @@ namespace turbin.sikker.core.Services
                 Receiver = invoiceDto.Receiver,
                 Amount = (float)Math.Round(totalAmount, 2),
                 Workflows = workflowInfos,
-                Title = invoiceDto.Title
+                Title = invoiceDto.Title,
+                Sender = invoiceDto.Sender
             };
 
             var connectionsString = Environment.GetEnvironmentVariable("SbConnectionString");

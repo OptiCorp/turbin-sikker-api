@@ -52,5 +52,7 @@ namespace turbin.sikker.core.Model
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+        public ICollection<Notification> Notifications { get; set; }
     }
 }

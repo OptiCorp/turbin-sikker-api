@@ -41,6 +41,16 @@ namespace turbin.sikker.core.Controllers
             return Ok(notifications);
         }
 
+        [HttpGet("GetNotificationByUserId")]
+        [SwaggerOperation(Summary = "Get all notifications for a user", Description = "Retrieves a list of invoices for a specfic user")]
+        [SwaggerResponse(200, "Success", typeof(IEnumerable<NotificationResponseDto>))]
+        [SwaggerResponse(404, "Notifications not found")]
+        public async Task<IActionResult> GetNotificationsByUserIdAsync(string id)
+        {
+            var notifications = await _notificationService.GetNotificationsByUserIdAsync(id);
+            return Ok(notifications);
+        }
+
         [HttpPost("AddNotification")]
         [SwaggerOperation(Summary = "Create new notification", Description = "Creates a new notification")]
         [SwaggerResponse(201, "Notification created")]
@@ -49,6 +59,14 @@ namespace turbin.sikker.core.Controllers
             await _notificationService.CreateNotificationAsync(notification);
 
             return Ok();
+        }
+
+        [HttpPost("UpdateNotififcation")]
+        [SwaggerOperation(Summary = "Update notification", Description = "Updtaes a notification")]
+        [SwaggerResponse(200, "Notification updates")]
+        public async Task UpdateNotificationAsync(NotificationUpdateDto notification)
+        {
+            await _notificationService.UpdateNotificationAsync(notification);
         }
     }
 }

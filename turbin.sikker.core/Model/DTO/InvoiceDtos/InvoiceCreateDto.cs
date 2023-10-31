@@ -17,6 +17,9 @@ namespace turbin.sikker.core.Model.DTO
         [Required]
         public string Title { get; set; }
 
+        [Required]
+        public string Sender { get; set; }
+
     }
 }
 

@@ -15,6 +15,10 @@ namespace turbin.sikker.core.Configuration
                 .WithMany()
                 .HasForeignKey(u => u.UserRoleId);
 
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Notifications)
+                .WithOne(u => u.Receiver);
+
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => ur.Id);
 
@@ -150,6 +154,11 @@ namespace turbin.sikker.core.Configuration
             modelBuilder.Entity<Notification>()
                 .HasKey(c => c.Id);
 
+            modelBuilder.Entity<Notification>()
+                .HasOne(c => c.Receiver)
+                .WithMany(c => c.Notifications)
+                .HasForeignKey(c => c.ReceiverId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

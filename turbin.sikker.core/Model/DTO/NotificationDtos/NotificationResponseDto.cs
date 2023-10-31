@@ -8,5 +8,6 @@ namespace turbin.sikker.core.Model.DTO
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public string NotificationType { get; set; }
+        public string ReceiverId { get; set; }
     }
 }

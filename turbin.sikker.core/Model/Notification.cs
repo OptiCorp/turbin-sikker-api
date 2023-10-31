@@ -5,10 +5,10 @@ namespace turbin.sikker.core.Model
 {
     public enum NotificationStatus
     {
-        [Display(Name = "Active")]
-        Active,
-        [Display(Name = "Inactive")]
-        Inactive
+        [Display(Name = "Unread")]
+        Unread,
+        [Display(Name = "Read")]
+        Read
     }
     public enum NotificationType
     {
@@ -31,5 +31,7 @@ namespace turbin.sikker.core.Model
         public DateTime UpdatedDate { get; set; }
         [EnumDataType(typeof(NotificationType))]
         public NotificationType NotificationType { get; set; }
+        public string ReceiverId { get; set; }
+        public User Receiver { get; set; }
     }
 }
