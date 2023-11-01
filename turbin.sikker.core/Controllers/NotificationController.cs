@@ -6,6 +6,7 @@ using turbin.sikker.core.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using turbin.sikker.core.Model.DTO.NotificationDtos;
+using Azure.Messaging.WebPubSub;
 
 namespace turbin.sikker.core.Controllers
 {
@@ -23,6 +24,17 @@ namespace turbin.sikker.core.Controllers
         {
             _notificationService = notificationService;
             _notificationUtilities = notificationUtilities;
+        }
+
+        [HttpGet("GetPubSubAccessToken")]
+        [SwaggerOperation(Summary = "Get an access token for pubsub", Description = "Retrieves an access token for pubsub")]
+        [SwaggerResponse(200, "Success", typeof(string))]
+        public async Task<IActionResult> GetAccessToken()
+        {
+            var client = new WebPubSubServiceClient(Environment.GetEnvironmentVariable("pubSubConnectionString"), "Hub");
+            var uri = await client.GetClientAccessUriAsync(new TimeSpan(24, 0, 0));
+            var token = new { token = uri };
+            return Ok(token);
         }
 
         [HttpGet("GetAllNotifications")]
