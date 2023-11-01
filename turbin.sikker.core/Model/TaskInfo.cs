@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace turbin.sikker.core.Model
 {
@@ -9,15 +10,15 @@ namespace turbin.sikker.core.Model
         Unfinished,
         [Display(Name = "Finished")]
         Finished,
-        [Display(Name = "Not applicable")]
+        [Display(Name = "NotApplicable")]
         NotApplicable
     }
 
+    [PrimaryKey(nameof(TaskId), nameof(WorkflowId))]
     public class TaskInfo
-    {   
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string? Id { get; set; }
+    {
         public string TaskId { get; set; }
         public TaskInfoStatus Status { get; set; }
+        public string WorkflowId { get; set; }
     }
 }

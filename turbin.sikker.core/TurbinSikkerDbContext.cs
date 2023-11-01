@@ -28,6 +28,8 @@ namespace turbin.sikker.core
 
         public DbSet<Workflow> Workflow { get; set; }
 
+        public DbSet<TaskInfo> TaskInfo { get; set; }
+
         public DbSet<Invoice> Invoice { get; set; }
 
         public DbSet<Notification> Notification { get; set; }
