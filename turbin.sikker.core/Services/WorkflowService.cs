@@ -32,6 +32,7 @@ namespace turbin.sikker.core.Services
                 .Include(c => c.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
                 .ThenInclude(c => c.Category)
+                .Include(c => c.TaskInfos)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (workflow == null) return null;
@@ -50,6 +51,7 @@ namespace turbin.sikker.core.Services
                 .Include(p => p.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
                 .ThenInclude(c => c.Category)
+                .Include(c => c.TaskInfos)
                 .OrderByDescending(c => c.CreatedDate)
                 .Select(c => _workflowUtilities.WorkflowToResponseDto(c))
                 .ToListAsync();
@@ -67,6 +69,7 @@ namespace turbin.sikker.core.Services
             .Include(p => p.Checklist)
             .ThenInclude(c => c.ChecklistTasks)
             .ThenInclude(c => c.Category)
+            .Include(c => c.TaskInfos)
             .Where(cw => cw.UserId == userId)
             .OrderByDescending(c => c.CreatedDate)
             .Select(c => _workflowUtilities.WorkflowToResponseDto(c))
@@ -114,7 +117,11 @@ namespace turbin.sikker.core.Services
                 }
                 if (updatedWorkflow.TaskInfos != null)
                 {
-                    workflow.TaskInfos = updatedWorkflow.TaskInfos;
+                    foreach (var taskInfo in updatedWorkflow.TaskInfos)
+                    {
+                        var info = await _context.TaskInfo.FirstOrDefaultAsync(c => c.WorkflowId == updatedWorkflow.Id && c.TaskId == taskInfo.TaskId);
+                        info.Status = Enum.Parse<TaskInfoStatus>(taskInfo.Status);
+                    }
                 }
             }
             workflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
@@ -138,20 +145,18 @@ namespace turbin.sikker.core.Services
                     CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                 };
 
-                var taskInfos = new List<TaskInfo>();
+                await _context.Workflow.AddAsync(newWorkflow);
 
                 foreach (var task in checklist.ChecklistTasks)
                 {
-                    taskInfos.Append(
-                    new TaskInfo
+                    await _context.TaskInfo.AddAsync(new TaskInfo
                     {
                         TaskId = task.Id,
-                        Status = TaskInfoStatus.Unfinished
-                    }
-                    );
+                        Status = TaskInfoStatus.Unfinished,
+                        WorkflowId = newWorkflow.Id
+                    });
                 }
-                newWorkflow.TaskInfos = taskInfos;
-                _context.Workflow.Add(newWorkflow);
+
                 newWorkflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
             };
 
