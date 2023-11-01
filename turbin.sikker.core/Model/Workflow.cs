@@ -20,7 +20,7 @@ namespace turbin.sikker.core.Model
 
         [Required]
         public string? ChecklistId { get; set; }
-        
+
         public Checklist? Checklist { get; }
 
         [Required]
@@ -29,7 +29,7 @@ namespace turbin.sikker.core.Model
         public User? User { get; }
 
         [Required]
-        public string? CreatorId{ get; set; }
+        public string? CreatorId { get; set; }
 
         public User? Creator { get; }
 
@@ -44,7 +44,7 @@ namespace turbin.sikker.core.Model
 
         public string? InvoiceId { get; set; }
 
-        public ICollection<TaskInfo>? TaskInfos { get; set; }
+        public ICollection<TaskInfo>? TaskInfos { get; }
 
     }
 }
