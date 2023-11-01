@@ -36,7 +36,12 @@ namespace turbin.sikker.core.Services
 
         public async Task<IEnumerable<NotificationResponseDto>> GetNotificationsByUserIdAsync(string id)
         {
-            return await _context.Notification.Where(c => c.ReceiverId == id).Select(n => _notificationUtilities.NotificationToResponseDto(n)).ToListAsync();
+            return await _context.Notification
+                            .Where(c => c.ReceiverId == id)
+                            .OrderBy(c => c.NotificationStatus)
+                            .ThenByDescending(c => c.CreatedDate)
+                            .Select(n => _notificationUtilities.NotificationToResponseDto(n))
+                            .ToListAsync();
         }
 
         public async Task CreateNotificationAsync(NotificationCreateDto notification)
