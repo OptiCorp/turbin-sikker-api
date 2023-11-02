@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231101140123_compositeKey")]
+    partial class compositeKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("ChecklistTasksId");
 
-                    b.ToTable("ChecklistToTaskLink", (string)null);
+                    b.ToTable("ChecklistToTaskLink");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Category", b =>
@@ -50,7 +53,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Checklist", b =>
@@ -82,7 +85,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Checklist", (string)null);
+                    b.ToTable("Checklist");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.ChecklistTask", b =>
@@ -107,7 +110,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Checklist_Task", (string)null);
+                    b.ToTable("Checklist_Task");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Invoice", b =>
@@ -154,7 +157,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Invoice", (string)null);
+                    b.ToTable("Invoice");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Notification", b =>
@@ -176,18 +179,12 @@ namespace turbin.sikker.core.Migrations
                     b.Property<int>("NotificationType")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiverId");
-
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
@@ -238,7 +235,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("WorkflowId");
 
-                    b.ToTable("Punch", (string)null);
+                    b.ToTable("Punch");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.TaskInfo", b =>
@@ -256,7 +253,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("WorkflowId");
 
-                    b.ToTable("TaskInfo", (string)null);
+                    b.ToTable("TaskInfo");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Upload", b =>
@@ -281,7 +278,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("PunchId");
 
-                    b.ToTable("Upload", (string)null);
+                    b.ToTable("Upload");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.User", b =>
@@ -315,9 +312,6 @@ namespace turbin.sikker.core.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("UmId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
@@ -335,7 +329,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("UserRoleId");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.UserRole", b =>
@@ -352,7 +346,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRole", (string)null);
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Workflow", b =>
@@ -398,7 +392,7 @@ namespace turbin.sikker.core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Workflow", (string)null);
+                    b.ToTable("Workflow");
                 });
 
             modelBuilder.Entity("ChecklistToTaskLink", b =>
@@ -436,17 +430,6 @@ namespace turbin.sikker.core.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("turbin.sikker.core.Model.Notification", b =>
-                {
-                    b.HasOne("turbin.sikker.core.Model.User", "Receiver")
-                        .WithMany("Notifications")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Receiver");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
@@ -546,11 +529,6 @@ namespace turbin.sikker.core.Migrations
             modelBuilder.Entity("turbin.sikker.core.Model.Punch", b =>
                 {
                     b.Navigation("Uploads");
-                });
-
-            modelBuilder.Entity("turbin.sikker.core.Model.User", b =>
-                {
-                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("turbin.sikker.core.Model.Workflow", b =>

@@ -9,6 +9,6 @@ namespace turbin.sikker.core.Utilities
         bool IsValidStatus(string value);
         string GetNotificationStatus(NotificationStatus status);
 
-        public NotificationResponseDto NotificationToResponseDto(Notification? notification, byte[]? bytes);
+        public NotificationResponseDto NotificationToResponseDto(Notification? notification);
     }
 }
