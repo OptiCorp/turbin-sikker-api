@@ -77,7 +77,8 @@ namespace turbin.sikker.core
 
             services.AddHostedService<CreateInvoiceHandler>();
             services.AddHostedService<NotificationHandler>();
-            services.AddHostedService<UserHandler>();
+            services.AddHostedService<UserCreateHandler>();
+            services.AddHostedService<UserUpdateHandler>();
 
 
 
