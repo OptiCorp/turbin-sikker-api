@@ -219,7 +219,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Task added to checklist")]
         [SwaggerResponse(400, "Task already exists in this checklist")]
         [SwaggerResponse(404, "Not found")]
-        public async Task<IActionResult> AddTaskToChecklistAsync(ChecklistTaskAddTaskToChecklistDto addTaskToChecklist)
+        public async Task<IActionResult> AddTaskToChecklistAsync(ChecklistTaskChecklistDto addTaskToChecklist)
         {
             var checklist = await _checklistService.GetChecklistByIdAsync(addTaskToChecklist.ChecklistId);
             if (checklist == null)
@@ -229,13 +229,13 @@ namespace turbin.sikker.core.Controllers
 
             foreach (var checklistTask in checklist.ChecklistTasks)
             {
-                if (addTaskToChecklist.Id == checklistTask.Id)
+                if (addTaskToChecklist.TaskId == checklistTask.Id)
                 {
                     return BadRequest("Task already exists in this checklist.");
                 }
             }
 
-            var task = await _checklistTaskService.GetChecklistTaskByIdAsync(addTaskToChecklist.Id);
+            var task = await _checklistTaskService.GetChecklistTaskByIdAsync(addTaskToChecklist.TaskId);
 
             if (task == null)
             {
@@ -245,6 +245,38 @@ namespace turbin.sikker.core.Controllers
             await _checklistTaskService.AddTaskToChecklistAsync(addTaskToChecklist);
 
             return Ok("Task added to checklist");
+        }
+
+        [HttpPost("RemoveTaskFromChecklist")]
+        [SwaggerOperation(Summary = "Remove task from checklist", Description = "Removes a task from a checklist.")]
+        [SwaggerResponse(200, "Task removed from checklist")]
+        [SwaggerResponse(400, "Task already removed from this checklist")]
+        [SwaggerResponse(404, "Not found")]
+        public async Task<IActionResult> RemoveTaskFromChecklistAsync(ChecklistTaskChecklistDto removeTaskFromChecklist)
+        {
+            var checklist = await _checklistService.GetChecklistByIdAsync(removeTaskFromChecklist.ChecklistId);
+            if (checklist == null)
+            {
+                return NotFound("Checklist not found");
+            }
+
+            var task = await _checklistTaskService.GetChecklistTaskByIdAsync(removeTaskFromChecklist.TaskId);
+
+            if (task == null)
+            {
+                return NotFound("Checklist task not found");
+            }
+
+            foreach (var checklistTask in checklist.ChecklistTasks)
+            {
+                if (removeTaskFromChecklist.TaskId == checklistTask.Id)
+                {
+                    await _checklistTaskService.RemoveTaskFromChecklistAsync(removeTaskFromChecklist);
+                    return Ok("Task removed from checklist");
+                }
+            }
+
+            return BadRequest("Task does not exist in this checklist.");
         }
 
         // Deletes form task based on given Id

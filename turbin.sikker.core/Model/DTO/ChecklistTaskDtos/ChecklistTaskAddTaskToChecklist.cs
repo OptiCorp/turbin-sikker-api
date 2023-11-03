@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace turbin.sikker.core.Model.DTO.TaskDtos
 {
-    public class ChecklistTaskAddTaskToChecklistDto
-    {   
+    public class ChecklistTaskChecklistDto
+    {
         [Required]
-        public string? Id { get; set; }
+        public string? TaskId { get; set; }
 
         [Required]
         public string? ChecklistId { get; set; }
