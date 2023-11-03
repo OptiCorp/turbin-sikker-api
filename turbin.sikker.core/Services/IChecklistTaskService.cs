@@ -12,7 +12,8 @@ namespace turbin.sikker.core.Services
         Task UpdateChecklistTaskAsync(ChecklistTaskUpdateDto checklistTask);
         Task UpdateChecklistTaskInChecklistAsync(ChecklistTaskUpdateDto checklistTask);
         Task<string> CreateChecklistTaskAsync(ChecklistTaskCreateDto checklistTask);
-        public Task AddTaskToChecklistAsync(ChecklistTaskAddTaskToChecklistDto checklistAddTask);
+        Task AddTaskToChecklistAsync(ChecklistTaskChecklistDto checklistAddTask);
+        Task RemoveTaskFromChecklistAsync(ChecklistTaskChecklistDto checklistRemoveTask);
         Task DeleteChecklistTaskAsync(string id);
     }
 }

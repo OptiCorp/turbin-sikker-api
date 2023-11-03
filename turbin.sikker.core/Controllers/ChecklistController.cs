@@ -43,25 +43,25 @@ namespace turbin.sikker.core.Controllers
         [SwaggerOperation(Summary = "Get all checklists", Description = "Retrieves a list of all checklists.")]
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseDto>))]
         public async Task<IActionResult> GetAllChecklistsAsync()
-        {   
+        {
             var checklists = await _checklistService.GetAllChecklistsAsync();
             var workflows = await _workflowService.GetAllWorkflowsAsync();
 
             if (workflows.Count() > 0)
             {
                 foreach (var workflow in workflows)
-            {
-                foreach (var checklist in checklists)
-            {
-                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
-                {   
-                    checklist.Workflows.Add(workflow);
-                    break;
+                {
+                    foreach (var checklist in checklists)
+                    {
+                        if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                        {
+                            checklist.Workflows.Add(workflow);
+                            break;
+                        }
+                    }
                 }
             }
-            }
-            }
-            
+
             return Ok(checklists);
         }
 
@@ -83,13 +83,13 @@ namespace turbin.sikker.core.Controllers
             if (workflows.Count() > 0)
             {
                 foreach (var workflow in workflows)
-            {
-                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
-                {   
-                    checklist.Workflows.Add(workflow);
-                    break;
+                {
+                    if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                    {
+                        checklist.Workflows.Add(workflow);
+                        break;
+                    }
                 }
-            }
             }
 
 
@@ -102,7 +102,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseNoUserDto>))]
         [SwaggerResponse(404, "User not found")]
         public async Task<IActionResult> GetAllChecklistsByUserIdAsync(string id)
-        {   
+        {
             var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
             {
@@ -115,18 +115,18 @@ namespace turbin.sikker.core.Controllers
             if (workflows.Count() > 0)
             {
                 foreach (var workflow in workflows)
-            {
-                foreach (var checklist in checklists)
-            {
-                if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
-                {   
-                    checklist.Workflows.Add(workflow);
-                    break;
+                {
+                    foreach (var checklist in checklists)
+                    {
+                        if (workflow.Checklist.Id == checklist.Id && workflow.Status != WorkflowStatus.Done.ToString())
+                        {
+                            checklist.Workflows.Add(workflow);
+                            break;
+                        }
+                    }
                 }
             }
-            }
-            }
-            
+
             return Ok(checklists);
         }
 
@@ -136,7 +136,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<ChecklistResponseDto>))]
         [SwaggerResponse(404, "No checklists found")]
         public async Task<IActionResult> SearchChecklistByNameAsync(string searchString)
-        {   
+        {
             var checklists = await _checklistService.SearchChecklistByNameAsync(searchString);
 
             if (checklists.IsNullOrEmpty())
@@ -264,23 +264,25 @@ namespace turbin.sikker.core.Controllers
             {
                 var tasks = await _checklistTaskService.GetAllTasksAsync();
 
-                if(_checklistTaskUtilities.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
+                if (_checklistTaskUtilities.TaskExists(tasks, checklistTask.CategoryId, checklistTask.Description))
                 {
                     var task = tasks.FirstOrDefault(t => t.Category.Id == checklistTask.CategoryId && t.Description == checklistTask.Description);
-                    await _checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskAddTaskToChecklistDto{
-                                                                        ChecklistId = newChecklistId, 
-                                                                        Id = task.Id
-                                                                        });
+                    await _checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskChecklistDto
+                    {
+                        ChecklistId = newChecklistId,
+                        TaskId = task.Id
+                    });
                     continue;
                 }
 
                 var taskId = await _checklistTaskService.CreateChecklistTaskAsync(checklistTask);
-                await _checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskAddTaskToChecklistDto{
-                                                                        ChecklistId = newChecklistId, 
-                                                                        Id = taskId
-                                                                        });
+                await _checklistTaskService.AddTaskToChecklistAsync(new ChecklistTaskChecklistDto
+                {
+                    ChecklistId = newChecklistId,
+                    TaskId = taskId
+                });
             }
-            
+
             return CreatedAtAction(nameof(GetChecklistByIdAsync), new { id = newChecklistId }, newChecklist);
 
         }
