@@ -13,7 +13,13 @@
 			"path": "../inventory-api"
 		},
 		{
-			"path": "../app-turbin-inventory"
+			"path": "../inventory-app"
+		},
+		{
+			"path": "../user-management-api"
+		},
+		{
+			"path": "../user-management-app"
 		}
 	],
 	"settings": {},
