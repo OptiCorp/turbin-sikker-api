@@ -79,6 +79,7 @@ namespace turbin.sikker.core
             services.AddHostedService<NotificationHandler>();
             services.AddHostedService<UserCreateHandler>();
             services.AddHostedService<UserUpdateHandler>();
+            services.AddHostedService<UserDeleteHandler>();
 
 
 

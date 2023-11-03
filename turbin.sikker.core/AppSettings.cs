@@ -9,8 +9,7 @@ public class AppSettings
 
     public string TopicUserCreated { get; set; } = "user-created";
     public string TopicUserUpdated { get; set; } = "user-updated";
-    public string TopicUserSoftDeleted { get; set; } = "user-soft-deleted";
-    public string TopicUserHardDeleted { get; set; } = "user-hard-deleted";
+    public string TopicUserDeleted { get; set; } = "user-deleted";
 
     public string SubscriptionTurbinsikker { get; set; } = "turbinsikker";
     public string SubscriptionInventory { get; set; } = "inventory";
