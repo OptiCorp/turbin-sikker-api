@@ -21,7 +21,7 @@ namespace turbin.sikker.core.Model.DTO
         [StringLength(50)]
         public string? Username { get; set; }
 
-        public UserRole? UserRole { get; set; }
+        public string? UserRole { get; set; }
 
         public string? Status { get; set; }
 

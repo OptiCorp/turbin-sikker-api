@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using turbin.sikker.core;
 
@@ -11,9 +12,11 @@ using turbin.sikker.core;
 namespace turbin.sikker.core.Migrations
 {
     [DbContext(typeof(TurbinSikkerDbContext))]
-    partial class TurbinSikkerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231106102055_deletedUserRole")]
+    partial class deletedUserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,7 +324,7 @@ namespace turbin.sikker.core.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserRole")
+                    b.Property<string>("UserRoleId")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");

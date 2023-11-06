@@ -24,7 +24,7 @@ namespace turbin.sikker.core.Model
 
         [Required]
         [StringLength(150)]
-        public string? UserRoleId { get; set; }
+        public string? UserRole { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -42,8 +42,6 @@ namespace turbin.sikker.core.Model
         [Required]
         [StringLength(50)]
         public string? Username { get; set; }
-
-        public UserRole? UserRole { get; }
 
         [Required]
         [EnumDataType(typeof(UserStatus))]

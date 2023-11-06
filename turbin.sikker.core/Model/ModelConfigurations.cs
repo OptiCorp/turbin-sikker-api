@@ -11,18 +11,8 @@ namespace turbin.sikker.core.Configuration
                 .HasKey(u => u.Id);
 
             modelBuilder.Entity<User>()
-                .HasOne(u => u.UserRole)
-                .WithMany()
-                .HasForeignKey(u => u.UserRoleId);
-
-            modelBuilder.Entity<User>()
                 .HasMany(u => u.Notifications)
                 .WithOne(u => u.Receiver);
-
-            modelBuilder.Entity<UserRole>()
-                .HasKey(ur => ur.Id);
-
-
         }
     }
 

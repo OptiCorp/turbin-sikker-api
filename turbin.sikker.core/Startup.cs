@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Logging;
 using turbin.sikker.core.Services;
 using FluentValidation;
-using turbin.sikker.core.Common;
 using turbin.sikker.core.Utilities;
 using Microsoft.Identity.Web;
 using Serilog;
@@ -48,7 +47,6 @@ namespace turbin.sikker.core
             });
 
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<IChecklistService, ChecklistService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IChecklistTaskService, ChecklistTaskService>();
@@ -60,7 +58,6 @@ namespace turbin.sikker.core
             services.AddScoped<ISocketService, SocketService>();
 
             services.AddScoped<IUserUtilities, UserUtilities>();
-            services.AddScoped<IUserRoleUtilities, UserRoleUtilities>();
             services.AddScoped<IChecklistUtilities, ChecklistUtilities>();
             services.AddScoped<ICategoryUtilities, CategoryUtilities>();
             services.AddScoped<IChecklistTaskUtilities, ChecklistTaskUtilities>();
@@ -70,10 +67,7 @@ namespace turbin.sikker.core
             services.AddScoped<IInvoiceUtilities, InvoiceUtilities>();
             services.AddScoped<INotificationUtilities, NotificationUtilities>();
 
-            services.AddScoped<ValidationHelper>();
-
             services.AddControllers();
-            services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
             services.AddHostedService<CreateInvoiceHandler>();
             services.AddHostedService<NotificationHandler>();
