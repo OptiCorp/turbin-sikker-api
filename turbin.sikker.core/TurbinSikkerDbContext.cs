@@ -14,8 +14,6 @@ namespace turbin.sikker.core
 
         public DbSet<User> User { get; set; }
 
-        public DbSet<UserRole> UserRole { get; set; }
-
         public DbSet<Category> Category { get; set; }
 
         public DbSet<ChecklistTask> Checklist_Task { get; set; }

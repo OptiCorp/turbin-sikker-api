@@ -3,9 +3,9 @@ using turbin.sikker.core.Model;
 
 namespace turbin.sikker.core.Utilities
 {
-public class UserUtilities : IUserUtilities
-	{
-       public bool IsUsernameTaken(IEnumerable<UserDto> users, string username)
+    public class UserUtilities : IUserUtilities
+    {
+        public bool IsUsernameTaken(IEnumerable<UserDto> users, string username)
         {
             return users.Any(u => u.Username == username);
         }

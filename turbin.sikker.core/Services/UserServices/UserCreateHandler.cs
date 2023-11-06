@@ -71,7 +71,7 @@ namespace turbin.sikker.core.Services
                     FirstName = userBody.FirstName,
                     LastName = userBody.LastName,
                     Email = userBody.Email,
-                    UserRoleId = userBody.UserRole,
+                    UserRole = userBody.UserRole,
                     CreatedDate = userBody.CreatedDate,
                     Status = Enum.Parse<UserStatus>(userBody.Status)
                 };

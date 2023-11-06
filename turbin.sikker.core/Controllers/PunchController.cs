@@ -72,7 +72,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Success", typeof(IEnumerable<PunchResponseDto>))]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> GetPunchesByWorkflowIdAsync(string workflowId)
-        {   
+        {
             var workflow = await _workflowService.GetWorkflowByIdAsync(workflowId);
             if (workflow == null)
             {
@@ -83,7 +83,7 @@ namespace turbin.sikker.core.Controllers
             if (punches == null)
             {
                 return NotFound("Punches not found.");
-            }    
+            }
 
             return Ok(punches);
         }
@@ -94,13 +94,15 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Punches not found")]
         public async Task<IActionResult> GetPunchesByInspectorIdAsync(string id)
-        {   
+        {
             var user = await _userService.GetUserByIdAsync(id);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound("User not found");
             }
-         
-            if (user.UserRole.Name != "Inspector") {
+
+            if (user.UserRole != "Inspector")
+            {
                 return BadRequest("User is not an inspector");
             }
 
@@ -108,7 +110,7 @@ namespace turbin.sikker.core.Controllers
             if (punches == null)
             {
                 return NotFound("Punches not found.");
-            }    
+            }
 
             return Ok(punches);
         }
@@ -119,13 +121,15 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Punches not found")]
         public async Task<IActionResult> GetPunchesByLeaderIdAsync(string id)
-        {   
+        {
             var user = await _userService.GetUserByIdAsync(id);
-            if (user == null) {
+            if (user == null)
+            {
                 return NotFound("User not found");
             }
-         
-            if (user.UserRole.Name != "Leader") {
+
+            if (user.UserRole != "Leader")
+            {
                 return BadRequest("User is not a leader");
             }
 
@@ -133,7 +137,7 @@ namespace turbin.sikker.core.Controllers
             if (punches == null)
             {
                 return NotFound("Punches not found.");
-            }    
+            }
 
             return Ok(punches);
         }
@@ -144,7 +148,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(201, "Punch created", typeof(PunchResponseDto))]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> CreatePunchAsync(PunchCreateDto punch, [FromServices] IValidator<PunchCreateDto> validator)
-        {   
+        {
             ValidationResult validationResult = validator.Validate(punch);
 
             if (!validationResult.IsValid)
@@ -187,7 +191,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(400, "Invalid request")]
         [SwaggerResponse(404, "Not found")]
         public async Task<IActionResult> UpdatePunchAsync(PunchUpdateDto updatedPunch, [FromServices] IValidator<PunchUpdateDto> validator)
-        {   
+        {
             ValidationResult validationResult = validator.Validate(updatedPunch);
 
             if (!validationResult.IsValid)
@@ -202,7 +206,7 @@ namespace turbin.sikker.core.Controllers
                         );
                 }
                 return ValidationProblem(modelStateDictionary);
-           }
+            }
 
             var punch = await _punchService.GetPunchByIdAsync(updatedPunch.Id);
             if (punch == null)
@@ -237,7 +241,7 @@ namespace turbin.sikker.core.Controllers
         [SwaggerResponse(200, "Punch deleted")]
         [SwaggerResponse(404, "Punch not found")]
         public async Task<IActionResult> DeletePunchAsync(string id)
-        {   
+        {
             var punch = await _punchService.GetPunchByIdAsync(id);
 
             if (punch == null)
@@ -246,15 +250,15 @@ namespace turbin.sikker.core.Controllers
             }
 
             var uploads = await _uploadService.GetUploadsByPunchIdAsync(id);
-            
+
             if (uploads != null)
             {
-                foreach(var upload in uploads)
+                foreach (var upload in uploads)
                 {
                     await _uploadService.DeleteUploadAsync(upload.Id);
                 }
             }
-           
+
             await _punchService.DeletePunchAsync(id);
 
             return Ok("Punch deleted");

@@ -10,10 +10,5 @@ namespace turbin.sikker.core.Services
         Task<UserDto> GetUserByUsernameAsync(string name);
         Task<User> GetUserByAzureAdUserIdAsync(string azureAdUserId);
         Task<UserDto> GetUserByIdAsync(string id);
-        Task UpdateUserAsync(UserUpdateDto user);
-        Task<string> CreateUserAsync(UserCreateDto user);
-        Task DeleteUserAsync(string id);
-        Task HardDeleteUserAsync(string id);
-        Task<string> GetInspectorRoleIdAsync();
     }
 }

@@ -77,8 +77,8 @@ namespace turbin.sikker.core.Services
                         user.LastName = updatedUserDto.LastName;
                     if (updatedUserDto.Email != null)
                         user.Email = updatedUserDto.Email;
-                    if (updatedUserDto.UserRoleId != null)
-                        user.UserRoleId = updatedUserDto.UserRoleId;
+                    if (updatedUserDto.UserRole != null)
+                        user.UserRole = updatedUserDto.UserRole;
                     if (updatedUserDto.Status != null)
                     {
                         string status = updatedUserDto.Status.ToLower();

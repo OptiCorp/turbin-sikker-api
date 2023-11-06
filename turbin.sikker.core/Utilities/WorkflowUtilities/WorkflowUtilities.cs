@@ -4,26 +4,32 @@ using turbin.sikker.core.Model.DTO.WorkflowDtos;
 
 namespace turbin.sikker.core.Utilities
 {
-public class WorkflowUtilities : IWorkflowUtilities
-	{
+    public class WorkflowUtilities : IWorkflowUtilities
+    {
+        private readonly IChecklistUtilities _checklistUtilities;
+
+        public WorkflowUtilities(IChecklistUtilities checklistUtilities)
+        {
+            _checklistUtilities = checklistUtilities;
+        }
         public WorkflowResponseDto WorkflowToResponseDto(Workflow? workflow)
-        {   
+        {
             if (workflow == null)
             {
                 return null;
             }
             var taskInfos = new Dictionary<string, string>();
             if (workflow.TaskInfos != null)
-            {   
-                foreach(var info in workflow.TaskInfos)
             {
-                taskInfos.Add(info.TaskId, info.Status.ToString());
-            }
+                foreach (var info in workflow.TaskInfos)
+                {
+                    taskInfos.Add(info.TaskId, info.Status.ToString());
+                }
             }
             return new WorkflowResponseDto
             {
                 Id = workflow.Id,
-                Checklist = workflow.Checklist,
+                Checklist = _checklistUtilities.ChecklistInWorkflowToResponseDto(workflow.Checklist),
                 User = workflow.User,
                 Creator = workflow.Creator,
                 Status = workflow.Status.ToString(),

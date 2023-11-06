@@ -4,21 +4,21 @@ using turbin.sikker.core.Model.DTO.WorkflowDtos;
 
 namespace turbin.sikker.core.Utilities
 {
-public class ChecklistUtilities : IChecklistUtilities
-	{
+    public class ChecklistUtilities : IChecklistUtilities
+    {
         public bool checklistExists(IEnumerable<ChecklistResponseDto> checklists, string userId, string title)
         {
             return checklists.Any(c => c.User.Id == userId && c.Title == title);
         }
 
         public ChecklistResponseDto ChecklistToResponseDto(Checklist checklist)
-        {    
+        {
             int? completionTime = 0;
-            foreach(var task in checklist.ChecklistTasks)
+            foreach (var task in checklist.ChecklistTasks)
             {
                 completionTime += task.EstAvgCompletionTime;
             }
-            
+
             return new ChecklistResponseDto
             {
                 Id = checklist.Id,
@@ -33,10 +33,31 @@ public class ChecklistUtilities : IChecklistUtilities
             };
         }
 
-        public ChecklistResponseNoUserDto ChecklistToNoUserDto(Checklist checklist)
-        {   
+        public ChecklistInWorkflowResponseDto ChecklistInWorkflowToResponseDto(Checklist checklist)
+        {
             int? completionTime = 0;
-            foreach(var task in checklist.ChecklistTasks)
+            foreach (var task in checklist.ChecklistTasks)
+            {
+                completionTime += task.EstAvgCompletionTime;
+            }
+
+            return new ChecklistInWorkflowResponseDto
+            {
+                Id = checklist.Id,
+                Title = checklist.Title,
+                User = checklist.Creator,
+                Status = checklist.Status == ChecklistStatus.Inactive ? "Inactive" : "Active",
+                CreatedDate = checklist.CreatedDate,
+                UpdatedDate = checklist.UpdatedDate,
+                ChecklistTasks = checklist.ChecklistTasks,
+                EstCompletionTimeMinutes = completionTime
+            };
+        }
+
+        public ChecklistResponseNoUserDto ChecklistToNoUserDto(Checklist checklist)
+        {
+            int? completionTime = 0;
+            foreach (var task in checklist.ChecklistTasks)
             {
                 completionTime += task.EstAvgCompletionTime;
             }
