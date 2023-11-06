@@ -1,11 +1,13 @@
 
+using turbin.sikker.core.Model.DTO.ChecklistDtos;
+
 namespace turbin.sikker.core.Model.DTO.WorkflowDtos
 {
     public class WorkflowResponseDto
-    {   
+    {
         public string? Id { get; set; }
-        
-        public Checklist? Checklist { get; set; }
+
+        public ChecklistInWorkflowResponseDto? Checklist { get; set; }
 
         public User? User { get; set; }
 

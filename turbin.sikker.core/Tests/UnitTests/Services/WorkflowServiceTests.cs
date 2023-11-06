@@ -13,7 +13,8 @@ namespace turbin.sikker.core.Tests.Services
             //Arrange
             var testUtilities = new TestUtilities();
             var dbContext = await testUtilities.GetDbContext("Workflow");
-            var workflowUtilities = new WorkflowUtilities();
+            var checklistUtilities = new ChecklistUtilities();
+            var workflowUtilities = new WorkflowUtilities(checklistUtilities);
             var workflowService = new WorkflowService(dbContext, workflowUtilities);
 
             var userId = "User 1";
@@ -33,7 +34,8 @@ namespace turbin.sikker.core.Tests.Services
             //Arrange
             var testUtilities = new TestUtilities();
             var dbContext = await testUtilities.GetDbContext("Workflow");
-            var workflowUtilities = new WorkflowUtilities();
+            var checklistUtilities = new ChecklistUtilities();
+            var workflowUtilities = new WorkflowUtilities(checklistUtilities);
             var workflowService = new WorkflowService(dbContext, workflowUtilities);
 
             var id = "Workflow 1";
@@ -52,7 +54,8 @@ namespace turbin.sikker.core.Tests.Services
             //Arrange
             var testUtilities = new TestUtilities();
             var dbContext = await testUtilities.GetDbContext("Workflow");
-            var workflowUtilities = new WorkflowUtilities();
+            var checklistUtilities = new ChecklistUtilities();
+            var workflowUtilities = new WorkflowUtilities(checklistUtilities);
             var workflowService = new WorkflowService(dbContext, workflowUtilities);
 
             //Act
@@ -69,7 +72,8 @@ namespace turbin.sikker.core.Tests.Services
             //Arrange
             var testUtilities = new TestUtilities();
             var dbContext = await testUtilities.GetDbContext("Workflow");
-            var workflowUtilities = new WorkflowUtilities();
+            var checklistUtilities = new ChecklistUtilities();
+            var workflowUtilities = new WorkflowUtilities(checklistUtilities);
             var workflowService = new WorkflowService(dbContext, workflowUtilities);
 
             var userId = "User 1";
@@ -88,7 +92,8 @@ namespace turbin.sikker.core.Tests.Services
             //Arrange
             var testUtilities = new TestUtilities();
             var dbContext = await testUtilities.GetDbContext("Workflow");
-            var workflowUtilities = new WorkflowUtilities();
+            var checklistUtilities = new ChecklistUtilities();
+            var workflowUtilities = new WorkflowUtilities(checklistUtilities);
             var workflowService = new WorkflowService(dbContext, workflowUtilities);
 
             var updatedWorkflow = new WorkflowUpdateDto
@@ -112,7 +117,8 @@ namespace turbin.sikker.core.Tests.Services
             //Arrange
             var testUtilities = new TestUtilities();
             var dbContext = await testUtilities.GetDbContext("Workflow");
-            var workflowUtilities = new WorkflowUtilities();
+            var checklistUtilities = new ChecklistUtilities();
+            var workflowUtilities = new WorkflowUtilities(checklistUtilities);
             var workflowService = new WorkflowService(dbContext, workflowUtilities);
 
             var userIds = new List<string>
@@ -142,7 +148,8 @@ namespace turbin.sikker.core.Tests.Services
             //Arrange
             var testUtilities = new TestUtilities();
             var dbContext = await testUtilities.GetDbContext("Workflow");
-            var workflowUtilities = new WorkflowUtilities();
+            var checklistUtilities = new ChecklistUtilities();
+            var workflowUtilities = new WorkflowUtilities(checklistUtilities);
             var workflowService = new WorkflowService(dbContext, workflowUtilities);
 
             var id = "Workflow 1";

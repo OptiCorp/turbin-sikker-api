@@ -46,52 +46,6 @@ namespace turbin.sikker.core.Tests.Services
                 }
             );
 
-            if (testType == "UserRole")
-            {
-                if (await databaseContext.UserRole.CountAsync() <= 0)
-                {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        await databaseContext.UserRole.AddAsync(
-                            new UserRole
-                            {
-                                Id = string.Format("UserRole {0}", i),
-                                Name = string.Format("UserRole {0}", i)
-                            }
-                        );
-                    }
-                    await databaseContext.User.AddAsync(
-                        new User
-                        {
-                            Id = "User 1",
-                            AzureAdUserId = "Some email",
-                            UserRoleId = "UserRole 1",
-                            FirstName = "name",
-                            LastName = "nameson",
-                            Email = "some email",
-                            Username = "username1",
-                            Status = UserStatus.Active,
-                            CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
-                        }
-                    );
-                    await databaseContext.SaveChangesAsync();
-                }
-                return databaseContext;
-            }
-
-            await databaseContext.UserRole.AddRangeAsync(
-                new UserRole
-                {
-                    Id = "Inspector",
-                    Name = "Inspector"
-                },
-                new UserRole
-                {
-                    Id = "Leader",
-                    Name = "Leader"
-                }
-            );
-
             if (testType == "User")
             {
                 if (await databaseContext.User.CountAsync() <= 0)
@@ -103,12 +57,12 @@ namespace turbin.sikker.core.Tests.Services
                             {
                                 Id = string.Format("User {0}", i),
                                 AzureAdUserId = string.Format("AzureAD{0}@bouvet.no", i),
-                                UserRoleId = i%2 == 0 ? "Inspector" : "Leader",
+                                UserRole = i % 2 == 0 ? "Inspector" : "Leader",
                                 FirstName = "name",
                                 LastName = "nameson",
                                 Email = "some email",
                                 Username = string.Format("Username {0}", i),
-                                Status = i%5 == 0 ? UserStatus.Deleted : UserStatus.Active,
+                                Status = i % 5 == 0 ? UserStatus.Deleted : UserStatus.Active,
                                 CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"))
                             }
                         );
@@ -123,7 +77,7 @@ namespace turbin.sikker.core.Tests.Services
                 {
                     Id = "User 1",
                     AzureAdUserId = "Some email",
-                    UserRoleId = "Inspector",
+                    UserRole = "Inspector",
                     FirstName = "name",
                     LastName = "nameson",
                     Email = "some email",
@@ -135,7 +89,7 @@ namespace turbin.sikker.core.Tests.Services
                 {
                     Id = "User 2",
                     AzureAdUserId = "Some email",
-                    UserRoleId = "Leader",
+                    UserRole = "Leader",
                     FirstName = "name",
                     LastName = "nameson",
                     Email = "some email",
@@ -147,7 +101,7 @@ namespace turbin.sikker.core.Tests.Services
                 {
                     Id = "User 3",
                     AzureAdUserId = "Some email",
-                    UserRoleId = "Inspector",
+                    UserRole = "Inspector",
                     FirstName = "name",
                     LastName = "nameson",
                     Email = "some email",
@@ -164,8 +118,8 @@ namespace turbin.sikker.core.Tests.Services
                     string createdById = "";
                     for (int i = 0; i < 10; i++)
                     {
-                        if (i%2 == 0) createdById = "User 1";
-                        if (i%2 != 0) createdById = "User 2";
+                        if (i % 2 == 0) createdById = "User 1";
+                        if (i % 2 != 0) createdById = "User 2";
                         await databaseContext.Checklist.AddAsync(
                             new Checklist
                             {
@@ -207,12 +161,12 @@ namespace turbin.sikker.core.Tests.Services
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        var checklistId = string.Format("Checklist {0}", (i%2)+1);
+                        var checklistId = string.Format("Checklist {0}", (i % 2) + 1);
                         await databaseContext.AddAsync(
                             new Workflow
                             {
                                 Id = string.Format("Workflow {0}", i),
-                                ChecklistId = string.Format("Checklist {0}", (i%2)+1),
+                                ChecklistId = string.Format("Checklist {0}", (i % 2) + 1),
                                 UserId = "User 1",
                                 CreatorId = "User 2",
                                 Status = WorkflowStatus.Sent,
@@ -232,8 +186,8 @@ namespace turbin.sikker.core.Tests.Services
                     string categoryId = "";
                     for (int i = 0; i < 10; i++)
                     {
-                        if (i%2 == 0) categoryId = "Category 1";
-                        if (i%2 != 0) categoryId = "Category 2";
+                        if (i % 2 == 0) categoryId = "Category 1";
+                        if (i % 2 != 0) categoryId = "Category 2";
                         await databaseContext.Checklist_Task.AddAsync(
                             new ChecklistTask
                             {
@@ -297,10 +251,10 @@ namespace turbin.sikker.core.Tests.Services
                             new Punch
                             {
                                 Id = string.Format("Punch {0}", i),
-                                WorkflowId = string.Format("Workflow {0}", (i%2)+1),
-                                ChecklistTaskId = string.Format("Task {0}", (i%2)+1),
+                                WorkflowId = string.Format("Workflow {0}", (i % 2) + 1),
+                                ChecklistTaskId = string.Format("Task {0}", (i % 2) + 1),
                                 CreatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
-                                CreatorId = i%2==0 ? "User 1" : "User 3",
+                                CreatorId = i % 2 == 0 ? "User 1" : "User 3",
                                 Description = string.Format("Punch {0}", i),
                                 Severity = PunchSeverity.Minor,
                                 Status = PunchStatus.Pending,
@@ -350,7 +304,7 @@ namespace turbin.sikker.core.Tests.Services
                             new Upload
                             {
                                 Id = string.Format("Upload {0}", i),
-                                PunchId = i%2==0 ? "Punch 1" : "Punch 2",
+                                PunchId = i % 2 == 0 ? "Punch 1" : "Punch 2",
                                 BlobRef = string.Format("Upload {0}", i)
                             }
                         );
@@ -364,5 +318,5 @@ namespace turbin.sikker.core.Tests.Services
 
             return databaseContext;
         }
-    }   
+    }
 }

@@ -18,16 +18,14 @@ namespace turbin.sikker.core.Controllers
     {
         private readonly IWorkflowService _workflowService;
         private readonly IUserService _userService;
-        private readonly IUserRoleService _userRoleService;
         private readonly IChecklistService _checklistService;
 
         private readonly TurbinSikkerDbContext _context;
 
-        public WorkflowController(IWorkflowService workflowService, IUserService userService, IUserRoleService userRoleService, IChecklistService checklistService, TurbinSikkerDbContext context)
+        public WorkflowController(IWorkflowService workflowService, IUserService userService, IChecklistService checklistService, TurbinSikkerDbContext context)
         {
             _workflowService = workflowService;
             _userService = userService;
-            _userRoleService = userRoleService;
             _checklistService = checklistService;
             _context = context;
         }
@@ -101,12 +99,11 @@ namespace turbin.sikker.core.Controllers
             }
 
             var creator = await _userService.GetUserByIdAsync(workflow.CreatorId);
-            var userRole = await _userRoleService.GetUserRoleByIdAsync(creator.UserRole.Id);
             var checklist = await _checklistService.GetChecklistByIdAsync(workflow.ChecklistId);
 
             if (creator == null) return NotFound("The creator of this workflow does not exist");
 
-            if (userRole.Name == "Inspector") return Conflict("Inspectors can not create workflows");
+            if (creator.UserRole == "Inspector") return Conflict("Inspectors can not create workflows");
 
             if (checklist == null) return BadRequest("The given checklist does not exist");
 
