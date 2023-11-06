@@ -22,7 +22,6 @@ namespace turbin.sikker.core.Services
                             .Include(p => p.ChecklistTask)
                             .Include(u => u.Uploads)
                             .Include(p => p.Creator)
-                            .ThenInclude(u => u.UserRole)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(p => _punchUtilities.PunchToResponseDto(p))
                             .ToListAsync();
@@ -34,7 +33,6 @@ namespace turbin.sikker.core.Services
                                 .Include(p => p.ChecklistTask)
                                 .Include(u => u.Uploads)
                                 .Include(p => p.Creator)
-                                .ThenInclude(u => u.UserRole)
                                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (punch == null) return null;
@@ -44,16 +42,16 @@ namespace turbin.sikker.core.Services
 
 
         public async Task<IEnumerable<PunchResponseDto>> GetPunchesByLeaderIdAsync(string id)
-        {   
+        {
             var allPunches = new List<PunchResponseDto>();
             var workflows = await _context.Workflow.Where(c => c.CreatorId == id).ToListAsync();
-            foreach (Workflow workflow in workflows) {
+            foreach (Workflow workflow in workflows)
+            {
                 var punches = await _context.Punch
                                     .Where(c => c.WorkflowId == workflow.Id)
                                     .Include(p => p.ChecklistTask)
                                     .Include(u => u.Uploads)
                                     .Include(p => p.Creator)
-                                    .ThenInclude(u => u.UserRole)
                                     .OrderByDescending(c => c.CreatedDate)
                                     .Select(c => _punchUtilities.PunchToResponseDto(c))
                                     .ToListAsync();
@@ -69,7 +67,6 @@ namespace turbin.sikker.core.Services
                             .Include(p => p.ChecklistTask)
                             .Include(u => u.Uploads)
                             .Include(p => p.Creator)
-                            .ThenInclude(u => u.UserRole)
                             .Where(c => c.CreatorId == id)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(c => _punchUtilities.PunchToResponseDto(c))
@@ -82,7 +79,6 @@ namespace turbin.sikker.core.Services
                             .Include(p => p.ChecklistTask)
                             .Include(u => u.Uploads)
                             .Include(p => p.Creator)
-                            .ThenInclude(u => u.UserRole)
                             .Where(c => c.WorkflowId == id)
                             .OrderByDescending(c => c.CreatedDate)
                             .Select(c => _punchUtilities.PunchToResponseDto(c))
@@ -154,7 +150,7 @@ namespace turbin.sikker.core.Services
                 {
                     string severity = updatedPunch.Severity.ToLower();
 
-                     switch (severity)
+                    switch (severity)
                     {
                         case "minor":
                             punch.Severity = PunchSeverity.Minor;

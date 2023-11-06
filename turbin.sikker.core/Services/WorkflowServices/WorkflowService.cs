@@ -26,9 +26,7 @@ namespace turbin.sikker.core.Services
         {
             var workflow = await _context.Workflow
                 .Include(c => c.User)
-                .ThenInclude(c => c.UserRole)
                 .Include(c => c.Creator)
-                .ThenInclude(c => c.UserRole)
                 .Include(c => c.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
                 .ThenInclude(c => c.Category)
@@ -45,9 +43,7 @@ namespace turbin.sikker.core.Services
         {
             var workflows = await _context.Workflow
                 .Include(c => c.User)
-                .ThenInclude(c => c.UserRole)
                 .Include(c => c.Creator)
-                .ThenInclude(c => c.UserRole)
                 .Include(p => p.Checklist)
                 .ThenInclude(c => c.ChecklistTasks)
                 .ThenInclude(c => c.Category)
@@ -63,9 +59,7 @@ namespace turbin.sikker.core.Services
         {
             var workflows = await _context.Workflow
             .Include(c => c.User)
-            .ThenInclude(c => c.UserRole)
             .Include(c => c.Creator)
-            .ThenInclude(c => c.UserRole)
             .Include(p => p.Checklist)
             .ThenInclude(c => c.ChecklistTasks)
             .ThenInclude(c => c.Category)
@@ -82,9 +76,7 @@ namespace turbin.sikker.core.Services
         {
             var workflows = await _context.Workflow
             .Include(c => c.User)
-            .ThenInclude(c => c.UserRole)
             .Include(c => c.Creator)
-            .ThenInclude(c => c.UserRole)
             .Include(p => p.Checklist)
             .ThenInclude(c => c.ChecklistTasks)
             .ThenInclude(c => c.Category)

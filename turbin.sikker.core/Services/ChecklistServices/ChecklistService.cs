@@ -19,7 +19,6 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistResponseDto>> GetAllChecklistsAsync()
         {
             return await _context.Checklist.Include(c => c.Creator)
-                                            .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .OrderBy(c => c.CreatedDate)
@@ -30,7 +29,6 @@ namespace turbin.sikker.core.Services
         public async Task<ChecklistResponseDto> GetChecklistByIdAsync(string id)
         {
             var checklist = await _context.Checklist.Include(c => c.Creator)
-                                            .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .FirstOrDefaultAsync(checklist => checklist.Id == id);
@@ -53,7 +51,6 @@ namespace turbin.sikker.core.Services
         public async Task<IEnumerable<ChecklistResponseDto>> SearchChecklistByNameAsync(string searchString)
         {
             return await _context.Checklist.Include(c => c.Creator)
-                                            .ThenInclude(c => c.UserRole)
                                             .Include(c => c.ChecklistTasks)
                                             .ThenInclude(task => task.Category)
                                             .Where(c => c.Title.Contains(searchString))
@@ -113,7 +110,7 @@ namespace turbin.sikker.core.Services
         public async Task HardDeleteChecklistAsync(string id)
         {
             var checklist = await _context.Checklist.FirstOrDefaultAsync(checklist => checklist.Id == id);
-            if (checklist != null) 
+            if (checklist != null)
             {
                 _context.Checklist.Remove(checklist);
                 await _context.SaveChangesAsync();
