@@ -10,6 +10,7 @@ namespace turbin.sikker.core.Model.DTO.WorkflowDtos
         public string? Status { get; set; }
         public int? CompletionTimeMinutes { get; set; }
         public ICollection<TaskInfoUpdate>? TaskInfos { get; set; }
+        public string? Comment { get; set; }
 
     }
 }

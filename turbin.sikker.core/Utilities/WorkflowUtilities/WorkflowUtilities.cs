@@ -37,7 +37,8 @@ namespace turbin.sikker.core.Utilities
                 UpdatedDate = workflow.UpdatedDate,
                 InvoiceId = workflow.InvoiceId,
                 CompletionTimeMinutes = workflow.CompletionTimeMinutes,
-                TaskInfos = taskInfos
+                TaskInfos = taskInfos,
+                Comment = workflow.Comment
             };
         }
     }
