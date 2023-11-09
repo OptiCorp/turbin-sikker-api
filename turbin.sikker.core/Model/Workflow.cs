@@ -10,7 +10,9 @@ namespace turbin.sikker.core.Model
         [Display(Name = "Committed")]
         Committed,
         [Display(Name = "Done")]
-        Done
+        Done,
+        [Display(Name = "Rejected")]
+        Rejected
     }
 
     public class Workflow
@@ -45,6 +47,8 @@ namespace turbin.sikker.core.Model
         public string? InvoiceId { get; set; }
 
         public ICollection<TaskInfo>? TaskInfos { get; }
+
+        public string? Comment { get; set; }
 
     }
 }

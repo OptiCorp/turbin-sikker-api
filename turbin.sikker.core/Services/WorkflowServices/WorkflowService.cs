@@ -115,6 +115,10 @@ namespace turbin.sikker.core.Services
                         info.Status = Enum.Parse<TaskInfoStatus>(taskInfo.Status);
                     }
                 }
+                if (updatedWorkflow.Comment != null)
+                {
+                    workflow.Comment = updatedWorkflow.Comment;
+                }
             }
             workflow.UpdatedDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
             await _context.SaveChangesAsync();
