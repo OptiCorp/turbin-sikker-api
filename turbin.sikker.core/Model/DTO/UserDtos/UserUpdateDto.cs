@@ -24,5 +24,7 @@ namespace turbin.sikker.core.Model.DTO
         public string? UserRole { get; set; }
 
         public string? Status { get; set; }
+
+        public string? AzureAdUserId { get; set; }
     }
 }
