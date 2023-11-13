@@ -79,6 +79,8 @@ namespace turbin.sikker.core.Services
                         user.Email = updatedUserDto.Email;
                     if (updatedUserDto.UserRole != null)
                         user.UserRole = updatedUserDto.UserRole;
+                    if (updatedUserDto.AzureAdUserId != null)
+                        user.AzureAdUserId = updatedUserDto.AzureAdUserId;
                     if (updatedUserDto.Status != null)
                     {
                         string status = updatedUserDto.Status.ToLower();
