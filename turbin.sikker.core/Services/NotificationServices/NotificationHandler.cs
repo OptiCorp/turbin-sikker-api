@@ -28,6 +28,7 @@ namespace turbin.sikker.core.Services
             var messageBody = Encoding.UTF8.GetString(message.Body);
 
             NotificationBusDto notificationBus = JsonSerializer.Deserialize<NotificationBusDto>(messageBody);
+            var notificationType = notificationBus.NotificationType.ToLower();
 
             using (var scope = _serviceProdiver.CreateScope())
             {
@@ -37,9 +38,9 @@ namespace turbin.sikker.core.Services
                 Notification notification = new Notification
                 {
                     Message = notificationBus.Message,
-                    NotificationStatus = NotificationStatus.Unread, // TODO: change to read and unread
+                    NotificationStatus = NotificationStatus.Unread,
                     CreatedDate = DateTime.Now,
-                    NotificationType = NotificationType.Error,
+                    NotificationType = notificationType == "error" ? NotificationType.Error : NotificationType.Info,
                     ReceiverId = notificationBus.ReceiverId,
                 };
 
@@ -49,7 +50,7 @@ namespace turbin.sikker.core.Services
                 await scopedService.SaveChangesAsync();
 
                 var serviceClient = new WebPubSubServiceClient(Environment.GetEnvironmentVariable("pubSubConnectionString"), "Hub");
-                await serviceClient.SendToAllAsync(notification.ReceiverId);
+                await serviceClient.SendToAllAsync($"{notificationType} {notification.ReceiverId}");
 
                 await _orderQueueClient.CompleteAsync(message.SystemProperties.LockToken).ConfigureAwait(false);
             }
