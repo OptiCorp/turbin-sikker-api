@@ -1,5 +1,15 @@
 # turbin-sikker-api
 
+## Key Features
+
+- [CRUD Checklist]
+- [CRUD Tasks for the Checklists]
+- [CRUD Workflows from the Checklists]
+- [CRUD Punches for the Checklist Tasks]
+- [CRUD Uploads for the Punches]
+- [Create Invoices with help from [Invoice Function App](https://github.com/OptiCorp/invoice-function-app)]
+- [Read Notifications created in the [Invoice Function App](https://github.com/OptiCorp/invoice-function-app)]
+
 ## Run API
 
 Clone and Run the API Application:
@@ -34,10 +44,6 @@ feat/#1/users-endpoint
         PUNCH ||--o{ UPLOAD : "contains"
         ROLE ||--o{ USER : "has"
 ```
-
-## Initial Schema
-
-[initial_schema.sql](initial_schema.sql)
 
 ## Database Migration
 
