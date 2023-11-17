@@ -1,14 +1,16 @@
 # turbin-sikker-api
 
+Turbine mainteneance inspection app. Leaders create checklists for Inspectors to complete.
+
 ## Key Features
 
-- [CRUD Checklist]
-- [CRUD Tasks for the Checklists]
-- [CRUD Workflows from the Checklists]
-- [CRUD Punches for the Checklist Tasks]
-- [CRUD Uploads for the Punches]
-- [Create Invoices with help from [Invoice Function App](https://github.com/OptiCorp/invoice-function-app)]
-- [Read Notifications created in the [Invoice Function App](https://github.com/OptiCorp/invoice-function-app)]
+- CRUD Checklist
+- CRUD Tasks for the Checklists
+- CRUD Workflows from the Checklists
+- CRUD Punches for the Checklist Tasks
+- CRUD Uploads for the Punches
+- Create Invoices with help from [Invoice Function App](https://github.com/OptiCorp/invoice-function-app)
+- Read Notifications created in the [Invoice Function App](https://github.com/OptiCorp/invoice-function-app)
 
 ## Run API
 
