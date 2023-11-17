@@ -1,6 +1,6 @@
 # turbin-sikker-api
 
-Turbine mainteneance inspection app. Leaders create checklists for Inspectors to complete.
+Turbine inspection app. Leaders create checklists for inspectors to complete.
 
 ## Key Features
 
