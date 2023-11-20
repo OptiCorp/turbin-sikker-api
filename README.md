@@ -20,6 +20,24 @@ Clone and Run the API Application:
 2. Navigate to project folder: `cd turbin-sikker-api/`
 3. Run API: `cd turbin.sikker.core && dotnet run`
 
+## Use case Example
+Returns json data about a single user.
+* **URL** <br />
+  /GetUser?id=`id`
+* **Method:**
+  `Get`
+* **URL Params**
+  **Required:**
+  `?id=id`
+* **Success Response:**
+    * **CODE:** 200 <br />
+      **Content:** `{ id : "12345-5432-2345-54321", firstName : "firtname", lastName : "lastname" ... }` 
+* **Error Response:**
+  * **CODE:** 404 NOT FOUND <br />
+    **Content:** `{ error: "User not found" }` <br />
+OR <br />    
+  * **CODE:** 401 UNAUTHORIZED <br />
+
 ## Branch name convention 
 1. type (feat, fix, chore, refactor)
 2. issue number
@@ -30,7 +48,7 @@ Clone and Run the API Application:
 ```
 feat/#1/users-endpoint
 ```
-
+    
 ## ER Diagram
 
 ```mermaid
